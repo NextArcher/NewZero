@@ -12,17 +12,17 @@ cc.Class({
 
      onLoad () 
      {
-         //开启碰撞检测
-        var manger = cc.director.getCollisionManager();
-        manger.enabled = true;
-        manger.enabledDebugDraw = true;
-        //manger.enabledDrawBoundingBox = true;
+        //开启碰撞检测
+        cc.director.getCollisionManager().enabled = true;
+        //开启物理系统
+        cc.director.getPhysicsManager().enabled = true;
 
          //注册事件
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
-         var b = 1;
+         //声明数值
+         var data = 3;
      },
 
     start () 
@@ -30,6 +30,7 @@ cc.Class({
 
         //定义移速
         this.SpeedX = 712;
+
     },
 
     //
@@ -77,11 +78,32 @@ cc.Class({
         }
      },
 
-     
+     //碰撞事件
      onCollisionEnter( other,self )
      {
-         
+         cc.log("?");
+        //  switch(other.node.group)
+        //  {
+        //      //碰撞到矩形物体时
+        //      case "Point_2":
+        //          //执行减少数值方法
+        //          ReduceData();
+        //          cc.log(data);
+        //         break;
+        //  }
      },
+
+     onCollision(event)
+     {
+         cc.log("碰撞");
+     },
+     
+
+     //减少数值方法
+     ReduceData()
+     {
+        return data --;
+     }
      
 
 

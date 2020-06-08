@@ -17,6 +17,10 @@ cc.Class({
 
      onLoad () 
      {
+        //开启碰撞检测
+        cc.director.getCollisionManager().enabled = true;
+        cc.director.getPhysicsManager().enabled = true;
+
         //  //定义指定数值数组
         // this.arr1 = Array[-300,-100,100,300];
         //定义计时器
@@ -30,20 +34,20 @@ cc.Class({
 
      update (dt) 
      {
-         //计时器 > 1
-         if(this.timer > 1)
-         {
-             //调用生成竖形预制体方法
-            this.InsPoint_1();
-            //重置预制体
-            this.timer = 0;
-         }
-         //计时器默认值是0 不可能会执行上面,所以下面要把计时器的值叠加
-         else
-         {
-             //计时器叠加
-             this.timer += dt;
-         }
+        //  //计时器 > 1
+        //  if(this.timer > 1)
+        //  {
+        //      //调用生成竖形预制体方法
+        //     this.InsPoint_1();
+        //     //重置预制体
+        //     this.timer = 0;
+        //  }
+        //  //计时器默认值是0 不可能会执行上面,所以下面要把计时器的值叠加
+        //  else
+        //  {
+        //      //计时器叠加
+        //      this.timer += dt;
+        //  }
 
      },
 

@@ -1,7 +1,8 @@
 {
   "group-list": [
     "default",
-    "Collider"
+    "Collider",
+    "Point_2"
   ],
   "collision-matrix": [
     [
@@ -9,7 +10,13 @@
     ],
     [
       false,
+      true,
       true
+    ],
+    [
+      false,
+      true,
+      false
     ]
   ],
   "excluded-modules": [
@@ -37,6 +44,5 @@
     "live": {
       "enable": false
     }
-  },
-  "start-scene": "current"
+  }
 }
