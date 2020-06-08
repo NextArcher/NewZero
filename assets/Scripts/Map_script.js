@@ -2,82 +2,91 @@
 
 cc.Class({
     extends: cc.Component,
-
+    
     properties:
     {
-        //条形障碍物预制体
-        Point_1:
+        //传入玩家对象
+        Player :
         {
-            default: null,
+            
+            default : null,
+            type : cc.Node
+        },
+
+        //传入矩形对象
+        Point_2 :
+        {
+            default : null,
             type: cc.Prefab
         },
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
      onLoad () 
      {
-        //开启碰撞检测
-        cc.director.getCollisionManager().enabled = true;
-        cc.director.getPhysicsManager().enabled = true;
 
-        //  //定义指定数值数组
-        // this.arr1 = Array[-300,-100,100,300];
-        //定义计时器
-        this.timer = 0;
      },
 
     start () 
     {
-        
+        //this.InsPoint_2();
     },
 
      update (dt) 
      {
-        //  //计时器 > 1
-        //  if(this.timer > 1)
-        //  {
-        //      //调用生成竖形预制体方法
-        //     this.InsPoint_1();
-        //     //重置预制体
-        //     this.timer = 0;
-        //  }
-        //  //计时器默认值是0 不可能会执行上面,所以下面要把计时器的值叠加
-        //  else
-        //  {
-        //      //计时器叠加
-        //      this.timer += dt;
-        //  }
-
+         //调用生成矩形方法
+        this.InsPoint_2();
      },
 
-     //生成竖形预制体方法
-     InsPoint_1()
+     //生成矩形方法
+     InsPoint_2()
      {
-        // //生成对象
-         var newpoint = cc.instantiate(this.Point_1);
-        // //父物体设置
-         this.node.addChild(newpoint);
-        // //修改位置值
-        //newpoint.setPosition(this.getPoinPosition());
-        this.getPoinPosition();
+        //生成矩形对象
+        var newPoin_2 = cc.instantiate(this.Point_2);
+        //设置父节点
+        this.node.addChild(newPoin_2);
+        //获取分辨率
+        let size = cc.view.getFrameSize();
+        //获取矩形边长
+        var brim = size.width / 5;
+        //设置矩形边长
+        newPoin_2.width = brim;
+        newPoin_2.height = brim;
+        //设置位置信息
+        newPoin_2.setPosition(this.RandomX(),1122,0);
      },
 
-     //修改位置值方法
-     getPoinPosition()
+     //限定生成X轴坐标方法
+     RandomX()
      {
+        //获取分辨率
+        let size = cc.view.getFrameSize();
+        //cc.log("width: "+ size.width);
+        //cc.log("height: "+ size.height);
+        //获取矩形边长
+        var brim = size.width / 5;
+        //定义指定数值数组
+        var arr1 = Array();
+        //临时记录变量,数轴特性 -1 0 1 分辨率代表宽度/2得出中间点,-得出最边缘
+        var tem = -size.width / 2;
+        //-240因为生成物体是基于Anchor来生成的,就是说物体如果在-240生成会看不见另一半
+        tem -= brim / 2;
+        //输出-240 既然分辨率是480为什么-240不会填满???如果你的摄像机也是720*480的另当别论
+        //cc.log(":"+ tem);
 
-        //  //定义指定数值数组
-        var arr1 = Array[-300,-100,100,300];
+        //循环5次得出生成点(X轴)
+        for(i=0;i<5;i++)
+        {
+            //tem = tem + brim;
+            tem += brim;
+            //这里理应得出X轴的4个点,难道忘了有负数的吗? 
+            arr1[i] = tem;
+            //cc.log("数值:" + tem);
+        }
 
-         //变量X = 数组 [数学.随机.长度]
-         var randomx = Math.floor(Math.random()*4);
-         var potX =  arr1[randomx];
-         cc.log(potX);
-         //变量Y = 数学.随机(0~1500)
-         var potY = Math.floor(Math.random()*1501);
-         cc.log(potY);
+        //随机获取数组内的一个数值
+        var posx = arr1[Math.floor(Math.random()*arr1.length)];
 
-         //return cc.v2(potX,potY);
+        return posx;
      },
+     
 });

@@ -6,41 +6,53 @@ cc.Class({
 
     properties: 
     {
-
+        //子物体label
+        Data_label :
+        {
+            default : null,
+            type : cc.Label
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
-        //开启碰撞检测
-        cc.director.getCollisionManager().enabled = true;
-        cc.director.getPhysicsManager().enabled = true;
 
-         var data = 1;
      },
 
     start () 
     {
-
+        //cc.log("矩形物体的边长:" + this.node.width);
     },
 
-    // update (dt) {},
+     update (dt) 
+     {
+        //下降方法
+        //this.Downup();
+        this.node.y -= dt * DownSpeed.Speed;
 
-    onCollision(event)
-    {
-        cc.log("碰撞");
-    },
-
-    //物理碰撞事件
-    onBeginContact ( contact, selfCollider, otherCollider)
-    {
-        cc.log("物理碰撞");
-    },
+     },
 
     //随机数值方法
     RandomData()
     {
         //Data = Math.floor(Math.random()*)
+    },
+
+    //计算与玩家的距离方法
+    getPlayerPos()
+    {
+        //获取玩家位置
+        var playerpos = this.map
+        //计算两点间的距离
+        var dist = this.node.position.sub(playerpos).mag();
+
+        return dist;
+    },
+
+    Downup()
+    {
+        this.node.y -= DownSpeed.Speed;
     },
 });

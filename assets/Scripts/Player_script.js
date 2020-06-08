@@ -1,4 +1,9 @@
 
+//声明全局下降速度变量
+window.DownSpeed=
+{
+    Speed : 128,
+},
 
 cc.Class({
     extends: cc.Component,
@@ -12,10 +17,9 @@ cc.Class({
 
      onLoad () 
      {
+
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
-        //开启物理系统
-        cc.director.getPhysicsManager().enabled = true;
 
          //注册事件
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
@@ -23,6 +27,8 @@ cc.Class({
 
          //声明数值
          var data = 3;
+
+         var Dspeed = 0;
      },
 
     start () 
@@ -30,6 +36,11 @@ cc.Class({
 
         //定义移速
         this.SpeedX = 712;
+        //获取分辨率
+        let size = cc.view.getFrameSize();
+        //根据分辨率得出人物宽高
+        this.node.width = size.width / 8;
+        this.node.height = size.width / 8;
 
     },
 
@@ -78,25 +89,34 @@ cc.Class({
         }
      },
 
-     //碰撞事件
-     onCollisionEnter( other,self )
+     //前头碰撞事件
+     onCollisionEnter(other,self)
      {
-         cc.log("?");
-        //  switch(other.node.group)
-        //  {
-        //      //碰撞到矩形物体时
-        //      case "Point_2":
-        //          //执行减少数值方法
-        //          ReduceData();
-        //          cc.log(data);
-        //         break;
-        //  }
+         if(other.node.group == "Point_2")
+         {
+             //记录当前下降速度
+             Dspeed = DownSpeed.Speed;
+             DownSpeed.Speed = 0;
+         }
+         else
+         {
+             return;
+         }
      },
 
-     onCollision(event)
+     //前头离开碰撞事件
+     onCollisionExit(other,self)
      {
-         cc.log("碰撞");
+        if(other.node.group == "Point_2")
+        {
+            DwonSpeed.Speed = Dspeed;
+        }
+        else
+        {
+            return;
+        }
      },
+     //
      
 
      //减少数值方法

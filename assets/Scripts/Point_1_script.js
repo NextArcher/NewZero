@@ -1,11 +1,4 @@
 
-
-//全局变量 表示下降速度
-window.DownSpeed =
-{
-    Speed : null,
-}
-
 cc.Class({
     extends: cc.Component,
 
@@ -21,7 +14,7 @@ cc.Class({
          //开启接触响应
          cc.director.getCollisionManager().enabled = true;
          //初始下降速度
-         DownSpeed.Speed = 256;
+         //DownSpeed.Speed = 256;
 
          var data = 3;
      },
