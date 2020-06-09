@@ -1,16 +1,17 @@
+//人物脚本
 
-//声明全局下降速度变量
-window.DownSpeed=
-{
-    Speed : 128,
-},
 
 cc.Class({
     extends: cc.Component,
 
     properties: 
     {
-        
+        //传入子物体label
+        Label_1 :
+        {
+            default : null,
+            type : cc.Label
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -25,10 +26,22 @@ cc.Class({
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
-         //声明数值
-         var data = 3;
+        //获取分辨率
+        //let size = cc.view.getFrameSize();
+        //根据分辨率得出人物宽高
+        this.node.width = MapData.size.width / 10;
+        this.node.height = MapData.size.width / 10;
 
-         var Dspeed = 0;
+        //显示人物初始值
+        this.Label_1.string = MapData.PlayerData;
+
+        //获取碰撞组件
+        var box = this.getComponent(cc.BoxCollider);
+        //设置碰撞组件的位置
+        box.offset.y = this.node.height / 2;
+        //设置碰撞组件的大小
+        box.size = cc.size(this.node.width / 2,this.node.height / 6);
+        //cc.log(this.node.width / 2,this.node.height / 6);
      },
 
     start () 
@@ -36,11 +49,6 @@ cc.Class({
 
         //定义移速
         this.SpeedX = 712;
-        //获取分辨率
-        let size = cc.view.getFrameSize();
-        //根据分辨率得出人物宽高
-        this.node.width = size.width / 8;
-        this.node.height = size.width / 8;
 
     },
 
@@ -50,12 +58,31 @@ cc.Class({
          //判断是否允许左边移动
          if(this.accLeft)
          {
-             this.node.x -= this.SpeedX * dt;
+             //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
+             if(this.node.x < -MapData.size.width / 2 + this.node.width / 2)
+             {
+                 //不能再继续左移了
+                 return;
+             }
+             else
+             {
+                 //左移实现
+                this.node.x -= this.SpeedX * dt;
+             }
          }
          //判断是否允许右边移动
          else if(this.accRight)
          {
-             this.node.x += this.SpeedX * dt;
+             //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
+            if(this.node.x > MapData.size.width / 2 - this.node.width / 2)
+            {
+                return;
+            }
+            else
+            {
+                //右移实现
+                this.node.x += this.SpeedX * dt;
+            }
          }
      },
 
@@ -94,36 +121,45 @@ cc.Class({
      {
          if(other.node.group == "Point_2")
          {
-             //记录当前下降速度
-             Dspeed = DownSpeed.Speed;
-             DownSpeed.Speed = 0;
+             //执行减少数值方法
+             //this.ReduceData();
+
+             //只有下降速度不为零时
+             if(MapData.DownSpeed != 0)
+             {
+                //记录当前下降速度
+                MapData.NowDownSpeed = MapData.DownSpeed;
+             }
+             //砸瓦鲁多!!
+             MapData.DownSpeed = 0;
          }
          else
          {
              return;
          }
      },
-
-     //前头离开碰撞事件
-     onCollisionExit(other,self)
-     {
-        if(other.node.group == "Point_2")
-        {
-            DwonSpeed.Speed = Dspeed;
-        }
-        else
-        {
-            return;
-        }
-     },
-     //
      
 
      //减少数值方法
      ReduceData()
      {
-        return data --;
-     }
+        //自减
+        MapData.PlayerData --;
+        //更新数值
+        this.Label_1.string = MapData.PlayerData;
+        if(MapData.PlayerData < 0)
+        {
+            cc.log("游戏结束");
+            //关闭按键响应
+            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
+            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
+            //关闭碰撞检测
+            cc.director.getCollisionManager().enabled = false;
+            //停止下降
+            MapData.DownSpeed = 0;
+            //显示结束UI
+        }
+     },
      
 
 
