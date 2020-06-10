@@ -1,5 +1,10 @@
 //人物脚本
 
+window.PointX =
+{
+    IsGorge : false,
+    x : null
+}
 
 cc.Class({
     extends: cc.Component,
@@ -11,6 +16,16 @@ cc.Class({
         {
             default : null,
             type : cc.Label
+        },
+        //允许左移?
+        accLeft :
+        {
+            default : false,
+        },
+        //允许右移?
+        accRight :
+        {
+            default : false,
         }
     },
 
@@ -38,7 +53,7 @@ cc.Class({
         //获取碰撞组件
         var box = this.getComponent(cc.BoxCollider);
         //设置碰撞组件的位置
-        box.offset.y = this.node.height / 2;
+        box.offset.y = this.node.height / 3;
         //设置碰撞组件的大小
         box.size = cc.size(this.node.width / 2,this.node.height / 6);
         //cc.log(this.node.width / 2,this.node.height / 6);
@@ -48,41 +63,84 @@ cc.Class({
     {
 
         //定义移速
-        this.SpeedX = 712;
+        this.SpeedX = 724;
 
     },
 
     //
      update (dt) 
      {
-         //判断是否允许左边移动
-         if(this.accLeft)
+         //调用移动方法
+         this.Move(dt);
+     },
+
+     //移动方法
+     Move(dt)
+     {
+         //狭路状态?(狭路状态:当人物消除一个矩形时限制人物的X轴移动,否则会穿过其他矩形)
+         if(PointX.IsGorge)
          {
-             //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
-             if(this.node.x < -MapData.size.width / 2 + this.node.width / 2)
-             {
-                 //不能再继续左移了
-                 return;
-             }
-             else
-             {
-                 //左移实现
-                this.node.x -= this.SpeedX * dt;
-             }
+             //左移?
+            if(this.accLeft)
+            {
+                //判断人物是否超出已消除矩形物体的X轴
+                if(this.node.x < PointX.x.Lose + this.node.width / 2)
+                {
+                    return;
+                }
+                //没有超出就实现移动
+                else
+                {
+                     //左移实现
+                     this.node.x -= this.SpeedX * dt;
+                }
+            }
+            //右移?
+            else if(this.accRight)
+            {
+                //判断人物是否超出已消除矩形物体的X轴
+                if(this.node.x > PointX.x.Just - this.node.width / 2)
+                {
+                    return ;
+                }
+                else
+                {
+                    //右移实现
+                    this.node.x += this.SpeedX * dt;
+                }
+            }
          }
-         //判断是否允许右边移动
-         else if(this.accRight)
+         else
          {
-             //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
-            if(this.node.x > MapData.size.width / 2 - this.node.width / 2)
-            {
-                return;
-            }
-            else
-            {
-                //右移实现
-                this.node.x += this.SpeedX * dt;
-            }
+             //判断是否允许左边移动
+             if(this.accLeft)
+             {
+                 //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
+                 if(this.node.x < -MapData.size.width / 2 + this.node.width / 2)
+                 {
+                     //不能再继续左移了
+                     return;
+                 }
+                 else
+                 {
+                     //左移实现
+                    this.node.x -= this.SpeedX * dt;
+                 }
+             }
+             //判断是否允许右边移动
+             else if(this.accRight)
+             {
+                 //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
+                if(this.node.x > MapData.size.width / 2 - this.node.width / 2)
+                {
+                    return;
+                }
+                else
+                {
+                    //右移实现
+                    this.node.x += this.SpeedX * dt;
+                }
+             }
          }
      },
 
@@ -117,7 +175,7 @@ cc.Class({
      },
 
      //前头碰撞事件
-     onCollisionEnter(other,self)
+     onCollisionStay(other,self)
      {
          if(other.node.group == "Point_2")
          {

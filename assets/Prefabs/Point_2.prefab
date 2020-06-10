@@ -235,6 +235,10 @@
     },
     "InData": 1,
     "timer": 0,
+    "player": null,
+    "Just": 0,
+    "Lose": 0,
+    "thisY": null,
     "_id": ""
   },
   {

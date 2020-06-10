@@ -19,7 +19,7 @@ window.MapData =
     //下降速度
     DownSpeed : 128,
     //人物数值
-    PlayerData : 3
+    PlayerData : 32
 }
 
 cc.Class({
