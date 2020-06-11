@@ -2,7 +2,8 @@
   "group-list": [
     "default",
     "Collider",
-    "Point_2"
+    "Point_2",
+    "YellowCircle"
   ],
   "collision-matrix": [
     [
@@ -10,12 +11,19 @@
     ],
     [
       false,
+      false,
       true,
       true
     ],
     [
       false,
       true,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
       false
     ]
   ],
@@ -44,6 +52,5 @@
     "live": {
       "enable": false
     }
-  },
-  "start-scene": "current"
+  }
 }

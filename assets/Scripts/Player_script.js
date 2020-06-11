@@ -2,6 +2,7 @@
 
 window.PointX =
 {
+    //狭路状态?
     IsGorge : false,
     x : null
 }
@@ -26,6 +27,11 @@ cc.Class({
         accRight :
         {
             default : false,
+        },
+        //计时器
+        timer :
+        {
+            default : 0
         }
     },
 
@@ -55,8 +61,10 @@ cc.Class({
         //设置碰撞组件的位置
         box.offset.y = this.node.height / 3;
         //设置碰撞组件的大小
-        box.size = cc.size(this.node.width / 2,this.node.height / 6);
+        box.size = cc.size(this.node.width / 3,this.node.height / 2);
         //cc.log(this.node.width / 2,this.node.height / 6);
+
+        YellowData.player = this;
      },
 
     start () 
@@ -175,7 +183,7 @@ cc.Class({
      },
 
      //前头碰撞事件
-     onCollisionStay(other,self)
+     onCollisionEnter(other,self)
      {
          if(other.node.group == "Point_2")
          {
@@ -191,9 +199,31 @@ cc.Class({
              //砸瓦鲁多!!
              MapData.DownSpeed = 0;
          }
+     },
+
+     //持续接触事件
+     onCollisionStay(other,self)
+     {
+         //判断发生接触的对象是否为 矩形物体
+         if(other.node.group == "Point_2")
+         {
+             //数值的减少速度与矩形物体同步
+            if(this.timer >= 1)
+            {
+                //执行减少数值方法
+                this.ReduceData();
+                //重置计时器
+                this.timer = 0;
+            }
+            else
+            {
+                //开始计时
+                this.timer += 0.3;
+            }
+         }
          else
          {
-             return;
+             return ;
          }
      },
      
@@ -203,22 +233,33 @@ cc.Class({
      {
         //自减
         MapData.PlayerData --;
-        //更新数值
-        this.Label_1.string = MapData.PlayerData;
+        //人物数值小于0时游戏结束
         if(MapData.PlayerData < 0)
         {
+            //停止下降
+            MapData.DownSpeed = 0;
+            //cc.game.end();
             cc.log("游戏结束");
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
             //关闭碰撞检测
             cc.director.getCollisionManager().enabled = false;
-            //停止下降
-            MapData.DownSpeed = 0;
             //显示结束UI
+        }
+        //数值大等于0时刷新 否则会显示负数
+        else if(MapData.PlayerData >= 0)
+        {
+            //更新数值
+            this.Label_1.string = MapData.PlayerData;
         }
      },
      
-
+     //更新显示数值方法
+     UpLabel()
+     {
+        //更新数值
+        this.Label_1.string = MapData.PlayerData;
+     },
 
 });

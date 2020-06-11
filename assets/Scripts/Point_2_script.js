@@ -1,9 +1,11 @@
 //矩形可消除物体脚本
 
-//什么全局变量 用于获取Map_script脚本引用
-window.MapScript =
+//声明全局变量 用于获取Map_script脚本引用
+window.Point_2Data =
 {
+    //人物引用
     script: null,
+    //矩形初始数值
     data: 1,
 }
 
@@ -47,16 +49,14 @@ cc.Class({
             default : 0
         },
         //记录当前X轴值
-        thisY :
+        thisX :
         {
-            default : null,
-            type : cc.Float
+            default : 0,
         },
         //记录当前Y轴值
         thisY :
         {
-            default : null,
-            type : cc.Float
+            default : 0,
         }
     },
 
@@ -76,16 +76,16 @@ cc.Class({
         this.Data_label.lineHeight = MapData.brim / 2;
 
         //显示数值
-         this.Data_label.string = MapScript.data;
+         this.Data_label.string = Point_2Data.data;
 
      },
 
     start () 
     {
         //使用全局变量成功访问并调用
-        //MapScript.script.Print("0101010101");
+        //Point_2Data.script.Print("0101010101");
         //获取玩家脚本
-        this.player = MapScript.script.Player.getComponent('Player_script');
+        this.player = Point_2Data.script.Player.getComponent('Player_script');
         //获取限定X轴方法
         this.Gorge();
         //记录X轴的值
@@ -94,13 +94,19 @@ cc.Class({
 
      update (dt) 
      {
+         //不是时停才能下降
+         if(MapData.DownSpeed != 0)
+         {
+             //下降实现 DownSpeed在人物脚本
+             this.node.y -= dt * MapData.DownSpeed;
+         }
 
-         //下降实现 DownSpeed在人物脚本
-        this.node.y -= dt * MapData.DownSpeed;
 
         //额 秀逗了 人物的Y轴值是不变的
+        //因为Y轴改变是矩形物体,所以在矩形物体脚本判断人物是否已超过当前物体
         if(this.node.y +this.node.height /2  < this.player.node.y )
         {
+            //关闭狭路状态
             PointX.IsGorge = false;
         }
 
@@ -108,17 +114,6 @@ cc.Class({
         this.ReY();
 
      },
-
-    //计算与玩家的距离方法
-    getPlayerPos()
-    {
-        //获取玩家位置
-        var playerpos = MapScript.script.Player.getPosition();
-        //计算两点间的距离
-        var dist = this.node.position.sub(playerpos).mag();
-
-        return dist;
-    },
 
     //隐藏方法
     HideObject()
@@ -148,6 +143,9 @@ cc.Class({
 
             //调用随机数值方法
             this.RandomData();
+
+            //加快下降
+            MapData.DownSpeed += 2;
         }
         else
         {
@@ -173,42 +171,76 @@ cc.Class({
         this.Data_label.string = this.InData;
     },
 
+    //初次接触事件
     onCollisionEnter(other,slef)
     {
-        //记录当前位置信息
-        this.thisY = this.node.y;
+        //原来是 两个临近的矩形也会触发改方法 加个限制就可以了
+        if(other.node.group == "Collider")
+        {
+            //记录当前位置信息
+            this.thisY = this.node.y;
+        }
     },
 
     //持续接触事件
     onCollisionStay(other,slef)
     {
-        //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
-        if(this.timer > 1)
+        //有时会有矩形接触矩形触发 所以加上限制
+        if(other.node.group == "Collider")
         {
-            //调用人物减少数值方法
-            this.player.ReduceData();
-            //数值自减
-            this.InData --;
-            //调用抖动方法
-            this.Shake();
-            if(this.InData < 1 && MapData.PlayerData >= 0)
+            //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
+            if(this.timer >= 1)
             {
-                //调用隐藏方法
-                this.HideObject();
+                //调用减少数值方法
+                this.ReduceData();
+
+                //计时器归零
+                this.timer = 0;
+            }
+            else
+            {
+                //开始计时
+                this.timer += 0.3;
+            }
+        }
+    },
+
+    //接触器离开事件
+    onCollisionExit(other,self)
+    {
+        //当人物碰撞器离开人物后 
+        if(other.node.group == "Collider")
+        {
+            if(MapData.DownSpeed == 0)
+            {
                 //重置位置信息
                 this.node.setPosition(this.thisX,this.thisY);
-                //开启下降
-                MapData.DownSpeed = MapData.NowDownSpeed;
             }
+        }
+    },
+
+    //减少数值方法
+    ReduceData()
+    {
+        this.InData --;
+        //调用抖动方法
+        this.Shake();
+        if(this.InData < 1)
+        {
+            //调用隐藏方法
+            this.HideObject();
+            //重置位置信息
+            this.node.setPosition(this.thisX,this.thisY);
+            //开启下降
+            MapData.DownSpeed = MapData.NowDownSpeed;
+        }
+        //当其数值大等于0时刷新 否则会显示负数
+        else if(this.InData >= 0)
+        {
             //数值刷新
             this.Data_label.string = this.InData;
-            //计时器归零
-            this.timer = 0;
         }
-        else
-        {
-            this.timer += 0.6;
-        }
+
     },
 
     //根据数值调整色调方法
@@ -222,13 +254,13 @@ cc.Class({
             if(MapData.PlayerData+1 < this.InData)
             {
                 //高红
-                this.node.color = new cc.color(255,this.InData * MapData.PlayerData,0);
+                this.node.color = new cc.color(255,0,0);
             }
             //人物数值 小于 该物体数值
             else
             {
                 //浅一点点 大概
-                this.node.color = new cc.color(255,this.InData * MapData.PlayerData * 10 ,0);
+                this.node.color = new cc.color(255 - this.InData * MapData.PlayerData,172,0);
             }
         }
         //人物数值大于该物体数值
@@ -238,13 +270,13 @@ cc.Class({
             if(MapData.PlayerData-1 > this.InData)
             {
                 //高绿
-                this.node.color = new cc.color(this.InData * MapData.PlayerData,255,0);
+                this.node.color = new cc.color(0,255,0);
             }
             //人物数值 大于 该物体数值
             else
             {
                 //浅一点点 大概
-                this.node.color = new cc.color(this.InData * MapData.PlayerData * 10,255,0);
+                this.node.color = new cc.color(172,255 - this.InData * MapData.PlayerData,0);
             }
         }
         //等于
@@ -270,8 +302,9 @@ cc.Class({
     {
 
         //JS生成范围带负数方法：生成的随机数 - 随机范围的一半
-        this.node.x += 1.5 - (Math.random() * 3);
-        this.node.y += 1.5 - (Math.random() * 3);
+        //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
+        this.node.x = this.thisX + 3 - (Math.random() * 6);
+        this.node.y = this.thisY + 3 - (Math.random() * 6);
     },
 
 });

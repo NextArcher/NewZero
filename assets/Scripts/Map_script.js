@@ -19,7 +19,7 @@ window.MapData =
     //下降速度
     DownSpeed : 128,
     //人物数值
-    PlayerData : 32
+    PlayerData : 32,
 }
 
 cc.Class({
@@ -40,6 +40,13 @@ cc.Class({
             default : null,
             type: cc.Prefab
         },
+
+        //传入黄圆物体
+        YellowCircle :
+        {
+            default : null,
+            type : cc.Prefab
+        }
     },
 
      onLoad () 
@@ -73,6 +80,11 @@ cc.Class({
             //调用生成方法
             this.InsPoint_2(i);
         }
+
+        for(i=0;i<5;i++)
+        {
+            this.InsYellowCircle();
+        }
      },
 
     start () 
@@ -82,7 +94,6 @@ cc.Class({
 
      update (dt) 
      {
-
 
      },
 
@@ -101,7 +112,23 @@ cc.Class({
             //在矩形物体上暂存 Map 引用
             //newPoin_2.getComponent('Point_2script').game = this;
             //使用全局变量获取引用
-            MapScript.script = this;
+            Point_2Data.script = this;
+     },
+
+     //生成黄圆方法
+     InsYellowCircle()
+     {
+         //生成黄圆对象
+         var newYellCirc = cc.instantiate(this.YellowCircle);
+         //设置父物体
+         this.node.addChild(newYellCirc);
+         //设置宽度
+         newYellCirc.width = MapData.size.width / 20;
+         //设置高度
+         newYellCirc.height = newYellCirc.width;
+
+         //获取人物引用 
+         YellowData.Map = this;
      },
 
      //测试：使用全局变量能否访问

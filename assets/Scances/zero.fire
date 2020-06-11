@@ -174,7 +174,7 @@
       "array": [
         0,
         0,
-        348.14221232134435,
+        355.9364409554043,
         0,
         0,
         0,
@@ -444,6 +444,7 @@
     },
     "accLeft": false,
     "accRight": false,
+    "timer": 0,
     "_id": "ddHn9+1UpI4LcidbypLRP+"
   },
   {
@@ -524,6 +525,9 @@
     },
     "Point_2": {
       "__uuid__": "05da3415-caf7-40ce-94e9-bdd269a1f88d"
+    },
+    "YellowCircle": {
+      "__uuid__": "b4ba6768-0a51-402a-ac7e-8802c03384f9"
     },
     "_id": "82LG9I/oNLvoWlP85C1VNV"
   }
