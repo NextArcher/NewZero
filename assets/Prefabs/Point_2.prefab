@@ -238,7 +238,9 @@
     "player": null,
     "Just": 0,
     "Lose": 0,
+    "thisX": 0,
     "thisY": null,
+    "Canvas": null,
     "_id": ""
   },
   {

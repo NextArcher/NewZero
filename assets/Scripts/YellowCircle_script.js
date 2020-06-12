@@ -51,6 +51,8 @@ cc.Class({
      onLoad () 
      {
 
+        Scripts.YellowCircle_script = this;
+
         //设置文字大小
         this.Label_1.fontSize = this.node.width / 2;
         this.Label_1.lineHeight = this.node.height / 2;
@@ -72,15 +74,15 @@ cc.Class({
         this.GetPlayerPos();
 
         //下降实现
-        this.node.y -= MapData.DownSpeed * dt;
+        //this.node.y -= MapData.DownSpeed * dt;
         //判断黄圆是否已离开可视范围
-         if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
-         {
-             //调用修改位置方法
-             this.YellBeBorm();
-             //一次 开
-             this.OneDo = true;
-         }
+        //  if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
+        //  {
+        //      //调用修改位置方法
+        //      this.YellBeBorm();
+        //      //一次 开
+        //      this.OneDo = true;
+        //  }
      },
 
      //与人物距离方法
@@ -118,13 +120,14 @@ cc.Class({
         //设置物体和碰撞器大小
 
 
-    //修改位置方法
+    //重置方法
     YellBeBorm()
     {
+        cc.log("调用黄重置方法");
         //随机得出X轴值
         YellowData.RandX = MapData.size.width / 4 - (Math.random() * MapData.size.width / 2);
         //随机得出Y轴值
-        YellowData.RandY = Math.random() * (MapData.size.height / 2 + MapData.PointY - MapData.brim / 2);
+        YellowData.RandY = - Math.random() * MapData.size.height - MapData.brim;
         //修改位置
         this.node.position = cc.v2(YellowData.RandX,YellowData.RandY);
         //调用显示方法

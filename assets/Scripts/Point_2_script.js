@@ -1,10 +1,10 @@
 //矩形可消除物体脚本
 
-//声明全局变量 用于获取Map_script脚本引用
+//声明全局变量 用于获取人物脚本引用
 window.Point_2Data =
 {
     //人物引用
-    script: null,
+    Player: null,
     //矩形初始数值
     data: 1,
 }
@@ -57,13 +57,15 @@ cc.Class({
         thisY :
         {
             default : 0,
-        }
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
+         Scripts.Point_2_script = this;
+
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
         //获取碰撞组件
@@ -82,10 +84,11 @@ cc.Class({
 
     start () 
     {
+
         //使用全局变量成功访问并调用
         //Point_2Data.script.Print("0101010101");
         //获取玩家脚本
-        this.player = Point_2Data.script.Player.getComponent('Player_script');
+        this.player = Point_2Data.Player.getComponent('Player_script');
         //获取限定X轴方法
         this.Gorge();
         //记录X轴的值
@@ -95,11 +98,11 @@ cc.Class({
      update (dt) 
      {
          //不是时停才能下降
-         if(MapData.DownSpeed != 0)
-         {
-             //下降实现 DownSpeed在人物脚本
-             this.node.y -= dt * MapData.DownSpeed;
-         }
+        //  if(MapData.DownSpeed != 0)
+        //  {
+        //      //下降实现 DownSpeed在人物脚本
+        //      //this.node.y -= dt * MapData.DownSpeed;
+        //  }
 
 
         //额 秀逗了 人物的Y轴值是不变的
@@ -108,11 +111,13 @@ cc.Class({
         {
             //关闭狭路状态
             PointX.IsGorge = false;
+            //重置父物体
+            this.node.parent = Scripts.Map_script.node;
+            cc.log("关闭狭路");
         }
 
         //调用Y轴重置方法
-        this.ReY();
-
+        //this.ReY();
      },
 
     //隐藏方法
@@ -126,16 +131,16 @@ cc.Class({
         PointX.x = this;
         //开启狭路
         PointX.IsGorge = true;
+        //设置父节点为画布 用于判断狭路状态的结束
+        this.node.parent = cc.find("Canvas").node;
     },
 
     //Y轴重置方法
     ReY()
     {
-        //如果当前物体的Y轴 小于 地图长度的一半(因为有负数)
-        if(this.node.y < -MapData.PointY / 2 - MapData.brim / 2)
-        {
+        cc.log("Rey被调用");
             //设置Y轴值
-            this.node.y = MapData.PointY;
+            //this.node.y = MapData.PointY;
             //修改物体透明度实现显示
             this.node.opacity = 255;
             //开启碰撞检测
@@ -145,12 +150,8 @@ cc.Class({
             this.RandomData();
 
             //加快下降
-            MapData.DownSpeed += 2;
-        }
-        else
-        {
-            return;
-        }
+            MapData.DownSpeed += 1;
+            Point_2Data.Player.SpeedX = MapData.DownSpeed;
     },
 
     //随机数值方法
@@ -172,12 +173,13 @@ cc.Class({
     },
 
     //初次接触事件
-    onCollisionEnter(other,slef)
+    onCollisionEnter(other,self)
     {
-        //原来是 两个临近的矩形也会触发改方法 加个限制就可以了
         if(other.node.group == "Collider")
         {
-            //记录当前位置信息
+            //砸瓦鲁多!!
+            MapData.DownSpeed = 0;
+            //记录Y轴
             this.thisY = this.node.y;
         }
     },
@@ -191,6 +193,7 @@ cc.Class({
             //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
             if(this.timer >= 1)
             {
+
                 //调用减少数值方法
                 this.ReduceData();
 
@@ -215,6 +218,10 @@ cc.Class({
             {
                 //重置位置信息
                 this.node.setPosition(this.thisX,this.thisY);
+            }
+            else
+            {
+                return ;
             }
         }
     },
@@ -300,7 +307,6 @@ cc.Class({
     //抖动方法
     Shake()
     {
-
         //JS生成范围带负数方法：生成的随机数 - 随机范围的一半
         //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
         this.node.x = this.thisX + 3 - (Math.random() * 6);
