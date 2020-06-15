@@ -48,7 +48,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 1
+      "y": 0.5
     },
     "_trs": {
       "__type__": "TypedArray",
@@ -123,7 +123,7 @@
     "_offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -80
+      "y": 0
     },
     "_size": {
       "__type__": "cc.Size",
@@ -140,7 +140,6 @@
       "__id__": 1
     },
     "_enabled": true,
-    "data": null,
     "_id": ""
   },
   {

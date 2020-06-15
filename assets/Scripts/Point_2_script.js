@@ -64,7 +64,6 @@ cc.Class({
 
      onLoad () 
      {
-         Scripts.Point_2_script = this;
 
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
@@ -98,26 +97,26 @@ cc.Class({
      update (dt) 
      {
          //不是时停才能下降
-        //  if(MapData.DownSpeed != 0)
-        //  {
-        //      //下降实现 DownSpeed在人物脚本
-        //      //this.node.y -= dt * MapData.DownSpeed;
-        //  }
+         if(MapData.DownSpeed != 0)
+         {
+             //下降实现 DownSpeed在地图脚本
+             this.node.y -= dt * MapData.DownSpeed;
+         }
 
+         //当前物体的Y轴小于可视范围
+         if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
+         {
+            //重置Y 开启
+            MapData.IsReY = true;
+         }
 
         //额 秀逗了 人物的Y轴值是不变的
         //因为Y轴改变是矩形物体,所以在矩形物体脚本判断人物是否已超过当前物体
-        if(this.node.y +this.node.height /2  < this.player.node.y )
+        if(this.node.y + this.node.height / 2  < this.player.node.y )
         {
             //关闭狭路状态
             PointX.IsGorge = false;
-            //重置父物体
-            this.node.parent = Scripts.Map_script.node;
-            cc.log("关闭狭路");
         }
-
-        //调用Y轴重置方法
-        //this.ReY();
      },
 
     //隐藏方法
@@ -131,16 +130,15 @@ cc.Class({
         PointX.x = this;
         //开启狭路
         PointX.IsGorge = true;
-        //设置父节点为画布 用于判断狭路状态的结束
-        this.node.parent = cc.find("Canvas").node;
     },
 
     //Y轴重置方法
     ReY()
     {
-        cc.log("Rey被调用");
             //设置Y轴值
-            //this.node.y = MapData.PointY;
+            this.node.y = MapData.PointY;
+            //重置Y 开启
+            MapData.IsReY = true;
             //修改物体透明度实现显示
             this.node.opacity = 255;
             //开启碰撞检测
@@ -150,8 +148,8 @@ cc.Class({
             this.RandomData();
 
             //加快下降
-            MapData.DownSpeed += 1;
-            Point_2Data.Player.SpeedX = MapData.DownSpeed;
+            MapData.DownSpeed += 2;
+            Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
     },
 
     //随机数值方法
@@ -177,6 +175,13 @@ cc.Class({
     {
         if(other.node.group == "Collider")
         {
+
+             //只有下降速度不为零时
+             if(MapData.DownSpeed != 0)
+             {
+                //记录当前下降速度
+                MapData.NowDownSpeed = MapData.DownSpeed;
+             }
             //砸瓦鲁多!!
             MapData.DownSpeed = 0;
             //记录Y轴
@@ -311,6 +316,10 @@ cc.Class({
         //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
         this.node.x = this.thisX + 3 - (Math.random() * 6);
         this.node.y = this.thisY + 3 - (Math.random() * 6);
+    },
+    Check()
+    {
+        cc.log("Check!!!!!!!!!!!!!!!!!!!!!!!!!!");
     },
 
 });

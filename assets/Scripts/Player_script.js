@@ -43,13 +43,14 @@ cc.Class({
 
      onLoad () 
      {
-         Scripts.Player_script = this;
-
          //调用碰撞前情提要方法
          this.FrontCollider();
 
          //调用人物前情提要方法
          this.FrontPlayer();
+
+        //传入引用
+        Scripts.Player_script = this;
 
          //给予引用
          Point_2Data.Player = this;
@@ -80,8 +81,8 @@ cc.Class({
      FrontPlayer()
      {
         //根据矩形物体得出人物宽高
-        this.node.width = MapData.brim / 3;
-        this.node.height = MapData.brim / 3;
+        this.node.width = MapData.brim / 2.3;
+        this.node.height = MapData.brim / 2.3;
 
         //设置文字大小
         this.Label_1.fontSize = this.node.width;
@@ -153,7 +154,7 @@ cc.Class({
                  //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
                  if(this.node.x <= -MapData.size.width / 2 + this.node.width / 2) 
                  {
-                     //不能再继续左移了
+                     //不能再继续左移了 
                      return;
                  }
                  else
@@ -209,25 +210,6 @@ cc.Class({
         }
      },
 
-     //前头碰撞事件
-     onCollisionEnter(other,self)
-     {
-         if(other.node.group == "Point_2")
-         {
-             //执行减少数值方法
-             //this.ReduceData();
-
-             //只有下降速度不为零时
-             if(MapData.DownSpeed != 0)
-             {
-                //记录当前下降速度
-                MapData.NowDownSpeed = MapData.DownSpeed;
-             }
-             //砸瓦鲁多!!
-             MapData.DownSpeed = 0;
-         }
-     },
-
      //持续接触事件
      onCollisionStay(other,self)
      {
@@ -265,7 +247,6 @@ cc.Class({
         {
             //停止下降
             MapData.DownSpeed = 0;
-            //cc.game.end();
             cc.log("游戏结束");
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
@@ -273,6 +254,8 @@ cc.Class({
             //关闭碰撞检测
             cc.director.getCollisionManager().enabled = false;
             //显示结束UI
+            //彻底暂停游戏
+            cc.Game.pause();
         }
         //数值大等于0时刷新 否则会显示负数
         else if(MapData.PlayerData >= 0)

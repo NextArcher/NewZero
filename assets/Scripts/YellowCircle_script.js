@@ -42,8 +42,8 @@ cc.Class({
         //一次 开
         OneDo :
         {
-            default : true
-        }
+            default : true,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -51,14 +51,12 @@ cc.Class({
      onLoad () 
      {
 
-        Scripts.YellowCircle_script = this;
-
         //设置文字大小
         this.Label_1.fontSize = this.node.width / 2;
         this.Label_1.lineHeight = this.node.height / 2;
 
         //调用修改位置方法
-        this.YellBeBorm();
+        this.ReXY();
         //调用随机数值方法
         this.RanData();
      },
@@ -74,15 +72,7 @@ cc.Class({
         this.GetPlayerPos();
 
         //下降实现
-        //this.node.y -= MapData.DownSpeed * dt;
-        //判断黄圆是否已离开可视范围
-        //  if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
-        //  {
-        //      //调用修改位置方法
-        //      this.YellBeBorm();
-        //      //一次 开
-        //      this.OneDo = true;
-        //  }
+        this.node.y -= MapData.DownSpeed * dt;
      },
 
      //与人物距离方法
@@ -96,7 +86,6 @@ cc.Class({
         //两点的距离 小于 当前物体宽度一半 加 对方物体宽度的一半
         if(this.dist < this.node.width / 2 + YellowData.Map.Player.width / 2)
         {
-            cc.log("发生接触");
             //调用隐藏方法
             this.HideThis();
             //判断一次 
@@ -121,19 +110,23 @@ cc.Class({
 
 
     //重置方法
-    YellBeBorm()
+    ReXY()
     {
-        cc.log("调用黄重置方法");
         //随机得出X轴值
         YellowData.RandX = MapData.size.width / 4 - (Math.random() * MapData.size.width / 2);
+        //计算出生成点的最小Y轴值
+        var minY = MapData.size.height / 2 + this.node.width;
+        //计算出生成点的最大Y轴值
+        var maxY = MapData.PointY - MapData.brim;
         //随机得出Y轴值
-        YellowData.RandY = - Math.random() * MapData.size.height - MapData.brim;
+        YellowData.RandY = Scripts.Map_script.GetRandomNum(minY,maxY);
         //修改位置
         this.node.position = cc.v2(YellowData.RandX,YellowData.RandY);
         //调用显示方法
         this.ShowThis();
         //调用随机数值方法
         this.RanData();
+
     },
 
     //隐藏方法
