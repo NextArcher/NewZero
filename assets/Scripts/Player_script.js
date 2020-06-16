@@ -43,20 +43,21 @@ cc.Class({
 
      onLoad () 
      {
-         //调用碰撞前情提要方法
-         this.FrontCollider();
-
-         //调用人物前情提要方法
-         this.FrontPlayer();
-
         //传入引用
         Scripts.Player_script = this;
 
-         //给予引用
-         Point_2Data.Player = this;
+        //给予引用
+        Point_2Data.Player = this;
         
         //给予引用
         YellowData.player = this;
+
+         //调用人物前情提要方法
+         this.FrontPlayer();
+         
+         //调用碰撞前情提要方法
+         this.FrontCollider();
+
      },
 
      //有关碰撞的前情提要方法
@@ -70,11 +71,13 @@ cc.Class({
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
         //获取碰撞组件
-        var box = this.getComponent(cc.BoxCollider);
+        var box = this.getComponent(cc.CircleCollider);
         //设置碰撞组件的位置
-        box.offset.y = this.node.height / 2;
+        //box.offset.y = this.node.height / 2;
         //设置碰撞组件的大小
-        box.size = cc.size(this.node.width / 3,this.node.height / 6);
+        // box.size = cc.size(this.node.width / 3,this.node.height / 6);
+        //设置碰撞组件的半径
+        box.radius = this.node.width / 2;
      },
 
      //有关人物的前情提要方法

@@ -3,7 +3,8 @@
     "default",
     "Collider",
     "Point_2",
-    "YellowCircle"
+    "YellowCircle",
+    "Point_1"
   ],
   "collision-matrix": [
     [
@@ -12,6 +13,7 @@
     [
       false,
       false,
+      true,
       true,
       true
     ],
@@ -23,6 +25,13 @@
     [
       false,
       true,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
       false,
       false
     ]

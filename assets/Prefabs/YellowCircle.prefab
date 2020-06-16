@@ -232,6 +232,8 @@
     },
     "playerpos": 0,
     "dist": 0,
+    "InData": 1,
+    "OneDo": true,
     "_id": ""
   },
   {

@@ -164,6 +164,7 @@ cc.Class({
                 {
                     //修改位置信息(竖形物体组,随机生成Y轴值,0)
                     MapData.Point_1S[i].setPosition(MapData.arr2[i],this.ReY(MapData.Point_1S[i]),0);
+                    MapData.Point_1S[i].getComponent("Point_1_script").ReXY();
                 }
              }
              //已重置
@@ -263,7 +264,7 @@ cc.Class({
         this.point_1maxY = MapData.PointY - MapData.brim - point_1.height / 2;
         //随机得出Y轴值
         this.point_1thisY = this.GetRandomNum(this.point_1minY,this.point_1maxY);
-
+        
         return this.point_1thisY;
      },
 
