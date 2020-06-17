@@ -23,7 +23,7 @@ window.MapData =
     //下降速度
     DownSpeed : 128,
     //人物数值
-    PlayerData : 32,
+    PlayerData : 0,
     //重置Y?
     IsReY : false,
     //矩形物体组
@@ -32,6 +32,8 @@ window.MapData =
     YellowCircleS : Array(),
     //竖形物体组
     Point_1S : Array(),
+    //现在人物分数
+    NowPlayerData : 0,
 },
 
 //全脚本收录
@@ -77,11 +79,18 @@ cc.Class({
         point_1minY : 0,
         point_1maxY : 0,
         point_1thisY : 0,
-        IsDouble : false,
+        //圆跟随
+        YellFollow : 
+        {
+            default : null,
+            type : cc.Prefab
+        },
     },
 
      onLoad () 
      {
+         MapData.NowPlayerData = MapData.PlayerData;
+
          //传入引用
          Scripts.Map_script = this;
 
@@ -103,7 +112,7 @@ cc.Class({
         
          //获取矩形Y轴生成点
          MapData.PointY = MapData.size.height + MapData.size.height / 2 - MapData.brim / 2;
-
+        
          //循环得出矩形物体生成点
         for(i=0;i<5;i++)
         {
@@ -170,10 +179,9 @@ cc.Class({
              //已重置
              MapData.IsReY = false;
          }
-         else
-         {
-             return ;
-         }
+
+         //this.YelloFollowDorS();
+
      },
 
      //生成矩形方法
@@ -221,9 +229,6 @@ cc.Class({
          var newpoint_1 = cc.instantiate(this.Point_1);
          //设置父物体
          this.node.addChild(newpoint_1);
-         //设置宽高
-         newpoint_1.width = MapData.size.width / 48;
-         newpoint_1.height = MapData.brim;
          //设置位置
          newpoint_1.setPosition(MapData.arr2[b],this.ReY(newpoint_1),0);
         //传入索引获取对象
@@ -246,18 +251,6 @@ cc.Class({
      //获取竖形物体的Y轴生成点
      ReY(point_1)
      {
-         //向下取整随机bool值
-         this.IsDouble = Math.floor(Math.random()*2)
-         if(this.IsDouble)
-         {
-             //两倍长度
-             point_1.height = MapData.brim * 2;
-         }
-         else
-         {
-             //原始长度
-             point_1.height = MapData.brim;
-         }
         //计算出生成点的最小Y轴值
         this.point_1minY = MapData.size.height / 2 + point_1.height;
         //计算出生成点的最大Y轴值
@@ -267,6 +260,47 @@ cc.Class({
         
         return this.point_1thisY;
      },
+
+    //生成圆跟随方法
+    InsYellFollow()
+    {
+        //生成对象
+        var newYell = cc.instantiate(this.YellFollow);
+        this.node.addChild(newYell);
+
+        newYell.setPosition(PointX.Last[0].x,PointX.Last[PointX.Last.length - 1].y,0);
+        PointX.Last[PointX.Last.length - 1] = newYell;
+    },
+
+    //尾随黄球的生成与减少
+    YelloFollowDorS()
+    {
+        if(MapData.PlayerData != MapData.NowPlayerData)
+        {
+            if(MapData.PlayerData > MapData.NowPlayerData)
+            {
+                var ix = MapData.PlayerData - MapData.NowPlayerData
+                for(i=0;i<ix;i++)
+                {
+                    this.InsYellFollow();
+                }
+            }
+            else if(MapData.PlayerData < MapData.NowPlayerData)
+            {
+                var ix = MapData.NowPlayerData - MapData.PlayerData
+                for(i=0;i<ix;i++)
+                {
+                   PointX.Last.pop();
+                }
+            }
+            MapData.NowPlayerData = MapData.PlayerData;
+        }
+        else
+        {
+            return;
+        }
+
+    },
 
      //测试：使用全局变量能否访问
      Print(src)

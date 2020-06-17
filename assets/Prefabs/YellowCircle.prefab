@@ -234,6 +234,10 @@
     "dist": 0,
     "InData": 1,
     "OneDo": true,
+    "YellFollow": {
+      "__uuid__": "32a7a01d-181a-4ff8-83ae-1f917f0cec9a"
+    },
+    "Canvas": null,
     "_id": ""
   },
   {

@@ -4,15 +4,22 @@
     "Collider",
     "Point_2",
     "YellowCircle",
-    "Point_1"
+    "Point_1",
+    "Point_1_1"
   ],
   "collision-matrix": [
     [
+      true,
+      null,
+      null,
+      null,
+      true,
       true
     ],
     [
       false,
       false,
+      true,
       true,
       true,
       true
@@ -29,8 +36,16 @@
       false
     ],
     [
-      false,
       true,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
+      true,
+      true,
+      false,
       false,
       false,
       false
@@ -61,6 +76,5 @@
     "live": {
       "enable": false
     }
-  },
-  "start-scene": "current"
+  }
 }

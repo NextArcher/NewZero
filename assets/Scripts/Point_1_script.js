@@ -5,26 +5,32 @@ cc.Class({
 
     properties: 
     {
+        //自身碰撞
         boxcol_1 : 
         {
             default : null,
             type : cc.BoxCollider
         },
+        //前头时停碰撞
         boxcol_2 :
         {
             default : null,
             type : cc.BoxCollider
         },
+        //双倍长度
         IsDouble : false,
+        IsColl : true,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
-        //设置宽高
-        this.width = MapData.size.width / 48;
-        this.height = MapData.brim;
+        //原始长度
+        this.node.height = MapData.brim;
+        this.node.width = MapData.brim / 10;
+        //调用设置大小方法
+        this.ReXY()
      },
 
     start () 
@@ -49,17 +55,18 @@ cc.Class({
          if(this.IsDouble)
          {
              //两倍长度
-             this.height = MapData.brim * 2;
+             this.node.height = MapData.brim * 2;
          }
          else
          {
              //原始长度
-             this.height = MapData.brim;
+             this.node.height = MapData.brim;
          }
         //设置碰撞大小
-        this.boxcol_1.size = cc.size(this.width,this.height);
-
-        this.boxcol_2.offset.y = - this.height / 2;
+        this.boxcol_1.size = cc.size(this.node.width,this.node.height);
+        //设置前方碰撞大小
+        this.boxcol_2.size = cc.size(this.node.width / 2,this.node.width / 2 );
+        this.boxcol_2.offset.y = -this.node.height / 2;
      }
 
 });

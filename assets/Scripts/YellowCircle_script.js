@@ -10,7 +10,7 @@ window.YellowData =
     //Y限定值
     RandY : 0,
     //人物引用对象
-    player : null
+    player : null,
 },
 
 cc.Class({

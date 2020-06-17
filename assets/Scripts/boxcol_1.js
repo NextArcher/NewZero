@@ -19,35 +19,14 @@ cc.Class({
     {
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
-    },
-
-    start () 
-    {
         //设置碰撞大小
         this.node.getComponent(cc.BoxCollider).size = cc.size(this.Thebase.width,this.Thebase.height);
     },
 
-    // update (dt) {},
-
-    onCollisionStay(other,self)
+    start () 
     {
-        if(other.node.group == "Collider")
-        {
-            cc.log("穿过?");
-            //获取碰撞对象脚本
-            this.PlayerScript = other.getComponent("Player_script");
-            //人正在向左走
-            if(this.PlayerScript.accLeft)
-            {
-                //不允许继续左走
-                this.PlayerScript.accLeft = false;
-            }
-            //人物正在往右走
-            if(this.PlayerScript.accRight)
-            {
-                //不允许继续往右走
-                this.PlayerScript.accRight = false;
-            }
-        }
+
     },
+
+    // update (dt) {},
 });

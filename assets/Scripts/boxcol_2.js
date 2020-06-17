@@ -21,26 +21,10 @@ cc.Class({
     start () 
     {
         //设置碰撞组件
-        this.node.getComponent(cc.BoxCollider).size = cc.size(this.Thebase.width,this.Thebase.width);
+        this.node.getComponent(cc.BoxCollider).size = cc.size(this.Thebase.width / 2,this.Thebase.width / 2);
         this.node.getComponent(cc.BoxCollider).offset.y = -this.Thebase.height /2;
     },
 
     // update (dt) {},
-
-    onCollisionEnter(other,self)
-    {
-        if(other.node.group == "Collider")
-        {
-            MapData.NowDownSpeed = MapData.DownSpeed;
-            MapData.DownSpeed = 0;
-        }
-    },
-
-    onCollisionExit(other,self)
-    {
-        if(other.node.group == "Collider")
-        {
-            MapData.DownSpeed = MapData.NowDownSpeed;
-        }
-    }
+    
 });

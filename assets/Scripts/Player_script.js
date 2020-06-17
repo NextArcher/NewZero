@@ -4,7 +4,8 @@ window.PointX =
 {
     //狭路状态?
     IsGorge : false,
-    x : null
+    x : null,
+    Last : Array(),
 }
 
 cc.Class({
@@ -33,16 +34,19 @@ cc.Class({
         {
             default : 0
         },
+        //横轴移速
         SpeedX :
         {
             default : 0
-        }
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
+         PointX.Last[0] = this.node;
+
         //传入引用
         Scripts.Player_script = this;
 
@@ -191,10 +195,12 @@ cc.Class({
             case cc.macro.KEY.a:
                 //console.log(this.node.x)
                 this.accLeft = true;
+                this.accRight = false;
                 break;
             case cc.macro.KEY.d:
                 //console.log(this.node.x)
                 this.accRight = true;
+                this.accLeft = false;
                 break;
          }
      },
@@ -213,29 +219,83 @@ cc.Class({
         }
      },
 
+     //初次接触
+     onCollisionEnter(other,self)
+     {
+         switch(other.node.group)
+         {
+            //竖形物体前头
+            case "Point_1_1" :
+                MapData.NowDownSpeed = MapData.DownSpeed;
+                MapData.DownSpeed = 0;
+                this.IsOnA = true;
+                break;
+
+             //竖形物体 初次接触也不能继续移动
+            case "Point_1" :
+                if(MapData.DownSpeed != 0)
+                {
+                    if(this.accLeft)
+                    {
+                        this.accLeft = false;
+                    }
+                    if(this.accRight)
+                    {
+                        this.accRight = false;
+                    }
+                }
+                break;
+
+            default :
+                break;
+         }
+     },
+
      //持续接触事件
      onCollisionStay(other,self)
      {
-         //判断发生接触的对象是否为 矩形物体
-         if(other.node.group == "Point_2")
+         switch(other.node.group)
          {
-             //数值的减少速度与矩形物体同步
-            if(this.timer >= 1)
-            {
-                //执行减少数值方法
-                this.ReduceData();
-                //重置计时器
-                this.timer = 0;
-            }
-            else
-            {
-                //开始计时
-                this.timer += 0.3;
-            }
+            case "Point_2" :
+                 //数值的减少速度与矩形物体同步
+                 if(this.timer >= 1)
+                 {
+                     //执行减少数值方法
+                     this.ReduceData();
+                     //重置计时器
+                     this.timer = 0;
+                 }
+                 else
+                 {
+                     //开始计时
+                     this.timer += 0.3;
+                 }
+            break;
+            case "Point_1" :
+                if(MapData.DownSpeed != 0)
+                {
+                    if(this.accLeft)
+                    {
+                        this.accLeft = false;
+                    }
+                    if(this.accRight)
+                    {
+                        this.accRight = false;
+                    }
+                }
+            break;
+            default:
+                break;
          }
-         else
+     },
+
+     onCollisionExit(other,self)
+     {
+         //离开竖形物体前头
+         if(other.node.group == "Point_1_1")
          {
-             return ;
+             //时间开始流动
+             MapData.DownSpeed = MapData.NowDownSpeed;
          }
      },
      
@@ -245,6 +305,8 @@ cc.Class({
      {
         //自减
         MapData.PlayerData --;
+        //PointX.Last[PointX.Last.length - 1].destroy();
+        //PointX.Last.pop();
         //人物数值小于0时游戏结束
         if(MapData.PlayerData < 0)
         {
