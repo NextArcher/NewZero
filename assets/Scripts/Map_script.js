@@ -85,6 +85,7 @@ cc.Class({
             default : null,
             type : cc.Prefab
         },
+        LastFollow : null,
     },
 
      onLoad () 
@@ -165,7 +166,7 @@ cc.Class({
                 //执行矩形物体脚本内部重置Y方法
                 MapData.Point_2S[i].getComponent("Point_2_script").ReY();
                 //开启一次 用于接触人物后数值增加执行一次
-                MapData.YellowCircleS[i].getComponent("YellowCircle_script").OneDo = true;
+                //MapData.YellowCircleS[i].getComponent("YellowCircle_script").OneDo = true;
                 //执行黄圆物体内部重置方法
                 MapData.YellowCircleS[i].getComponent("YellowCircle_script").ReXY();
                 //如果没有就不用执行了
@@ -179,8 +180,6 @@ cc.Class({
              //已重置
              MapData.IsReY = false;
          }
-
-         //this.YelloFollowDorS();
 
      },
 
@@ -262,44 +261,25 @@ cc.Class({
      },
 
     //生成圆跟随方法
-    InsYellFollow()
+    InsYellFollow(data)
     {
-        //生成对象
-        var newYell = cc.instantiate(this.YellFollow);
-        this.node.addChild(newYell);
-
-        newYell.setPosition(PointX.Last[0].x,PointX.Last[PointX.Last.length - 1].y,0);
-        PointX.Last[PointX.Last.length - 1] = newYell;
-    },
-
-    //尾随黄球的生成与减少
-    YelloFollowDorS()
-    {
-        if(MapData.PlayerData != MapData.NowPlayerData)
+        for(i=0;i<data;i++)
         {
-            if(MapData.PlayerData > MapData.NowPlayerData)
-            {
-                var ix = MapData.PlayerData - MapData.NowPlayerData
-                for(i=0;i<ix;i++)
-                {
-                    this.InsYellFollow();
-                }
-            }
-            else if(MapData.PlayerData < MapData.NowPlayerData)
-            {
-                var ix = MapData.NowPlayerData - MapData.PlayerData
-                for(i=0;i<ix;i++)
-                {
-                   PointX.Last.pop();
-                }
-            }
-            MapData.NowPlayerData = MapData.PlayerData;
-        }
-        else
-        {
-            return;
-        }
 
+            //生成对象
+            var newYell = cc.instantiate(this.YellFollow);
+            newYell.name = "YellFollow" + i;
+
+            //获取最后一个索引
+            newYell.getComponent("following_script").OnA = PointX.Last[PointX.Last.length - 1];
+
+            //当前生成的节点对象 添加到数组
+            PointX.Last.push(newYell);
+            //设置父节点
+            this.node.addChild(newYell);
+            //设置生成点
+            newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
+        }
     },
 
      //测试：使用全局变量能否访问

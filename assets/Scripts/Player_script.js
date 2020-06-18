@@ -305,8 +305,15 @@ cc.Class({
      {
         //自减
         MapData.PlayerData --;
-        //PointX.Last[PointX.Last.length - 1].destroy();
-        //PointX.Last.pop();
+        //只有仅剩的部分不是头的时候才能进行尾部销毁
+        if(PointX.Last[PointX.Last.length - 1] != PointX.Last[0])
+        {
+            //数组中是object 无法调用destroy 从而需要获取脚本再执行
+            PointX.Last[PointX.Last.length - 1].getComponent("following_script").node.destroy();
+            //删除掉已为空的数组尾部 可能并没有调用
+            PointX.Last.pop();
+        }
+
         //人物数值小于0时游戏结束
         if(MapData.PlayerData < 0)
         {

@@ -174,7 +174,7 @@
       "array": [
         0,
         0,
-        355.9364409554043,
+        347.6280097378473,
         0,
         0,
         0,
@@ -363,8 +363,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": true,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 1,
+    "groupIndex": 1,
     "_id": "2d+ASzqn5MeaWka148rLkS"
   },
   {
@@ -533,8 +533,9 @@
     "point_1maxY": 0,
     "point_1thisY": 0,
     "YellFollow": {
-      "__uuid__": "b4ba6768-0a51-402a-ac7e-8802c03384f9"
+      "__uuid__": "32a7a01d-181a-4ff8-83ae-1f917f0cec9a"
     },
+    "LastFollow": null,
     "_id": "13kj+I9RlN26xEuFBt8yn+"
   }
 ]

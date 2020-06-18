@@ -50,7 +50,10 @@ cc.Class({
 
      onLoad () 
      {
+        //开启碰撞检测
+        cc.director.getCollisionManager().enabled = true;
 
+        this.node.getComponent(cc.CircleCollider).radius = this.node.width / 2;
         //设置文字大小
         this.Label_1.fontSize = this.node.width / 2;
         this.Label_1.lineHeight = this.node.height / 2;
@@ -69,36 +72,23 @@ cc.Class({
      update (dt) 
      {
         //调用与人物距离方法
-        this.GetPlayerPos();
+        //this.GetPlayerPos();
 
         //下降实现
         this.node.y -= MapData.DownSpeed * dt;
      },
 
-     //与人物距离方法
-     GetPlayerPos()
+     //初次接触方法
+     onCollisionEnter(other,self)
      {
-         //获取人物位置
-        this.playerpos = YellowData.Map.Player.getPosition();
-        //根据两点位置 计算距离
-        this.dist = this.node.position.sub(this.playerpos).mag();
-
-        //两点的距离 小于 当前物体宽度一半 加 对方物体宽度的一半
-        if(this.dist < this.node.width / 2 + YellowData.Map.Player.width / 2)
-        {
-            //调用隐藏方法
+         if(other.node.group == "Collider")
+         {
             this.HideThis();
-            //判断一次 
-            if(this.OneDo)
-            {
-                //人物数值增加
-                MapData.PlayerData += this.InData;
-                YellowData.player.UpLabel();
-
-                //一次 关
-                this.OneDo = false;
-            }
-        }
+            //人物数值增加
+            MapData.PlayerData += this.InData;
+            YellowData.player.UpLabel();
+            Scripts.Map_script.getComponent("Map_script").InsYellFollow(this.InData);
+         }
      },
 
     //随机数值方法
@@ -126,6 +116,8 @@ cc.Class({
         this.ShowThis();
         //调用随机数值方法
         this.RanData();
+
+        this.OneDo = true;
 
     },
 
