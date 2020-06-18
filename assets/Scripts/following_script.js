@@ -16,6 +16,8 @@ cc.Class({
         timer : 0,
         //上一个物体的Y轴值
         fol : 0,
+        //自身速度
+        speed : 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -54,16 +56,18 @@ cc.Class({
             //获取上一个物体的尾端
             this.fol = this.node.y;
         }
+
+        this.speed = MapData.FollSpeed;
     },
 
      update (dt) 
      {
-        if(this.timer >= 0.05)
+        if(this.timer >= this.speed )
         {
             //动作越长 与跟随的物体间隔越大
             //动作越短 间隔小 卡顿
             //OnA是人物Node
-            this.moveTo = cc.moveTo( 0.04 ,cc.v2(this.OnA.x,this.fol));
+            this.moveTo = cc.moveTo( this.speed ,cc.v2(this.OnA.x,this.fol));
             //运行动作
             this.node.runAction(this.moveTo);
             this.timer = 0;

@@ -34,6 +34,8 @@ window.MapData =
     Point_1S : Array(),
     //现在人物分数
     NowPlayerData : 0,
+    //尾随速度
+    FollSpeed : 0.04,
 },
 
 //全脚本收录
@@ -279,6 +281,8 @@ cc.Class({
             this.node.addChild(newYell);
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
+
+            MapData.FollSpeed += 0.002;
         }
     },
 

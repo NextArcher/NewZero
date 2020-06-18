@@ -312,6 +312,8 @@ cc.Class({
             PointX.Last[PointX.Last.length - 1].getComponent("following_script").node.destroy();
             //删除掉已为空的数组尾部 可能并没有调用
             PointX.Last.pop();
+
+            MapData.FollSpeed -= 0.002;
         }
 
         //人物数值小于0时游戏结束
