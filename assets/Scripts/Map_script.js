@@ -32,10 +32,12 @@ window.MapData =
     YellowCircleS : Array(),
     //竖形物体组
     Point_1S : Array(),
-    //现在人物分数
-    NowPlayerData : 0,
     //尾随速度
     FollSpeed : 0.04,
+    //累计长度
+    AddUpData : 0,
+    //磁力状态?
+    IsMagnetism : false,
 },
 
 //全脚本收录
@@ -45,6 +47,8 @@ window.Scripts =
     Map_script : null,
     //人物脚本
     Player_script : null,
+    //磁力道具脚本
+    Prop_0_script : null,
 },
 
 cc.Class({
@@ -87,19 +91,21 @@ cc.Class({
             default : null,
             type : cc.Prefab
         },
-        LastFollow : null,
+        //累计长度 label
+        AddUplbl : 
+        {
+            default : null,
+            type : cc.Label,
+        }
     },
 
      onLoad () 
      {
-         MapData.NowPlayerData = MapData.PlayerData;
 
          //传入引用
          Scripts.Map_script = this;
 
          cc.log("AD键控制移动");
-         //获取分辨率
-         //MapData.size = cc.view.getFrameSize();
          //获取分辨率
          MapData.size = cc.winSize;
          cc.log(MapData.size);
@@ -115,11 +121,13 @@ cc.Class({
         
          //获取矩形Y轴生成点
          MapData.PointY = MapData.size.height + MapData.size.height / 2 - MapData.brim / 2;
+
+         this.AddUplbl.fontSize = this.Player.width;
+         this.AddUplbl.lineHeight = this.Player.height;
         
          //循环得出矩形物体生成点
         for(i=0;i<5;i++)
         {
-            //cc.log("i0:"+i);
             //这里理应得出X轴的4个点,难道忘了有负数的吗? 
             MapData.arr1[i] = MapData.tem;
             //tem = tem + brim;
@@ -150,11 +158,17 @@ cc.Class({
          {
             this.InsPoint_1(i);
          }
+
      },
 
     start () 
     {
-
+        //调用计算尾随个数方法得出循环生成几个尾随物体
+        for(i=0;i<this.YellFollNumber();i++)
+        {
+            //调用生成尾随物体方法
+            this.InsYellFollow();
+        }
     },
 
      update (dt) 
@@ -182,9 +196,9 @@ cc.Class({
              //已重置
              MapData.IsReY = false;
          }
-
      },
 
+//#region 生成矩形方法
      //生成矩形方法
      InsPoint_2(a)
      {
@@ -203,7 +217,9 @@ cc.Class({
             //传入索引 获取 对象
             MapData.Point_2S[a] = newPoin_2;
      },
+//#endregion 生成矩形方法end
 
+//#region 生成黄圆方法
      //生成黄圆方法
      InsYellowCircle(a)
      {
@@ -222,7 +238,9 @@ cc.Class({
          //传入索引获取对象
          MapData.YellowCircleS[a] = newYellCirc;
      },
+//#endregion 生成黄圆方法end
 
+//#region  生成生成竖形物体方法
      //生成竖形物体方法
      InsPoint_1(b)
      {
@@ -235,7 +253,9 @@ cc.Class({
         //传入索引获取对象
          MapData.Point_1S[b] = newpoint_1;
      },
+//#endregion 生成生成竖形物体方法end
 
+//#region 在指定数值范围内生成随机数方法
      //限制随机数范围方法 例:3,20
      GetRandomNum(min,max)
      {
@@ -248,7 +268,9 @@ cc.Class({
          //最小值: 3 + 0
          return (min + Math.round(Rand * Range))
      },
+//#endregion 在指定数值范围内生成随机数方法end
 
+//#region 获取竖形物体的Y轴生成点方法
      //获取竖形物体的Y轴生成点
      ReY(point_1)
      {
@@ -261,28 +283,47 @@ cc.Class({
         
         return this.point_1thisY;
      },
+//#endregion 获取竖形物体的Y轴生成点方法end
 
-    //生成圆跟随方法
-    InsYellFollow(data)
+//#region 生成尾随物体方法
+    //生成尾随物体方法
+    InsYellFollow()
     {
-        for(i=0;i<data;i++)
-        {
-
             //生成对象
             var newYell = cc.instantiate(this.YellFollow);
+            //取名
             newYell.name = "YellFollow" + i;
-
-            //获取最后一个索引
-            newYell.getComponent("following_script").OnA = PointX.Last[PointX.Last.length - 1];
-
-            //当前生成的节点对象 添加到数组
-            PointX.Last.push(newYell);
             //设置父节点
             this.node.addChild(newYell);
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
             MapData.FollSpeed += 0.002;
+    },
+//#endregion 生成尾随物体方法end
+
+//#region 获取生成尾随物体个数方法
+    //获取生成尾随物体个数
+    YellFollNumber()
+    {
+        var number = MapData.size.height / this.Player.width;
+
+        return number;
+    },
+//#endregion 获取生成尾随物体个数方法end
+
+    //刷新累计数值方法 由增加数值方法调用
+    UpLabel()
+    {
+        MapData.AddUpData ++;
+        //更新累计数值
+        this.AddUplbl.string = MapData.AddUpData;
+        //累计的数值 大于等于 20 时清空
+        if(MapData.AddUpData >= 20)
+        {
+            MapData.AddUpData = 0;
+            //生成随机道具
+            Scripts.Prop_0_script.SetXY();
         }
     },
 

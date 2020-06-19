@@ -5,7 +5,8 @@
     "Point_2",
     "YellowCircle",
     "Point_1",
-    "Point_1_1"
+    "Point_1_1",
+    "Following"
   ],
   "collision-matrix": [
     [
@@ -40,13 +41,24 @@
       true,
       false,
       false,
-      false
+      false,
+      null,
+      true
     ],
     [
       true,
       true,
       false,
       false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      true,
       false,
       false
     ]
@@ -76,6 +88,5 @@
     "live": {
       "enable": false
     }
-  },
-  "start-scene": "current"
+  }
 }

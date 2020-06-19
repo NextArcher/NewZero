@@ -29,4 +29,19 @@ cc.Class({
     },
 
     // update (dt) {},
+
+    onCollisionEnter(other,self)
+    {
+        
+    },
+
+    onCollisionStay(other,self)
+    {
+
+    },
+
+    onCollisionExit(other,self)
+    {
+
+    }
 });

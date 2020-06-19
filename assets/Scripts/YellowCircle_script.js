@@ -86,8 +86,30 @@ cc.Class({
             this.HideThis();
             //人物数值增加
             MapData.PlayerData += this.InData;
+            //调用刷新数值方法
             YellowData.player.UpLabel();
-            Scripts.Map_script.getComponent("Map_script").InsYellFollow(this.InData);
+            for(i=0;i<this.InData;i++)
+            {
+                //调用刷新累计数值方法
+                Scripts.Map_script.UpLabel();
+                //向下遍历数组(从索引1开始) 遇到隐藏的就显示
+                for(j=1;j < PointX.Last.length;j++)
+                {
+                    //尾随物体组.获取脚本.node组件.opacity属性
+                    //索引0(人物)并没有following_script脚本
+                    if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                    {
+                        //显示
+                        PointX.Last[j].getComponent("following_script").node.opacity = 255;
+                        break ;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+    
+                }
+            }
          }
      },
 

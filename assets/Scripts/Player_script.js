@@ -45,6 +45,7 @@ cc.Class({
 
      onLoad () 
      {
+         //将自身填进跟随数组
          PointX.Last[0] = this.node;
 
         //传入引用
@@ -64,27 +65,24 @@ cc.Class({
 
      },
 
-     //有关碰撞的前情提要方法
+//#region 有关碰撞的前置方法
+     //有关碰撞的前置方法
      FrontCollider()
      {
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
-
          //注册事件
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-
         //获取碰撞组件
         var box = this.getComponent(cc.CircleCollider);
-        //设置碰撞组件的位置
-        //box.offset.y = this.node.height / 2;
-        //设置碰撞组件的大小
-        // box.size = cc.size(this.node.width / 3,this.node.height / 6);
         //设置碰撞组件的半径
         box.radius = this.node.width / 2;
      },
+//#endregion 有关碰撞的前置方法end
 
-     //有关人物的前情提要方法
+//#region 有关人物的前置方法
+     //有关人物的前置方法
      FrontPlayer()
      {
         //根据矩形物体得出人物宽高
@@ -101,6 +99,7 @@ cc.Class({
         //显示人物初始值
         this.Label_1.string = MapData.PlayerData;
      },
+//#endregion 有关人物的前置方法end
 
     start () 
     {
@@ -117,6 +116,7 @@ cc.Class({
          this.Move(dt);
      },
 
+//#region 人物移动方法
      //移动方法
      Move(dt)
      {
@@ -186,7 +186,9 @@ cc.Class({
              }
          }
      },
+//#endregion 人物移动方法end
 
+//#region 按键事件
      //按下按键事件 根据按键 允许左或右移动
      onKeyDown(event)
      {
@@ -204,7 +206,9 @@ cc.Class({
                 break;
          }
      },
+//#endregion 按键事件end
 
+//#region 松键事件
      //松开按键事件 根据按键 关闭左或右移动
      onKeyUp(event)
      {
@@ -218,6 +222,7 @@ cc.Class({
                break;
         }
      },
+//#endregion 松键事件end
 
      //初次接触
      onCollisionEnter(other,self)
@@ -289,6 +294,7 @@ cc.Class({
          }
      },
 
+     //接触离开
      onCollisionExit(other,self)
      {
          //离开竖形物体前头
@@ -299,7 +305,7 @@ cc.Class({
          }
      },
      
-
+//#region 减少数值方法
      //减少数值方法
      ReduceData()
      {
@@ -308,12 +314,25 @@ cc.Class({
         //只有仅剩的部分不是头的时候才能进行尾部销毁
         if(PointX.Last[PointX.Last.length - 1] != PointX.Last[0])
         {
-            //数组中是object 无法调用destroy 从而需要获取脚本再执行
-            PointX.Last[PointX.Last.length - 1].getComponent("following_script").node.destroy();
-            //删除掉已为空的数组尾部 可能并没有调用
-            PointX.Last.pop();
-
-            MapData.FollSpeed -= 0.002;
+            //当人物数值 小于或等于 数组长度时 才能隐藏
+            if(MapData.PlayerData <= PointX.Last.length)
+            {
+                //向上遍历数组 遇到没有隐藏的 就隐藏
+                for(i = PointX.Last.length;i > 1;i--)
+                {
+                    //遇到没有隐藏的
+                    if(PointX.Last[i - 1].getComponent("following_script").node.opacity != 0)
+                    {
+                        //隐藏
+                        PointX.Last[i - 1].getComponent("following_script").node.opacity = 0;
+                        break ;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
         }
 
         //人物数值小于0时游戏结束
@@ -338,6 +357,7 @@ cc.Class({
             this.Label_1.string = MapData.PlayerData;
         }
      },
+//#endregion 减少数值方法end
      
      //更新显示数值方法
      UpLabel()

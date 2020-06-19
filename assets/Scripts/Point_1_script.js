@@ -67,6 +67,6 @@ cc.Class({
         //设置前方碰撞大小
         this.boxcol_2.size = cc.size(this.node.width / 2,this.node.width / 2 );
         this.boxcol_2.offset.y = -this.node.height / 2;
-     }
+     },
 
 });

@@ -18,21 +18,27 @@ cc.Class({
         fol : 0,
         //自身速度
         speed : 0,
+        circlecollider :
+        {
+            default : null,
+            type : cc.CircleCollider,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
+         cc.director.getCollisionManager().enabled = true;
 
+        //获取最后一个索引
+        this.OnA = PointX.Last[PointX.Last.length - 1];
+        //将自身添加到数组
+        PointX.Last[PointX.Last.length] = this.node;
      },
 
     start () 
     {
-        // //获取最后一个索引
-        // this.OnA = PointX.Last[PointX.Last.length - 1];
-        // //将自身添加到数组
-        // PointX.Last[PointX.Last.length] = this.node;
 
         //如果上一个物体是人物
         if(this.OnA.group == "Collider")
@@ -57,24 +63,28 @@ cc.Class({
             this.fol = this.node.y;
         }
 
+        //获取
+        this.circlecollider = this.node.getComponent(cc.CircleCollider);
+        this.circlecollider.size = cc.size(this.node.width,this.node.height);
+        this.circlecollider.offset.y = -this.node.height / 2;
         this.speed = MapData.FollSpeed;
     },
 
      update (dt) 
      {
-        if(this.timer >= this.speed )
-        {
-            //动作越长 与跟随的物体间隔越大
-            //动作越短 间隔小 卡顿
-            //OnA是人物Node
-            this.moveTo = cc.moveTo( this.speed ,cc.v2(this.OnA.x,this.fol));
-            //运行动作
-            this.node.runAction(this.moveTo);
-            this.timer = 0;
-        }
-        else
-        {
-            this.timer += dt;
-        }
+            if(this.timer >= this.speed )
+            {
+                //动作越长 与跟随的物体间隔越大
+                //动作越短 间隔小 卡顿
+                //OnA是人物Node
+                this.moveTo = cc.moveTo( this.speed ,cc.v2(this.OnA.x,this.fol));
+                //运行动作
+                this.node.runAction(this.moveTo);
+                this.timer = 0;
+            }
+            else
+            {
+                this.timer += dt;
+            }
      },
 });

@@ -310,7 +310,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Point_1<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 1
