@@ -55,8 +55,8 @@ cc.Class({
         else
         {
             //赋值同样大小
-            this.node.width = this.OnA.width;
-            this.node.height = this.OnA.height;
+            this.node.width = this.OnA.width - 1.2;
+            this.node.height = this.OnA.height - 1.2;
             //修改Y轴值
             this.node.y = this.OnA.y - this.OnA.height;
             //获取上一个物体的尾端

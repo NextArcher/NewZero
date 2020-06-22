@@ -120,41 +120,6 @@ cc.Class({
      //移动方法
      Move(dt)
      {
-         //狭路状态?(狭路状态:当人物消除一个矩形时限制人物的X轴移动,否则会穿过其他矩形)
-         if(PointX.IsGorge)
-         {
-             //左移?
-            if(this.accLeft)
-            {
-                //判断人物是否超出已消除矩形物体的X轴
-                if(this.node.x <= PointX.x.Lose + this.node.width / 2)
-                {
-                    return;
-                }
-                //没有超出就实现移动
-                else
-                {
-                     //左移实现
-                     this.node.x -= this.SpeedX * dt;
-                }
-            }
-            //右移?
-            else if(this.accRight)
-            {
-                //判断人物是否超出已消除矩形物体的X轴
-                if(this.node.x >= PointX.x.Just - this.node.width / 2)
-                {
-                    return ;
-                }
-                else
-                {
-                    //右移实现
-                    this.node.x += this.SpeedX * dt;
-                }
-            }
-         }
-         else
-         {
              //判断是否允许左边移动
              if(this.accLeft)
              {
@@ -184,7 +149,6 @@ cc.Class({
                     this.node.x += this.SpeedX * dt;
                 }
              }
-         }
      },
 //#endregion 人物移动方法end
 
@@ -262,19 +226,22 @@ cc.Class({
          switch(other.node.group)
          {
             case "Point_2" :
-                 //数值的减少速度与矩形物体同步
-                 if(this.timer >= 1)
-                 {
-                     //执行减少数值方法
-                     this.ReduceData();
-                     //重置计时器
-                     this.timer = 0;
-                 }
-                 else
-                 {
-                     //开始计时
-                     this.timer += 0.3;
-                 }
+                if(!PointX.IsGorge)
+                {
+                     //数值的减少速度与矩形物体同步
+                     if(this.timer >= 1)
+                     {
+                         //执行减少数值方法
+                         this.ReduceData();
+                         //重置计时器
+                         this.timer = 0;
+                     }
+                     else
+                     {
+                         //开始计时
+                         this.timer += 0.3;
+                     }
+                }
             break;
             case "Point_1" :
                 if(MapData.DownSpeed != 0)
@@ -344,7 +311,6 @@ cc.Class({
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-            //关闭碰撞检测
             cc.director.getCollisionManager().enabled = false;
             //显示结束UI
             //彻底暂停游戏

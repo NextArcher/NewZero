@@ -110,8 +110,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 13.35,
-      "height": 30.24
+      "width": 22.25,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -149,7 +149,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "label_1<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 2
@@ -163,8 +163,8 @@
     "_useOriginalSize": true,
     "_string": "1",
     "_N$string": "1",
-    "_fontSize": 24,
-    "_lineHeight": 24,
+    "_fontSize": 40,
+    "_lineHeight": 40,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,
@@ -192,7 +192,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "YellowCircle<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 1
@@ -237,6 +237,7 @@
     "dist": 0,
     "InData": 1,
     "OneDo": true,
+    "timer": 0,
     "_id": ""
   },
   {

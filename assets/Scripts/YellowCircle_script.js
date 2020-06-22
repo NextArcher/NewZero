@@ -44,6 +44,8 @@ cc.Class({
         {
             default : true,
         },
+        //计时器
+        timer : 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -55,8 +57,8 @@ cc.Class({
 
         this.node.getComponent(cc.CircleCollider).radius = this.node.width / 2;
         //设置文字大小
-        this.Label_1.fontSize = this.node.width / 2;
-        this.Label_1.lineHeight = this.node.height / 2;
+        this.Label_1.fontSize = this.node.width * 2;
+        this.Label_1.lineHeight = this.node.height * 2;
 
         //调用修改位置方法
         this.ReXY();
@@ -74,8 +76,36 @@ cc.Class({
         //调用与人物距离方法
         //this.GetPlayerPos();
 
-        //下降实现
-        this.node.y -= MapData.DownSpeed * dt;
+        //只有在分辨率内才能吸
+        if(this.node.y < MapData.size.height / 2 - this.node.height / 2)
+        {
+            //判断是否为磁力状态
+            if(MapData.IsMagnetism)
+            {
+                //计时器用于等待动作的完成
+                if(this.timer >= 0.32)
+                {
+                    var moveTo = cc.moveTo(0.3,Scripts.Player_script.node.getPosition());
+                    this.node.runAction(moveTo);
+                    this.timer = 0;
+                }
+                else
+                {
+                    this.timer += dt;
+                }
+            }
+            else
+            {
+                //非磁力状态moveTo是undefined 会报错的 所以加上判断
+                if(moveTo != undefined)
+                    this.node.stopAction(moveTo);
+            }
+        }
+        if(moveTo == undefined)
+        {
+            //下降实现
+            this.node.y -= MapData.DownSpeed * dt;
+        }
      },
 
      //初次接触方法

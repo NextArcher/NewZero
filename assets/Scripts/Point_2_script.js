@@ -122,8 +122,7 @@ cc.Class({
     //隐藏方法
     HideObject()
     {
-        //关闭碰撞检测
-        cc.director.getCollisionManager().enabled = false;
+        cc.director.getPhysicsManager().enabled = false;
         //修改透明度实现隐藏
         this.node.opacity = 0;
         //人物脚本获取当前透明物体引用
@@ -142,7 +141,7 @@ cc.Class({
             //修改物体透明度实现显示
             this.node.opacity = 255;
             //开启碰撞检测
-            cc.director.getCollisionManager().enabled = true;
+            cc.director.getPhysicsManager().enabled = true;
 
             //调用随机数值方法
             this.RandomData();
@@ -175,17 +174,19 @@ cc.Class({
     {
         if(other.node.group == "Collider")
         {
-
-             //只有下降速度不为零时
-             if(MapData.DownSpeed != 0)
-             {
-                //记录当前下降速度
-                MapData.NowDownSpeed = MapData.DownSpeed;
-             }
-            //砸瓦鲁多!!
-            MapData.DownSpeed = 0;
-            //记录Y轴
-            this.thisY = this.node.y;
+            if(!PointX.IsGorge)
+            {
+                 //只有下降速度不为零时
+                 if(MapData.DownSpeed != 0)
+                 {
+                    //记录当前下降速度
+                    MapData.NowDownSpeed = MapData.DownSpeed;
+                 }
+                //砸瓦鲁多!!
+                MapData.DownSpeed = 0;
+                //记录Y轴
+                this.thisY = this.node.y;
+            }
         }
     },
 
@@ -195,20 +196,39 @@ cc.Class({
         //有时会有矩形接触矩形触发 所以加上限制
         if(other.node.group == "Collider")
         {
-            //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
-            if(this.timer >= 1)
+            //非狭路状态
+            if(!PointX.IsGorge)
             {
-
-                //调用减少数值方法
-                this.ReduceData();
-
-                //计时器归零
-                this.timer = 0;
+                //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
+                if(this.timer >= 1)
+                {
+    
+                    //调用减少数值方法
+                    this.ReduceData();
+    
+                    //计时器归零
+                    this.timer = 0;
+                }
+                else
+                {
+                    //开始计时
+                    this.timer += 0.3;
+                }
             }
+            //狭路状态
             else
             {
-                //开始计时
-                this.timer += 0.3;
+                //获取人物脚本
+                var ors = other.node.getComponent("Player_script");
+                //发生接触不得继续移动
+                if(ors.accLeft)
+                {
+                    ors.accLeft = false;
+                }
+                else if(ors.accRight)
+                {
+                    ors.accRight = false;
+                }
             }
         }
     },
@@ -235,6 +255,9 @@ cc.Class({
     ReduceData()
     {
         this.InData --;
+        MapData.Score ++;
+        //显示得分
+        Scripts.Map_script.Score_lbl.string = MapData.Score;
         //调用抖动方法
         this.Shake();
         if(this.InData < 1)

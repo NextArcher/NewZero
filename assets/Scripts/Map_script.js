@@ -33,11 +33,15 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.04,
+    FollSpeed : 0.02,
     //累计长度
     AddUpData : 0,
     //磁力状态?
     IsMagnetism : false,
+    //穿透状态?
+    IsPenetrate : false,
+    //得分
+    Score : 0,
 },
 
 //全脚本收录
@@ -49,6 +53,8 @@ window.Scripts =
     Player_script : null,
     //磁力道具脚本
     Prop_0_script : null,
+    //穿透道具脚本
+    Prop_1_script : null,
 },
 
 cc.Class({
@@ -96,6 +102,12 @@ cc.Class({
         {
             default : null,
             type : cc.Label,
+        },
+        //得分显示
+        Score_lbl : 
+        {
+            default : null,
+            type : cc.Label,
         }
     },
 
@@ -122,8 +134,12 @@ cc.Class({
          //获取矩形Y轴生成点
          MapData.PointY = MapData.size.height + MapData.size.height / 2 - MapData.brim / 2;
 
+         //设置累计长度标签组件
          this.AddUplbl.fontSize = this.Player.width;
          this.AddUplbl.lineHeight = this.Player.height;
+         //设置得分标签组件
+         this.Score_lbl.fontSize = MapData.brim / 2;
+         this.Score_lbl.lineHeight = MapData.brim / 2;
         
          //循环得出矩形物体生成点
         for(i=0;i<5;i++)
@@ -228,7 +244,7 @@ cc.Class({
          //设置父物体
          this.node.addChild(newYellCirc);
          //设置宽度
-         newYellCirc.width = MapData.size.width / 24;
+         newYellCirc.width = MapData.brim / 3;
          //设置高度
          newYellCirc.height = newYellCirc.width;
 
@@ -315,15 +331,30 @@ cc.Class({
     //刷新累计数值方法 由增加数值方法调用
     UpLabel()
     {
-        MapData.AddUpData ++;
-        //更新累计数值
-        this.AddUplbl.string = MapData.AddUpData;
-        //累计的数值 大于等于 20 时清空
-        if(MapData.AddUpData >= 20)
+        if(!MapData.IsMagnetism)
         {
-            MapData.AddUpData = 0;
-            //生成随机道具
-            Scripts.Prop_0_script.SetXY();
+            MapData.AddUpData ++;
+            //更新累计数值
+            this.AddUplbl.string = MapData.AddUpData;
+            //累计的数值 大于等于 20 时清空
+            if(MapData.AddUpData >= 20)
+            {
+                MapData.AddUpData = 0;
+                var rand = Math.floor(Math.random()*2);
+                switch(rand)
+                {
+                    case 0:
+                        //生成磁力道具
+                        Scripts.Prop_0_script.SetXY();
+                        break
+                    case 1 :
+                        //生成穿透道具
+                        Scripts.Prop_1_script.SetXY();
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     },
 
