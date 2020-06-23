@@ -22,6 +22,7 @@ cc.Class({
 
     onLoad () 
     {
+        //给予引用
         Scripts.Prop_1_script = this;
 
         cc.director.getCollisionManager().enabled = true;
@@ -110,15 +111,10 @@ cc.Class({
             MapData.DownSpeed = MapData.NowDownSpeed;
             var v = setTimeout(function()
             {
-                cc.log("Time Out");
+                cc.log("IsPenetrate Time Out!");
                 //10秒后关闭
                 MapData.IsPenetrate = false;
-                //遍历关闭矩形碰撞器
-                for(i=0;i<MapData.Point_2S.length;i++)
-                {
-                    box = MapData.Point_2S[i].getComponent(cc.BoxCollider);
-                    box.enabled = true;
-                }
+                //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭
             },10000);
         }
     },

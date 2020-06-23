@@ -94,18 +94,9 @@ cc.Class({
                     this.timer += dt;
                 }
             }
-            else
-            {
-                //非磁力状态moveTo是undefined 会报错的 所以加上判断
-                if(moveTo != undefined)
-                    this.node.stopAction(moveTo);
-            }
         }
-        if(moveTo == undefined)
-        {
-            //下降实现
-            this.node.y -= MapData.DownSpeed * dt;
-        }
+        //下降实现
+        this.node.y -= MapData.DownSpeed * dt;
      },
 
      //初次接触方法

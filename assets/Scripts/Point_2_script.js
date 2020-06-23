@@ -58,6 +58,7 @@ cc.Class({
         {
             default : 0,
         },
+        ReduceSpeed : 0.3,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -122,7 +123,8 @@ cc.Class({
     //隐藏方法
     HideObject()
     {
-        cc.director.getPhysicsManager().enabled = false;
+        //关闭碰撞器
+        this.node.getComponent(cc.BoxCollider).enabled = false;
         //修改透明度实现隐藏
         this.node.opacity = 0;
         //人物脚本获取当前透明物体引用
@@ -140,15 +142,22 @@ cc.Class({
             MapData.IsReY = true;
             //修改物体透明度实现显示
             this.node.opacity = 255;
-            //开启碰撞检测
-            cc.director.getPhysicsManager().enabled = true;
+            //非穿透状态
+            if(!MapData.IsPenetrate)
+            {
+                //开启碰撞器
+                this.node.getComponent(cc.BoxCollider).enabled = true;
+            }
 
             //调用随机数值方法
             this.RandomData();
 
             //加快下降
             MapData.DownSpeed += 2;
+            //人物移速等于下降速度
             Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
+
+            this.ReduceSpeed = 0.3;
     },
 
     //随机数值方法
@@ -196,38 +205,27 @@ cc.Class({
         //有时会有矩形接触矩形触发 所以加上限制
         if(other.node.group == "Collider")
         {
-            //非狭路状态
-            if(!PointX.IsGorge)
+            if(other.node.getComponent(cc.BoxCollider).tag == 1)
             {
-                //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
-                if(this.timer >= 1)
+                //非狭路状态
+                if(!PointX.IsGorge)
                 {
-    
-                    //调用减少数值方法
-                    this.ReduceData();
-    
-                    //计时器归零
-                    this.timer = 0;
-                }
-                else
-                {
-                    //开始计时
-                    this.timer += 0.3;
-                }
-            }
-            //狭路状态
-            else
-            {
-                //获取人物脚本
-                var ors = other.node.getComponent("Player_script");
-                //发生接触不得继续移动
-                if(ors.accLeft)
-                {
-                    ors.accLeft = false;
-                }
-                else if(ors.accRight)
-                {
-                    ors.accRight = false;
+                    //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
+                    if(this.timer >= 1)
+                    {
+        
+                        //调用减少数值方法
+                        this.ReduceData();
+        
+                        //计时器归零
+                        this.timer = 0;
+                    }
+                    else
+                    {
+                        //开始计时
+                        this.timer += this.ReduceSpeed;
+                        this.ReduceSpeed += 0.01;
+                    }
                 }
             }
         }
@@ -255,7 +253,15 @@ cc.Class({
     ReduceData()
     {
         this.InData --;
-        MapData.Score ++;
+        //双倍得分?
+        if(MapData.IsDouble)
+        {
+            MapData.Score += 2;
+        }
+        else
+        {
+            MapData.Score ++;
+        }
         //显示得分
         Scripts.Map_script.Score_lbl.string = MapData.Score;
         //调用抖动方法
@@ -337,8 +343,8 @@ cc.Class({
     {
         //JS生成范围带负数方法：生成的随机数 - 随机范围的一半
         //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
-        this.node.x = this.thisX + 3 - (Math.random() * 6);
-        this.node.y = this.thisY + 3 - (Math.random() * 6);
+        this.node.x = this.thisX + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
+        this.node.y = this.thisY + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
     },
     Check()
     {

@@ -5,37 +5,39 @@ cc.Class({
 
     properties: 
     {
-        //碰撞组件
-        box : 
+        //碰撞器
+        Coll :
         {
             default : null,
             type : cc.CircleCollider,
         },
-        //记录X轴
+        //初始位置
         thisX : 0,
-        //记录Y轴
         thisY : 0,
-        //是否已出现在分辨率中
+
         IsIns : false,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-     onLoad () 
-     {
-         //给予引用
-        Scripts.Prop_0_script = this;
-         //设置宽高
-         this.node.width = MapData.brim / 3;
-         this.node.height = this.node.width;
-         //设置碰撞组件
-         cc.director.getCollisionManager().enabled = true;
-         this.box = this.node.getComponent(cc.CircleCollider);
-         this.box.radius = this.node.width;
-         //设置位置信息
-         this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
-         this.node.y = this.thisY = 0;
-     },
+    onLoad () 
+    {
+        //给予引用
+        Scripts.Prop_2_script = this;
+
+        cc.director.getCollisionManager().enabled = true;
+
+        //设置大小
+        this.node.width = MapData.brim / 3;
+        this.node.heigth = this.node.width;
+
+        //碰撞半径
+        this.Coll.radius = this.node.width;
+
+        //初始位置
+        this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
+        this.node.y = this.thisY = MapData.brim;
+    },
 
     start () 
     {
@@ -54,7 +56,7 @@ cc.Class({
                 //如果消失在画布中
                 if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
                 {
-                    cc.log("磁铁道具归位");
+                    cc.log("双倍得分道具归位");
                     this.node.position = cc.v2(this.thisX,this.thisY);
                     //离开画布
                     this.IsIns = false;
@@ -88,20 +90,20 @@ cc.Class({
     {
         if(other.node.group == "Collider")
         {
-            cc.log("人物接触磁铁道具归位");
+            cc.log("人物双倍得分道具归位");
             this.node.opacity = 0;
             this.node.position = cc.v2(this.thisX,this.thisY);
             this.node.opacity = 255;
             //离开画布
             this.IsIns = false;
-            MapData.IsMagnetism = true;
+            MapData.IsDouble = true;
 
             //10000(毫秒) == 10 (秒)后关闭磁力状态
             setTimeout(function()
             {
-                cc.log("IsMagnetism Time Out!");
+                cc.log("IsDouble Time Out!");
                 //关闭磁力状态
-                MapData.IsMagnetism = false;
+                MapData.IsDouble = false;
             },10000)
         }
     },
@@ -110,4 +112,5 @@ cc.Class({
     {
 
     },
+
 });

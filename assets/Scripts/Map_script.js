@@ -40,6 +40,8 @@ window.MapData =
     IsMagnetism : false,
     //穿透状态?
     IsPenetrate : false,
+    //双倍得分状态?
+    IsDouble : false,
     //得分
     Score : 0,
 },
@@ -55,6 +57,8 @@ window.Scripts =
     Prop_0_script : null,
     //穿透道具脚本
     Prop_1_script : null,
+    //双倍得分脚本
+    Prop_2_script : null,
 },
 
 cc.Class({
@@ -331,7 +335,8 @@ cc.Class({
     //刷新累计数值方法 由增加数值方法调用
     UpLabel()
     {
-        if(!MapData.IsMagnetism)
+        //在所有增益状态没有开启时允许执行
+        if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
         {
             MapData.AddUpData ++;
             //更新累计数值
@@ -340,7 +345,9 @@ cc.Class({
             if(MapData.AddUpData >= 20)
             {
                 MapData.AddUpData = 0;
-                var rand = Math.floor(Math.random()*2);
+                //更新累计数值
+                this.AddUplbl.string = MapData.AddUpData;
+                var rand = Math.floor(Math.random()*3);
                 switch(rand)
                 {
                     case 0:
@@ -351,10 +358,18 @@ cc.Class({
                         //生成穿透道具
                         Scripts.Prop_1_script.SetXY();
                         break;
+                    case 2:
+                        //生成双倍得分道具
+                        Scripts.Prop_2_script.SetXY();
+                        break;
                     default:
                         break;
                 }
             }
+        }
+        else
+        {
+            return;
         }
     },
 
