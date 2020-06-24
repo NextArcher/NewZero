@@ -39,13 +39,11 @@ cc.Class({
         {
             default : 1
         },
-        //一次 开
-        OneDo :
-        {
-            default : true,
-        },
         //计时器
         timer : 0,
+        //下降开关
+        IsDown : true,
+        Force : 0.24,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -83,10 +81,13 @@ cc.Class({
             if(MapData.IsMagnetism)
             {
                 //计时器用于等待动作的完成
-                if(this.timer >= 0.32)
+                if(this.timer >= this.Force)
                 {
-                    var moveTo = cc.moveTo(0.3,Scripts.Player_script.node.getPosition());
+                    var moveTo = cc.moveTo(this.Force,Scripts.Player_script.node.getPosition());
+                    moveTo.setTag = 1;
                     this.node.runAction(moveTo);
+                    //不允许下降
+                    this.IsDown = false;
                     this.timer = 0;
                 }
                 else
@@ -95,8 +96,11 @@ cc.Class({
                 }
             }
         }
-        //下降实现
-        this.node.y -= MapData.DownSpeed * dt;
+        if(this.IsDown)
+        {
+            //下降实现
+            this.node.y -= MapData.DownSpeed * dt;
+        }
      },
 
      //初次接触方法
@@ -159,8 +163,8 @@ cc.Class({
         this.ShowThis();
         //调用随机数值方法
         this.RanData();
-
-        this.OneDo = true;
+        //允许下降
+        this.IsDown = true;
 
     },
 

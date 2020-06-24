@@ -67,6 +67,13 @@ cc.Class({
         //设置前方碰撞大小
         this.boxcol_2.size = cc.size(this.node.width / 2,this.node.width / 2 );
         this.boxcol_2.offset.y = -this.node.height / 2;
+        //非穿透状态
+        if(!MapData.IsPenetrate)
+        {
+            //开启碰撞器
+            this.boxcol_1.enabled = true;
+            this.boxcol_2.enabled = true;
+        }
      },
 
 });

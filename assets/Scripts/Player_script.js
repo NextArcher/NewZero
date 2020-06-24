@@ -5,7 +5,10 @@ window.PointX =
     //狭路状态?
     IsGorge : false,
     x : null,
+    //尾部组
     Last : Array(),
+    //tag1接触?
+    IsTag1 : false,
 }
 
 cc.Class({
@@ -87,7 +90,7 @@ cc.Class({
 
         //设置矩形碰撞
         this.BoxCollider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
-        this.BoxCollider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 2 ,this.node.height / 2);
+        this.BoxCollider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 3 ,this.node.height / 2);
      },
 //#endregion 有关碰撞的前置方法end
 
@@ -213,6 +216,9 @@ cc.Class({
                     MapData.DownSpeed = 0;
                     this.IsOnA = true;
                     break;
+                case "Point_2":
+                    PointX.IsTag1 = true;
+                    break;
                  default:
                     break;
              }
@@ -301,7 +307,7 @@ cc.Class({
                         else
                         {
                             //开始计时
-                            this.timer += 0.3;
+                            this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
                         }   
                     }
                 break;
@@ -317,6 +323,11 @@ cc.Class({
          //离开竖形物体前头
          if(other.node.group == "Point_1_1")
          {
+             if(self.tag == 1)
+             {
+                 //关闭tag1接触
+                 PointX.IsTag1 = false;
+             }
              //时间开始流动
              MapData.DownSpeed = MapData.NowDownSpeed;
          }

@@ -18,11 +18,17 @@ cc.Class({
         fol : 0,
         //自身速度
         speed : 0,
+        //最初自身速度
+        Ospeed : 0,
         circlecollider :
         {
             default : null,
             type : cc.CircleCollider,
         },
+        //可暂停恢复动作
+        actionManger : null,
+
+        thisX : 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -35,6 +41,8 @@ cc.Class({
         this.OnA = PointX.Last[PointX.Last.length - 1];
         //将自身添加到数组
         PointX.Last[PointX.Last.length] = this.node;
+
+        this.actionManger = cc.director.getActionManager();
      },
 
     start () 
@@ -68,6 +76,7 @@ cc.Class({
         this.circlecollider.size = cc.size(this.node.width,this.node.height);
         this.circlecollider.offset.y = -this.node.height / 2;
         this.speed = MapData.FollSpeed;
+        this.Ospeed = this.speed;
     },
 
      update (dt) 
@@ -80,11 +89,31 @@ cc.Class({
                 this.moveTo = cc.moveTo( this.speed ,cc.v2(this.OnA.x,this.fol));
                 //运行动作
                 this.node.runAction(this.moveTo);
+                if(this.speed > this.Ospeed / 10)
+                {
+                    this.speed -= 0.0001;
+                }
                 this.timer = 0;
             }
             else
             {
                 this.timer += dt;
             }
+     },
+
+     onCollisionEnter(other,self)
+     {
+         if(other.node.group == "Point_1")
+         {
+             
+         }
+     },
+
+     onCollisionStay(other,self)
+     {
+         if(other.node.group == "Point_1")
+         {
+
+         }
      },
 });

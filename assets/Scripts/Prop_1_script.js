@@ -90,20 +90,30 @@ cc.Class({
     {
         if(other.node.group == "Collider")
         {
-            cc.log("穿透 接触 人物");
+            cc.log("穿透 Time Start!");
+
+            var P2S ;
+            var P1S ;
+            //遍历关闭矩形物体碰撞器
+            for(i=0;i<MapData.Point_2S.length;i++)
+            {
+                P2S = MapData.Point_2S[i].getComponent(cc.BoxCollider);
+                P2S.enabled = false;
+                
+                //关闭竖形物体碰撞器
+                if(MapData.Point_1S[i] != null)
+                {
+                    P1S = MapData.Point_1S[i].getComponent("Point_1_script");
+                    P1S.boxcol_1.enabled = false;
+                    P1S.boxcol_2.enabled = false;
+                }
+
+            }
             //隐藏 归位 显示 离开画布
             this.node.opacity = 0;
             this.node.position = cc.v2(this.thisX,this.thisY); 
             this.node.opacity = 255;
             this.IsIns = false;
-
-            var box ;
-            //遍历关闭矩形物体碰撞器
-            for(i=0;i<MapData.Point_2S.length;i++)
-            {
-                box = MapData.Point_2S[i].getComponent(cc.BoxCollider);
-                box.enabled = false;
-            }
 
             //开启穿透状态
             MapData.IsPenetrate = true;
@@ -111,7 +121,7 @@ cc.Class({
             MapData.DownSpeed = MapData.NowDownSpeed;
             var v = setTimeout(function()
             {
-                cc.log("IsPenetrate Time Out!");
+                cc.log("穿透 Time Out!");
                 //10秒后关闭
                 MapData.IsPenetrate = false;
                 //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭

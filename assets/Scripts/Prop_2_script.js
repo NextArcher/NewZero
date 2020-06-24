@@ -90,21 +90,21 @@ cc.Class({
     {
         if(other.node.group == "Collider")
         {
-            cc.log("人物双倍得分道具归位");
+            cc.log("双倍得分 Time Start!");
+            MapData.IsDouble = true;
             this.node.opacity = 0;
             this.node.position = cc.v2(this.thisX,this.thisY);
             this.node.opacity = 255;
             //离开画布
             this.IsIns = false;
-            MapData.IsDouble = true;
 
             //10000(毫秒) == 10 (秒)后关闭磁力状态
             setTimeout(function()
             {
-                cc.log("IsDouble Time Out!");
+                cc.log("双倍得分 Time Out!");
                 //关闭磁力状态
                 MapData.IsDouble = false;
-            },10000)
+            },15000)
         }
     },
 

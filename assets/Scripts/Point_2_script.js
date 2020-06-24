@@ -157,6 +157,9 @@ cc.Class({
             //人物移速等于下降速度
             Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
 
+            //开启矩形碰撞器
+            Scripts.Player_script.BoxCollider.enabled = true;
+
             this.ReduceSpeed = 0.3;
     },
 
@@ -205,7 +208,7 @@ cc.Class({
         //有时会有矩形接触矩形触发 所以加上限制
         if(other.node.group == "Collider")
         {
-            if(other.node.getComponent(cc.BoxCollider).tag == 1)
+            if(PointX.IsTag1)
             {
                 //非狭路状态
                 if(!PointX.IsGorge)
@@ -272,6 +275,10 @@ cc.Class({
             this.HideObject();
             //重置位置信息
             this.node.setPosition(this.thisX,this.thisY);
+            //关闭人物矩形碰撞器
+            Scripts.Player_script.BoxCollider.enabled = false;
+            //关闭人物tag1接触
+            PointX.IsTag1 = false;
             //开启下降
             MapData.DownSpeed = MapData.NowDownSpeed;
         }
