@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.02,
+    FollSpeed : 0.01,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -201,17 +201,13 @@ cc.Class({
              {
                 //执行矩形物体脚本内部重置Y方法
                 MapData.Point_2S[i].getComponent("Point_2_script").ReY();
-                //开启一次 用于接触人物后数值增加执行一次
-                //MapData.YellowCircleS[i].getComponent("YellowCircle_script").OneDo = true;
-                //执行黄圆物体内部重置方法
-                MapData.YellowCircleS[i].getComponent("YellowCircle_script").ReXY();
                 //如果没有就不用执行了
-                if(MapData.Point_1S[i] != null)
-                {
-                    //修改位置信息(竖形物体组,随机生成Y轴值,0)
-                    MapData.Point_1S[i].setPosition(MapData.arr2[i],this.ReY(MapData.Point_1S[i]),0);
-                    MapData.Point_1S[i].getComponent("Point_1_script").ReXY();
-                }
+                // if(MapData.Point_1S[i] != null)
+                // {
+                //     //修改位置信息(竖形物体组,随机生成Y轴值,0)
+                //     MapData.Point_1S[i].setPosition(MapData.arr2[i],this.ReY(MapData.Point_1S[i]),0);
+                //     MapData.Point_1S[i].getComponent("Point_1_script").ReXY();
+                // }
              }
              //已重置
              MapData.IsReY = false;
@@ -318,7 +314,7 @@ cc.Class({
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
-            MapData.FollSpeed += 0.002;
+            MapData.FollSpeed += 0.001;
     },
 //#endregion 生成尾随物体方法end
 
@@ -335,6 +331,7 @@ cc.Class({
     //刷新累计数值方法 由增加数值方法调用
     UpLabel()
     {
+        this.AddUplbl.string = MapData.AddUpData;
         //在所有增益状态没有开启时允许执行
         if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
         {

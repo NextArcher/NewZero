@@ -142,12 +142,8 @@ cc.Class({
             MapData.IsReY = true;
             //修改物体透明度实现显示
             this.node.opacity = 255;
-            //非穿透状态
-            if(!MapData.IsPenetrate)
-            {
-                //开启碰撞器
-                this.node.getComponent(cc.BoxCollider).enabled = true;
-            }
+            //开启碰撞器
+            this.node.getComponent(cc.BoxCollider).enabled = true;
 
             //调用随机数值方法
             this.RandomData();

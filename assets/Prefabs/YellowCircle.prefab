@@ -236,8 +236,9 @@
     "playerpos": 0,
     "dist": 0,
     "InData": 1,
-    "OneDo": true,
     "timer": 0,
+    "IsDown": true,
+    "Force": 0.24,
     "_id": ""
   },
   {

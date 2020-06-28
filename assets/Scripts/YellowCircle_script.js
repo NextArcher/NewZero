@@ -71,8 +71,10 @@ cc.Class({
 
      update (dt) 
      {
-        //调用与人物距离方法
-        //this.GetPlayerPos();
+         if(this.node.y < -MapData.size.height / 2 - this.node.width / 2)
+         {
+             this.ReXY();
+         }
 
         //只有在分辨率内才能吸
         if(this.node.y < MapData.size.height / 2 - this.node.height / 2)
@@ -103,38 +105,54 @@ cc.Class({
         }
      },
 
-     //初次接触方法
      onCollisionEnter(other,self)
      {
-         if(other.node.group == "Collider")
+        switch(other.node.group)
+        {
+           //生成时与其他物体接触 调用修改位置方法
+           case "YellowCircle":
+               this.ReXY();
+           break;
+
+           case "Point_1":
+               this.ReXY();
+           break;
+
+           case "Point_1_1":
+               this.ReXY();
+           break;
+           case "Point_2":
+               this.ReXY();
+           break;
+
+           default :
+           break;
+        }
+     },
+
+     //初次接触方法
+     onCollisionStay(other,self)
+     {
+         switch(other.node.group)
          {
-            this.HideThis();
-            //人物数值增加
-            MapData.PlayerData += this.InData;
-            //调用刷新数值方法
-            YellowData.player.UpLabel();
-            for(i=0;i<this.InData;i++)
-            {
-                //调用刷新累计数值方法
-                Scripts.Map_script.UpLabel();
-                //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                for(j=1;j < PointX.Last.length;j++)
-                {
-                    //尾随物体组.获取脚本.node组件.opacity属性
-                    //索引0(人物)并没有following_script脚本
-                    if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
-                    {
-                        //显示
-                        PointX.Last[j].getComponent("following_script").node.opacity = 255;
-                        break ;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-    
-                }
-            }
+            //生成时与其他物体接触 调用修改位置方法
+            case "YellowCircle":
+                this.ReXY();
+            break;
+
+            case "Point_1":
+                this.ReXY();
+            break;
+
+            case "Point_1_1":
+                this.ReXY();
+            break;
+            case "Point_2":
+                this.ReXY();
+            break;
+
+            default :
+            break;
          }
      },
 
@@ -149,6 +167,13 @@ cc.Class({
     //重置方法
     ReXY()
     {
+         //停止下降 用于给时间判断是否接触矩形对象 0.3秒后恢复
+        this.IsDown = false;
+        this.scheduleOnce(function()
+        {
+            this.IsDown = true;
+        },0.1);
+
         //随机得出X轴值
         YellowData.RandX = MapData.size.width / 4 - (Math.random() * MapData.size.width / 2);
         //计算出生成点的最小Y轴值

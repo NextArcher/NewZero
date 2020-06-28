@@ -23,15 +23,11 @@ cc.Class({
             type : cc.Label
         },
         //允许左移?
-        accLeft :
-        {
-            default : false,
-        },
+        IsLeft : true,
+        accLeft : false,
         //允许右移?
-        accRight :
-        {
-            default : false,
-        },
+        IsRight : true,
+        accRight : false,
         //计时器
         timer :
         {
@@ -47,6 +43,11 @@ cc.Class({
         {
             default : null,
             type : cc.BoxCollider
+        },
+        YellowScript : 
+        {
+            default : null,
+            type : cc.Component
         },
     },
 
@@ -83,10 +84,6 @@ cc.Class({
          //注册事件
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-        //获取碰撞组件
-        var box = this.getComponent(cc.CircleCollider);
-        //设置圆碰撞组件的半径
-        box.radius = this.node.width / 2;
 
         //设置矩形碰撞
         this.BoxCollider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
@@ -204,117 +201,48 @@ cc.Class({
      //初次接触
      onCollisionEnter(other,self)
      {
-         //#region 矩形碰撞
-         //矩形碰撞
-         if(self.tag == 1)
-         {
              switch(other.node.group)
              {
                 //竖形物体前头
-                case "Point_1_1" :
-                    MapData.NowDownSpeed = MapData.DownSpeed;
-                    MapData.DownSpeed = 0;
-                    this.IsOnA = true;
-                    break;
+                // case "Point_1_1" :
+                //     MapData.NowDownSpeed = MapData.DownSpeed;
+                //     MapData.DownSpeed = 0;
+                //     break;
                 case "Point_2":
                     PointX.IsTag1 = true;
                     break;
                  default:
                     break;
              }
-         }
-         //#endregion 矩形碰撞end
-         
-         //#region  圆形碰撞
-         //圆形碰撞
-         else if(self.tag == 0)
-         {
-             switch(other.node.group)
-             {
-                 //竖形物体 初次接触也不能继续移动
-                 case "Point_1" :
-                    if(MapData.DownSpeed != 0)
-                    {
-                        if(this.accLeft)
-                        {
-                            this.accLeft = false;
-                        }
-                        if(this.accRight)
-                        {
-                            this.accRight = false;
-                        }
-                    }
-                    break;
-                 default:
-                    break;
-             }
-         }
-         //#endregion 圆形碰撞end
      },
 
      //持续接触事件
      onCollisionStay(other,self)
      {
-         //圆形碰撞
-        if(self.tag == 0)
-         {
-             switch(other.node.group)
-             {
-                 //接触竖形物体 无法移动
-                case "Point_1" :
-                if(MapData.DownSpeed != 0)
+        //矩形碰撞
+        switch(other.node.group)
+        {
+            case "Point_2" :
+                if(!PointX.IsGorge)
                 {
-                    if(this.accLeft)
+                    //数值的减少速度与矩形物体同步
+                    if(this.timer >= 1)
                     {
-                        this.accLeft = false;
+                        //执行减少数值方法
+                        this.ReduceData();
+                        //重置计时器
+                        this.timer = 0;
                     }
-                    else if(this.accRight)
+                    else
                     {
-                        this.accRight = false;
-                    }
+                        //开始计时
+                        this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
+                    }   
                 }
-                break;
-                case "Point_2" :
-                    if(this.accLeft)
-                    {
-                        this.accLeft = false;
-                    }
-                    else if(this.accRight)
-                    {
-                        this.accRight = false;
-                    }
-                break;
-                 default:
-                     break;
-             }
-         }
-         //矩形碰撞
-         else if(self.tag == 1)
-         {
-             switch(other.node.group)
-             {
-                case "Point_2" :
-                    if(!PointX.IsGorge)
-                    {
-                        //数值的减少速度与矩形物体同步
-                        if(this.timer >= 1)
-                        {
-                            //执行减少数值方法
-                            this.ReduceData();
-                            //重置计时器
-                            this.timer = 0;
-                        }
-                        else
-                        {
-                            //开始计时
-                            this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
-                        }   
-                    }
-                break;
-                 default:
-                     break;
-             }
-         }
+            break;
+            default:
+            break;
+        }
      },
 
      //接触离开

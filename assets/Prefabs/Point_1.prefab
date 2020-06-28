@@ -355,7 +355,8 @@
       "__id__": 7
     },
     "IsDouble": false,
-    "IsColl": true,
+    "thisX": 0,
+    "IsDown": true,
     "_id": ""
   },
   {

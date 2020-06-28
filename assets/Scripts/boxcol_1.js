@@ -30,14 +30,44 @@ cc.Class({
 
     // update (dt) {},
 
+    //重置XY时是否重叠
     onCollisionEnter(other,self)
     {
-        
+        switch(other.node.group)
+        {
+            //与对象重叠执行重置XY方法
+            case "Point_2":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
+            case "Point_1":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
+            case "Point_1_1":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
+
+            default :
+            break;
+        }
     },
 
     onCollisionStay(other,self)
     {
+        switch(other.node.group)
+        {
+            case "Point_2":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
+            case "Point_1":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
+            case "Point_1_1":
+                this.Thebase.getComponent("Point_1_script").ReXY();
+            break;
 
+            default :
+            break;
+        }
     },
 
     onCollisionExit(other,self)

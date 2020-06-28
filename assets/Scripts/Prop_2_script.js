@@ -88,23 +88,38 @@ cc.Class({
 
     onCollisionEnter(other,self)
     {
-        if(other.node.group == "Collider")
-        {
-            cc.log("双倍得分 Time Start!");
-            MapData.IsDouble = true;
-            this.node.opacity = 0;
-            this.node.position = cc.v2(this.thisX,this.thisY);
-            this.node.opacity = 255;
-            //离开画布
-            this.IsIns = false;
 
-            //10000(毫秒) == 10 (秒)后关闭磁力状态
-            setTimeout(function()
-            {
-                cc.log("双倍得分 Time Out!");
-                //关闭磁力状态
-                MapData.IsDouble = false;
-            },15000)
+        switch(other.node.group)
+        {
+            case "Collider":
+                cc.log("双倍得分 Time Start!");
+                MapData.IsDouble = true;
+                this.node.opacity = 0;
+                this.node.position = cc.v2(this.thisX,this.thisY);
+                this.node.opacity = 255;
+                //离开画布
+                this.IsIns = false;
+    
+                //10000(毫秒) == 10 (秒)后关闭磁力状态
+                this.scheduleOnce(function()
+                {
+                    cc.log("双倍得分 Time Out!");
+                    //关闭磁力状态
+                    MapData.IsDouble = false;
+                },15)
+            break;
+            case "Point_2":
+                this.SetXY();
+            break;
+            case "Point_1":
+                this.SetXY();
+            break;
+            case "YellowCircle":
+                this.SetXY();
+            break;
+
+            default:
+            break;
         }
     },
 

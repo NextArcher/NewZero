@@ -88,44 +88,53 @@ cc.Class({
 
     onCollisionEnter(other,self)
     {
-        if(other.node.group == "Collider")
+        switch(other.node.group)
         {
-            cc.log("穿透 Time Start!");
+            //接触人物
+            case "Collider":
+                cc.log("穿透 Time Start!");
 
-            var P2S ;
-            var P1S ;
-            //遍历关闭矩形物体碰撞器
-            for(i=0;i<MapData.Point_2S.length;i++)
-            {
-                P2S = MapData.Point_2S[i].getComponent(cc.BoxCollider);
-                P2S.enabled = false;
-                
-                //关闭竖形物体碰撞器
-                if(MapData.Point_1S[i] != null)
+                var P1S ;
+                //遍历关闭矩形物体碰撞器
+                for(i=0;i<MapData.Point_1S.length;i++)
                 {
-                    P1S = MapData.Point_1S[i].getComponent("Point_1_script");
-                    P1S.boxcol_1.enabled = false;
-                    P1S.boxcol_2.enabled = false;
+                    
+                    //关闭竖形物体碰撞器
+                        P1S = MapData.Point_1S[i].getComponent("Point_1_script");
+                        P1S.boxcol_1.enabled = false;
+                        P1S.boxcol_2.enabled = false;
+    
                 }
+                //隐藏 归位 显示 离开画布
+                this.node.opacity = 0;
+                this.node.position = cc.v2(this.thisX,this.thisY); 
+                this.node.opacity = 255;
+                this.IsIns = false;
+    
+                //开启穿透状态
+                MapData.IsPenetrate = true;
+                //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
+                MapData.DownSpeed = MapData.NowDownSpeed;
+                this.scheduleOnce(function()
+                {
+                    cc.log("穿透 Time Out!");
+                    //10秒后关闭
+                    MapData.IsPenetrate = false;
+                    //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭
+                },10);
+            break;
+            case "Point_2":
+                this.SetXY();
+            break;
+            case "Point_1":
+                this.SetXY();
+            break;
+            case "YellowCircle":
+                this.SetXY();
+            break;
 
-            }
-            //隐藏 归位 显示 离开画布
-            this.node.opacity = 0;
-            this.node.position = cc.v2(this.thisX,this.thisY); 
-            this.node.opacity = 255;
-            this.IsIns = false;
-
-            //开启穿透状态
-            MapData.IsPenetrate = true;
-            //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
-            MapData.DownSpeed = MapData.NowDownSpeed;
-            var v = setTimeout(function()
-            {
-                cc.log("穿透 Time Out!");
-                //10秒后关闭
-                MapData.IsPenetrate = false;
-                //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭
-            },10000);
+            default:
+            break;
         }
     },
 

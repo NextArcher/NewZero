@@ -18,8 +18,6 @@ cc.Class({
         fol : 0,
         //自身速度
         speed : 0,
-        //最初自身速度
-        Ospeed : 0,
         circlecollider :
         {
             default : null,
@@ -55,7 +53,7 @@ cc.Class({
            this.node.width = this.OnA.width / 1.5;
            this.node.height = this.OnA.height / 1.5;
            //修改Y轴值
-            this.node.y = this.OnA.y - this.OnA.height / 2;
+            this.node.y = this.OnA.y - this.OnA.height / 2 + this.OnA.height / 8;
             //获取上一个物体的尾端
             this.fol = this.node.y;
         }
@@ -66,7 +64,7 @@ cc.Class({
             this.node.width = this.OnA.width - 1.2;
             this.node.height = this.OnA.height - 1.2;
             //修改Y轴值
-            this.node.y = this.OnA.y - this.OnA.height;
+            this.node.y = this.OnA.y - this.OnA.height + this.OnA.height / 8;
             //获取上一个物体的尾端
             this.fol = this.node.y;
         }
@@ -76,7 +74,6 @@ cc.Class({
         this.circlecollider.size = cc.size(this.node.width,this.node.height);
         this.circlecollider.offset.y = -this.node.height / 2;
         this.speed = MapData.FollSpeed;
-        this.Ospeed = this.speed;
     },
 
      update (dt) 
@@ -89,10 +86,6 @@ cc.Class({
                 this.moveTo = cc.moveTo( this.speed ,cc.v2(this.OnA.x,this.fol));
                 //运行动作
                 this.node.runAction(this.moveTo);
-                if(this.speed > this.Ospeed / 10)
-                {
-                    this.speed -= 0.0001;
-                }
                 this.timer = 0;
             }
             else
