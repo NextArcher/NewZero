@@ -124,9 +124,9 @@
     "timer": 0,
     "fol": 0,
     "speed": 0,
-    "Ospeed": 0,
     "circlecollider": null,
     "actionManger": null,
+    "thisX": 0,
     "_id": ""
   },
   {

@@ -21,9 +21,9 @@ window.MapData =
     //当前下降速度
     NowDownSpeed : 0,
     //下降速度
-    DownSpeed : 128,
+    DownSpeed : 108,
     //人物数值
-    PlayerData : 0,
+    PlayerData : 3,
     //重置Y?
     IsReY : false,
     //矩形物体组
@@ -112,7 +112,14 @@ cc.Class({
         {
             default : null,
             type : cc.Label,
-        }
+        },
+        //进度条对象
+        AddupProgressBar:
+        {
+            default : null,
+            type : cc.ProgressBar,
+        },
+
     },
 
      onLoad () 
@@ -136,14 +143,14 @@ cc.Class({
          MapData.tem += MapData.brim / 2;
         
          //获取矩形Y轴生成点
-         MapData.PointY = MapData.size.height + MapData.size.height / 2 - MapData.brim / 2;
+         MapData.PointY = MapData.size.height / 2 + MapData.brim;
 
          //设置累计长度标签组件
          this.AddUplbl.fontSize = this.Player.width;
          this.AddUplbl.lineHeight = this.Player.height;
          //设置得分标签组件
-         this.Score_lbl.fontSize = MapData.brim / 2;
-         this.Score_lbl.lineHeight = MapData.brim / 2;
+         this.Score_lbl.fontSize = MapData.brim / 1.5;
+         this.Score_lbl.lineHeight = MapData.brim / 1.5;
         
          //循环得出矩形物体生成点
         for(i=0;i<5;i++)
@@ -159,8 +166,6 @@ cc.Class({
         {
             //调用生成方法
             this.InsPoint_2(i);
-            //调用黄圆生成方法
-            this.InsYellowCircle(i);
         }
 
         //获取最左边生成点
@@ -173,10 +178,13 @@ cc.Class({
             MapData.yem += MapData.brim;
         }
 
-        //生成竖形
-         for(i=0;i<4;i++)
+        //生成8个物体
+         for(i=0;i<8;i++)
          {
-            this.InsPoint_1(i);
+             //调用生成竖形物体方法
+            this.InsPoint_1();
+             //调用黄圆生成方法
+            this.InsYellowCircle();
          }
 
      },
@@ -189,6 +197,7 @@ cc.Class({
             //调用生成尾随物体方法
             this.InsYellFollow();
         }
+        cc.log(this.AddUplbl.fontSize);
     },
 
      update (dt) 
@@ -201,13 +210,6 @@ cc.Class({
              {
                 //执行矩形物体脚本内部重置Y方法
                 MapData.Point_2S[i].getComponent("Point_2_script").ReY();
-                //如果没有就不用执行了
-                // if(MapData.Point_1S[i] != null)
-                // {
-                //     //修改位置信息(竖形物体组,随机生成Y轴值,0)
-                //     MapData.Point_1S[i].setPosition(MapData.arr2[i],this.ReY(MapData.Point_1S[i]),0);
-                //     MapData.Point_1S[i].getComponent("Point_1_script").ReXY();
-                // }
              }
              //已重置
              MapData.IsReY = false;
@@ -237,7 +239,7 @@ cc.Class({
 
 //#region 生成黄圆方法
      //生成黄圆方法
-     InsYellowCircle(a)
+     InsYellowCircle()
      {
          //生成黄圆对象
          var newYellCirc = cc.instantiate(this.YellowCircle);
@@ -252,22 +254,20 @@ cc.Class({
          YellowData.Map = this;
 
          //传入索引获取对象
-         MapData.YellowCircleS[a] = newYellCirc;
+         MapData.YellowCircleS.push(newYellCirc);
      },
 //#endregion 生成黄圆方法end
 
 //#region  生成生成竖形物体方法
      //生成竖形物体方法
-     InsPoint_1(b)
+     InsPoint_1()
      {
          //生成竖形物体
          var newpoint_1 = cc.instantiate(this.Point_1);
          //设置父物体
          this.node.addChild(newpoint_1);
-         //设置位置
-         newpoint_1.setPosition(MapData.arr2[b],this.ReY(newpoint_1),0);
-        //传入索引获取对象
-         MapData.Point_1S[b] = newpoint_1;
+         //传入索引获取对象
+         MapData.Point_1S.push(newpoint_1);
      },
 //#endregion 生成生成竖形物体方法end
 
@@ -285,21 +285,6 @@ cc.Class({
          return (min + Math.round(Rand * Range))
      },
 //#endregion 在指定数值范围内生成随机数方法end
-
-//#region 获取竖形物体的Y轴生成点方法
-     //获取竖形物体的Y轴生成点
-     ReY(point_1)
-     {
-        //计算出生成点的最小Y轴值
-        this.point_1minY = MapData.size.height / 2 + point_1.height;
-        //计算出生成点的最大Y轴值
-        this.point_1maxY = MapData.PointY - MapData.brim - point_1.height / 2;
-        //随机得出Y轴值
-        this.point_1thisY = this.GetRandomNum(this.point_1minY,this.point_1maxY);
-        
-        return this.point_1thisY;
-     },
-//#endregion 获取竖形物体的Y轴生成点方法end
 
 //#region 生成尾随物体方法
     //生成尾随物体方法
@@ -331,19 +316,19 @@ cc.Class({
     //刷新累计数值方法 由增加数值方法调用
     UpLabel()
     {
-        this.AddUplbl.string = MapData.AddUpData;
+        this.AddUplbl.string = MapData.AddUpData + "/20";
         //在所有增益状态没有开启时允许执行
         if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
         {
             MapData.AddUpData ++;
             //更新累计数值
-            this.AddUplbl.string = MapData.AddUpData;
+            this.AddUplbl.string = MapData.AddUpData + "/20";
             //累计的数值 大于等于 20 时清空
             if(MapData.AddUpData >= 20)
             {
                 MapData.AddUpData = 0;
                 //更新累计数值
-                this.AddUplbl.string = MapData.AddUpData;
+                this.AddUplbl.string = MapData.AddUpData + "/20";
                 var rand = Math.floor(Math.random()*3);
                 switch(rand)
                 {

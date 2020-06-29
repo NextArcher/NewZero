@@ -183,6 +183,9 @@
       "__id__": 1
     },
     "PlayerScript": null,
+    "box": {
+      "__id__": 3
+    },
     "_id": ""
   },
   {
@@ -295,6 +298,9 @@
     "Thebase": {
       "__id__": 1
     },
+    "box": {
+      "__id__": 7
+    },
     "_id": ""
   },
   {
@@ -356,7 +362,6 @@
     },
     "IsDouble": false,
     "thisX": 0,
-    "IsDown": true,
     "_id": ""
   },
   {

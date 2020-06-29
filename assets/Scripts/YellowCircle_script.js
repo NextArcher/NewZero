@@ -43,6 +43,7 @@ cc.Class({
         timer : 0,
         //下降开关
         IsDown : true,
+        //磁力动作时长
         Force : 0.24,
     },
 
@@ -105,20 +106,13 @@ cc.Class({
         }
      },
 
+     //初次接触
      onCollisionEnter(other,self)
      {
         switch(other.node.group)
         {
            //生成时与其他物体接触 调用修改位置方法
            case "YellowCircle":
-               this.ReXY();
-           break;
-
-           case "Point_1":
-               this.ReXY();
-           break;
-
-           case "Point_1_1":
                this.ReXY();
            break;
            case "Point_2":
@@ -130,56 +124,16 @@ cc.Class({
         }
      },
 
-     //初次接触方法
-     onCollisionStay(other,self)
-     {
-         switch(other.node.group)
-         {
-            //生成时与其他物体接触 调用修改位置方法
-            case "YellowCircle":
-                this.ReXY();
-            break;
-
-            case "Point_1":
-                this.ReXY();
-            break;
-
-            case "Point_1_1":
-                this.ReXY();
-            break;
-            case "Point_2":
-                this.ReXY();
-            break;
-
-            default :
-            break;
-         }
-     },
-
-    //随机数值方法
-        //数值范围:1~5
-
-    //随机生成方法
-        //设置生成位置限制
-        //设置物体和碰撞器大小
-
-
     //重置方法
     ReXY()
     {
-         //停止下降 用于给时间判断是否接触矩形对象 0.3秒后恢复
-        this.IsDown = false;
-        this.scheduleOnce(function()
-        {
-            this.IsDown = true;
-        },0.1);
 
         //随机得出X轴值
-        YellowData.RandX = MapData.size.width / 4 - (Math.random() * MapData.size.width / 2);
+        YellowData.RandX = MapData.arr1[Math.floor(Math.random()* MapData.arr1.length)];
         //计算出生成点的最小Y轴值
-        var minY = MapData.size.height / 2 + this.node.width;
+        var minY = MapData.PointY + MapData.brim / 2 + this.node.height;
         //计算出生成点的最大Y轴值
-        var maxY = MapData.PointY - MapData.brim;
+        var maxY =  minY + MapData.size.height - this.node.height;
         //随机得出Y轴值
         YellowData.RandY = Scripts.Map_script.GetRandomNum(minY,maxY);
         //修改位置

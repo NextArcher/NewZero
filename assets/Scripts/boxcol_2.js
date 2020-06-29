@@ -3,11 +3,13 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        //传入父物体
         Thebase : 
         {
             default : null,
             type : cc.Node
-        }
+        },
+        box : cc.BoxCollider,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -16,13 +18,14 @@ cc.Class({
      {
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
+        //设置碰撞组件
+        this.box.size = cc.size(this.Thebase.width,this.Thebase.width);
+        this.box.offset.y = -this.Thebase.height / 2;
      },
 
     start () 
     {
-        //设置碰撞组件
-        this.node.getComponent(cc.BoxCollider).size = cc.size(this.Thebase.width / 2,this.Thebase.width / 2);
-        this.node.getComponent(cc.BoxCollider).offset.y = -this.Thebase.height /2;
+
     },
 
     // update (dt) {},

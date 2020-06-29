@@ -33,7 +33,7 @@ cc.Class({
 
      onLoad () 
      {
-         cc.director.getCollisionManager().enabled = true;
+        //cc.director.getCollisionManager().enabled = true;
 
         //获取最后一个索引
         this.OnA = PointX.Last[PointX.Last.length - 1];
@@ -47,7 +47,7 @@ cc.Class({
     {
 
         //如果上一个物体是人物
-        if(this.OnA.group == "Collider")
+        if(this.OnA.group == "default")
         {
             //缩小
            this.node.width = this.OnA.width / 1.5;

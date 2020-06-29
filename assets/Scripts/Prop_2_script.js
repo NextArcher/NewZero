@@ -74,11 +74,11 @@ cc.Class({
     {
 
         //计算出X轴的范围
-        var posX = MapData.size.width / 2 - this.node.width / 2;
-        //计算出Y轴的最大生成点
-        var posYmaX = MapData.PointY - MapData.brim / 2 - this.node.height / 2;
+        var posX = MapData.arr1[Math.floor(Math.random()* MapData.arr1.length)];
         //Y轴的最小生成点
-        var posYmiN = MapData.size.height / 2;
+        var posYmiN = MapData.PointY + MapData.brim / 2 + this.node.height;
+        //计算出Y轴的最大生成点
+        var posYmaX = posYmiN + MapData.size.height - this.node.height;
         //调用Map的获取随机数方法 修改当前物体的位置
         this.node.x = Scripts.Map_script.GetRandomNum(-posX,posX);
         this.node.y = Scripts.Map_script.GetRandomNum(posYmiN,posYmaX);
@@ -112,6 +112,9 @@ cc.Class({
                 this.SetXY();
             break;
             case "Point_1":
+                this.SetXY();
+            break;
+            case "Point_1_1":
                 this.SetXY();
             break;
             case "YellowCircle":

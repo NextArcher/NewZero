@@ -29,15 +29,9 @@ cc.Class({
         IsRight : true,
         accRight : false,
         //计时器
-        timer :
-        {
-            default : 0
-        },
+        timer : 0,
         //横轴移速
-        SpeedX :
-        {
-            default : 0
-        },
+        SpeedX : 0,
         //矩形碰撞器
         BoxCollider :
         {
@@ -47,7 +41,7 @@ cc.Class({
         YellowScript : 
         {
             default : null,
-            type : cc.Component
+            type : cc.Component,
         },
     },
 
@@ -55,6 +49,9 @@ cc.Class({
 
      onLoad () 
      {
+         //显示等级 越大显示更高
+         this.node.zIndex = 1;
+
          //将自身填进跟随数组
          PointX.Last[0] = this.node;
 
@@ -87,7 +84,7 @@ cc.Class({
 
         //设置矩形碰撞
         this.BoxCollider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
-        this.BoxCollider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 3 ,this.node.height / 2);
+        this.BoxCollider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 2,this.node.height / 2);
      },
 //#endregion 有关碰撞的前置方法end
 
@@ -131,7 +128,7 @@ cc.Class({
      Move(dt)
      {
              //判断是否允许左边移动
-             if(this.accLeft)
+             if(this.accLeft && this.IsLeft)
              {
                  //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
                  if(this.node.x <= -MapData.size.width / 2 + this.node.width / 2) 
@@ -146,7 +143,7 @@ cc.Class({
                  }
              }
              //判断是否允许右边移动
-             else if(this.accRight)
+             else if(this.accRight && this.IsRight)
              {
                  //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
                 if(this.node.x >= MapData.size.width / 2 - this.node.width / 2)
@@ -198,30 +195,29 @@ cc.Class({
      },
 //#endregion 松键事件end
 
-     //初次接触
+//#region  初次接触事件
      onCollisionEnter(other,self)
      {
-             switch(other.node.group)
-             {
-                //竖形物体前头
-                // case "Point_1_1" :
-                //     MapData.NowDownSpeed = MapData.DownSpeed;
-                //     MapData.DownSpeed = 0;
-                //     break;
-                case "Point_2":
-                    PointX.IsTag1 = true;
-                    break;
-                 default:
-                    break;
-             }
+         //接触竖形物体前头 时停
+         if(other.node.group == "Point_1_1")
+         {
+            if(MapData.DownSpeed != 0)
+            {
+                MapData.NowDownSpeed = MapData.DownSpeed;
+                MapData.DownSpeed = 0;
+            }
+         }
      },
+//#endregion 初次接触事件end
 
+//#region  持续接触事件
      //持续接触事件
      onCollisionStay(other,self)
      {
         //矩形碰撞
         switch(other.node.group)
         {
+            //#region 矩形
             case "Point_2" :
                 if(!PointX.IsGorge)
                 {
@@ -240,26 +236,22 @@ cc.Class({
                     }   
                 }
             break;
+            //#endregion 矩形end
             default:
             break;
         }
      },
+//#endregion 持续接触事件end
 
-     //接触离开
+//#region 离开接触事件
      onCollisionExit(other,self)
      {
-         //离开竖形物体前头
          if(other.node.group == "Point_1_1")
          {
-             if(self.tag == 1)
-             {
-                 //关闭tag1接触
-                 PointX.IsTag1 = false;
-             }
-             //时间开始流动
              MapData.DownSpeed = MapData.NowDownSpeed;
          }
      },
+//#endregion 离开接触事件end
      
 //#region 减少数值方法
      //减少数值方法

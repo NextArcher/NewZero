@@ -58,6 +58,7 @@ cc.Class({
         {
             default : 0,
         },
+        //加快减少数值
         ReduceSpeed : 0.3,
     },
 
@@ -153,9 +154,6 @@ cc.Class({
             //人物移速等于下降速度
             Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
 
-            //开启矩形碰撞器
-            Scripts.Player_script.BoxCollider.enabled = true;
-
             this.ReduceSpeed = 0.3;
     },
 
@@ -180,7 +178,7 @@ cc.Class({
     //初次接触事件
     onCollisionEnter(other,self)
     {
-        if(other.node.group == "Collider")
+        if(other.node.group == "default")
         {
             if(!PointX.IsGorge)
             {
@@ -202,10 +200,8 @@ cc.Class({
     onCollisionStay(other,slef)
     {
         //有时会有矩形接触矩形触发 所以加上限制
-        if(other.node.group == "Collider")
+        if(other.node.group == "default")
         {
-            if(PointX.IsTag1)
-            {
                 //非狭路状态
                 if(!PointX.IsGorge)
                 {
@@ -226,7 +222,6 @@ cc.Class({
                         this.ReduceSpeed += 0.01;
                     }
                 }
-            }
         }
     },
 
@@ -234,7 +229,7 @@ cc.Class({
     onCollisionExit(other,self)
     {
         //当人物碰撞器离开人物后 
-        if(other.node.group == "Collider")
+        if(other.node.group == "default")
         {
             if(MapData.DownSpeed == 0)
             {
@@ -262,19 +257,19 @@ cc.Class({
             MapData.Score ++;
         }
         //显示得分
-        Scripts.Map_script.Score_lbl.string = MapData.Score;
+        Scripts.Map_script.Score_lbl.string = + MapData.Score;
         //调用抖动方法
         this.Shake();
+        //调用修改颜色方法
+        this.DynamicColor();
         if(this.InData < 1)
         {
             //调用隐藏方法
             this.HideObject();
             //重置位置信息
             this.node.setPosition(this.thisX,this.thisY);
-            //关闭人物矩形碰撞器
-            Scripts.Player_script.BoxCollider.enabled = false;
-            //关闭人物tag1接触
-            PointX.IsTag1 = false;
+            //关闭自身碰撞器
+            this.node.getComponent(cc.BoxCollider).enabled = false;
             //开启下降
             MapData.DownSpeed = MapData.NowDownSpeed;
         }
@@ -290,7 +285,6 @@ cc.Class({
     //根据数值调整色调方法
     DynamicColor()
     {
-        //this.node.color = new cc.color(127.5,127.5,0);
         //人物数值小于该物体数值
         if(MapData.PlayerData < this.InData)
         {
@@ -348,10 +342,6 @@ cc.Class({
         //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
         this.node.x = this.thisX + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
         this.node.y = this.thisY + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
-    },
-    Check()
-    {
-        cc.log("Check!!!!!!!!!!!!!!!!!!!!!!!!!!");
     },
 
 });
