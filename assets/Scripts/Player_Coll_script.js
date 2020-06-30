@@ -17,8 +17,7 @@ cc.Class({
             default : null,
             type : cc.Component,
         },
-        //被接触的黄圆脚本
-        YellowScript : null,
+
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -32,6 +31,9 @@ cc.Class({
 
         //获人物脚本
         this.PlayerScript = this.Player.getComponent("Player_script");
+
+        //被接触的黄圆脚本
+        this.YellowScript = null;
     },
 
     start () 
@@ -89,33 +91,41 @@ cc.Class({
             
             //#region  食物
             case "YellowCircle":
-                //获取脚本调用隐藏方法
+                //获取脚本
                 this.YellowScript = other.node.getComponent("YellowCircle_script");
-                this.YellowScript.node.opacity = 0;
-                //分数增加
-                MapData.PlayerData += this.YellowScript.InData;
-                this.PlayerScript.UpLabel();
-                //显示的尾巴个数
-                for(i=0;i<this.YellowScript.InData;i++)
+                //因为道具也是这个分组 所以获取不到脚本就是接触道具不执行下面
+                if(this.YellowScript != null)
                 {
+                    //调用隐藏方法
+                    this.YellowScript.HideThis();
+                    //分数增加
+                    MapData.PlayerData += this.YellowScript.InData;
                     //调用刷新累计数值方法
                     Scripts.Map_script.UpLabel();
-                    //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                    for(j=1;j < PointX.Last.length;j++)
+                    //人物分数刷新
+                    Scripts.Player_script.UpLabel();
+                    //显示的尾巴个数
+                    for(i=0;i<this.YellowScript.InData;i++)
                     {
-                        //尾随物体组.获取脚本.node组件.opacity属性
-                        //索引0(人物)并没有following_script脚本
-                        if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                        //调用刷新累计数值方法
+                        Scripts.Map_script.UpLabel();
+                        //向下遍历数组(从索引1开始) 遇到隐藏的就显示
+                        for(j=1;j < PointX.Last.length;j++)
                         {
-                            //显示
-                            PointX.Last[j].getComponent("following_script").node.opacity = 255;
-                            break ;
+                            //尾随物体组.获取脚本.node组件.opacity属性
+                            //索引0(人物)并没有following_script脚本
+                            if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                            {
+                                //显示
+                                PointX.Last[j].getComponent("following_script").node.opacity = 255;
+                                break ;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                 
                         }
-                        else
-                        {
-                            continue;
-                        }
-             
                     }
                 }
             break;
@@ -149,13 +159,19 @@ cc.Class({
          {
             //离开竖形物体
             case "Point_1" :
+                this.scheduleOnce(function()
+                {
                     this.PlayerScript.IsLeft = true;
                     this.PlayerScript.IsRight = true;
+                },0.08)
             break;
             //离开矩形物体
             case "Point_2":
-                this.PlayerScript.IsLeft = true;
-                this.PlayerScript.IsRight = true;
+                this.scheduleOnce(function()
+                {
+                    this.PlayerScript.IsLeft = true;
+                    this.PlayerScript.IsRight = true;
+                },0.08)
             break;
 
             default:

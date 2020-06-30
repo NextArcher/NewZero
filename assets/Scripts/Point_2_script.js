@@ -76,7 +76,7 @@ cc.Class({
 
         //设置文字大小
         this.Data_label.fontSize = MapData.brim / 2;
-        this.Data_label.lineHeight = MapData.brim / 2;
+        //this.Data_label.lineHeight = MapData.brim / 2;
 
         //显示数值
          this.Data_label.string = Point_2Data.data;
@@ -124,27 +124,27 @@ cc.Class({
     //隐藏方法
     HideObject()
     {
+        //开启狭路
+        PointX.IsGorge = true;
         //关闭碰撞器
         this.node.getComponent(cc.BoxCollider).enabled = false;
         //修改透明度实现隐藏
         this.node.opacity = 0;
         //人物脚本获取当前透明物体引用
         PointX.x = this;
-        //开启狭路
-        PointX.IsGorge = true;
     },
 
     //Y轴重置方法
     ReY()
     {
+            //开启碰撞器
+            this.node.getComponent(cc.BoxCollider).enabled = true;
             //设置Y轴值
             this.node.y = MapData.PointY;
             //重置Y 开启
             MapData.IsReY = true;
             //修改物体透明度实现显示
             this.node.opacity = 255;
-            //开启碰撞器
-            this.node.getComponent(cc.BoxCollider).enabled = true;
 
             //调用随机数值方法
             this.RandomData();

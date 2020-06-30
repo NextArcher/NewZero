@@ -33,15 +33,10 @@ cc.Class({
         //横轴移速
         SpeedX : 0,
         //矩形碰撞器
-        BoxCollider :
+        Collider :
         {
             default : null,
-            type : cc.BoxCollider
-        },
-        YellowScript : 
-        {
-            default : null,
-            type : cc.Component,
+            type : cc.CircleCollider
         },
     },
 
@@ -83,8 +78,8 @@ cc.Class({
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
         //设置矩形碰撞
-        this.BoxCollider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
-        this.BoxCollider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 2,this.node.height / 2);
+        this.Collider.getComponent(cc.CircleCollider).offset.y = this.node.height / 2;
+        this.Collider.getComponent(cc.CircleCollider).radius = this.node.width / 3;
      },
 //#endregion 有关碰撞的前置方法end
 
@@ -195,20 +190,6 @@ cc.Class({
      },
 //#endregion 松键事件end
 
-//#region  初次接触事件
-     onCollisionEnter(other,self)
-     {
-         //接触竖形物体前头 时停
-         if(other.node.group == "Point_1_1")
-         {
-            if(MapData.DownSpeed != 0)
-            {
-                MapData.NowDownSpeed = MapData.DownSpeed;
-                MapData.DownSpeed = 0;
-            }
-         }
-     },
-//#endregion 初次接触事件end
 
 //#region  持续接触事件
      //持续接触事件
@@ -243,15 +224,6 @@ cc.Class({
      },
 //#endregion 持续接触事件end
 
-//#region 离开接触事件
-     onCollisionExit(other,self)
-     {
-         if(other.node.group == "Point_1_1")
-         {
-             MapData.DownSpeed = MapData.NowDownSpeed;
-         }
-     },
-//#endregion 离开接触事件end
      
 //#region 减少数值方法
      //减少数值方法

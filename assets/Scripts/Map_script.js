@@ -20,9 +20,9 @@ window.MapData =
     PointY : null,
     //当前下降速度
     NowDownSpeed : 0,
-    //下降速度
-    DownSpeed : 108,
-    //人物数值
+    //下降速度 原108
+    DownSpeed : 32,
+    //人物数值 原3
     PlayerData : 3,
     //重置Y?
     IsReY : false,
@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.01,
+    FollSpeed : 0.001,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -119,6 +119,8 @@ cc.Class({
             default : null,
             type : cc.ProgressBar,
         },
+        //进度条子物体
+        AddupProgressBarSon: cc.Node,
 
     },
 
@@ -151,6 +153,19 @@ cc.Class({
          //设置得分标签组件
          this.Score_lbl.fontSize = MapData.brim / 1.5;
          this.Score_lbl.lineHeight = MapData.brim / 1.5;
+         //显示等级 越大显示更高
+         this.Score_lbl.node.zInde = 3;
+
+         //设置进度条 长，宽，子物体位置
+         //this.AddupProgressBar.node.zInde = 2;
+         this.AddupProgressBar.node.width = MapData.size.width / 3;
+         //this.AddupProgressBar.totalLength = this.AddupProgressBar.width;
+         //this.AddupProgressBar.node.height = MapData.size .width / 32;
+
+         this.AddupProgressBarSon.width = this.AddupProgressBar.node.width;
+
+
+         //#region  生成物体
         
          //循环得出矩形物体生成点
         for(i=0;i<5;i++)
@@ -187,6 +202,8 @@ cc.Class({
             this.InsYellowCircle();
          }
 
+         //#endregion 生成物体end
+
      },
 
     start () 
@@ -197,7 +214,6 @@ cc.Class({
             //调用生成尾随物体方法
             this.InsYellFollow();
         }
-        cc.log(this.AddUplbl.fontSize);
     },
 
      update (dt) 
@@ -245,10 +261,6 @@ cc.Class({
          var newYellCirc = cc.instantiate(this.YellowCircle);
          //设置父物体
          this.node.addChild(newYellCirc);
-         //设置宽度
-         newYellCirc.width = MapData.brim / 3;
-         //设置高度
-         newYellCirc.height = newYellCirc.width;
 
          //获取人物引用 
          YellowData.Map = this;
@@ -299,7 +311,7 @@ cc.Class({
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
-            MapData.FollSpeed += 0.001;
+            MapData.FollSpeed += 0.0001;
     },
 //#endregion 生成尾随物体方法end
 
@@ -317,42 +329,42 @@ cc.Class({
     UpLabel()
     {
         this.AddUplbl.string = MapData.AddUpData + "/20";
-        //在所有增益状态没有开启时允许执行
-        if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
-        {
+
             MapData.AddUpData ++;
             //更新累计数值
             this.AddUplbl.string = MapData.AddUpData + "/20";
+            //进度条更新
+            this.AddupProgressBar.progress = MapData.AddUpData / 20;
             //累计的数值 大于等于 20 时清空
             if(MapData.AddUpData >= 20)
             {
                 MapData.AddUpData = 0;
                 //更新累计数值
                 this.AddUplbl.string = MapData.AddUpData + "/20";
-                var rand = Math.floor(Math.random()*3);
-                switch(rand)
+                //在所有增益状态没有开启时允许执行
+                if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
                 {
-                    case 0:
-                        //生成磁力道具
-                        Scripts.Prop_0_script.SetXY();
-                        break
-                    case 1 :
-                        //生成穿透道具
-                        Scripts.Prop_1_script.SetXY();
+                    //随机生成道具
+                    var rand = Math.floor(Math.random()*3);
+                    switch(rand)
+                    {
+                        case 0:
+                            //生成磁力道具
+                            Scripts.Prop_0_script.SetXY();
+                            break
+                        case 1 :
+                            //生成穿透道具
+                            Scripts.Prop_1_script.SetXY();
                         break;
-                    case 2:
-                        //生成双倍得分道具
-                        Scripts.Prop_2_script.SetXY();
+                        case 2:
+                            //生成双倍得分道具
+                            Scripts.Prop_2_script.SetXY();
                         break;
-                    default:
+                        default:
                         break;
+                    }
                 }
             }
-        }
-        else
-        {
-            return;
-        }
     },
 
      //测试：使用全局变量能否访问

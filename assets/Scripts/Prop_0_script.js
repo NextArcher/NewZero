@@ -31,7 +31,7 @@ cc.Class({
          //设置碰撞组件
          cc.director.getCollisionManager().enabled = true;
          this.box = this.node.getComponent(cc.CircleCollider);
-         this.box.radius = this.node.width;
+         this.box.radius = this.node.width / 2;
          //设置位置信息
          this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
          this.node.y = this.thisY = 0;
@@ -123,8 +123,32 @@ cc.Class({
         }
     },
 
+    onCollisionStay(other,self)
+    {
+        switch(other.node.group)
+        {
+            case "Point_2":
+                this.SetXY();
+            break;
+            case "Point_1":
+                this.SetXY();
+            break;
+            case "Point_1_1":
+                this.SetXY();
+            break;
+            case "YellowCircle":
+                this.SetXY();
+            break;
+
+            default:
+            break;
+        }
+    },
+
     onCollisionExit(other,self)
     {
 
     },
+
+
 });

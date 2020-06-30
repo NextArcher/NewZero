@@ -51,13 +51,16 @@ cc.Class({
 
      onLoad () 
      {
+         //设置该物体大小
+         this.node.width = MapData.brim / 3;
+         this.node.height = this.node.width;
+
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
 
         this.node.getComponent(cc.CircleCollider).radius = this.node.width / 2;
         //设置文字大小
-        this.Label_1.fontSize = this.node.width * 2;
-        this.Label_1.lineHeight = this.node.height * 2;
+        this.Label_1.fontSize = this.node.width;
 
         //调用修改位置方法
         this.ReXY();
@@ -113,7 +116,30 @@ cc.Class({
         {
            //生成时与其他物体接触 调用修改位置方法
            case "YellowCircle":
+               if(!MapData.IsMagnetism)
+               {
+                    this.ReXY();
+               }
+           break;
+           case "Point_2":
                this.ReXY();
+           break;
+
+           default :
+           break;
+        }
+     },
+
+     onCollisionStay(other,self)
+     {
+        switch(other.node.group)
+        {
+           //生成时与其他物体接触 调用修改位置方法
+           case "YellowCircle":
+               if(!MapData.IsMagnetism)
+               {
+                    this.ReXY();
+               }
            break;
            case "Point_2":
                this.ReXY();

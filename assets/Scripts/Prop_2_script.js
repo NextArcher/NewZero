@@ -32,7 +32,7 @@ cc.Class({
         this.node.heigth = this.node.width;
 
         //碰撞半径
-        this.Coll.radius = this.node.width;
+        this.Coll.radius = this.node.width / 2;
 
         //初始位置
         this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
@@ -108,6 +108,28 @@ cc.Class({
                     MapData.IsDouble = false;
                 },15)
             break;
+            case "Point_2":
+                this.SetXY();
+            break;
+            case "Point_1":
+                this.SetXY();
+            break;
+            case "Point_1_1":
+                this.SetXY();
+            break;
+            case "YellowCircle":
+                this.SetXY();
+            break;
+
+            default:
+            break;
+        }
+    },
+
+    onCollisionStay(other,self)
+    {
+        switch(other.node.group)
+        {
             case "Point_2":
                 this.SetXY();
             break;
