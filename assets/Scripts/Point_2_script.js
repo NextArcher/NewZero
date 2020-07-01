@@ -85,9 +85,6 @@ cc.Class({
 
     start () 
     {
-
-        //使用全局变量成功访问并调用
-        //Point_2Data.script.Print("0101010101");
         //获取玩家脚本
         this.player = Point_2Data.Player.getComponent('Player_script');
         //获取限定X轴方法
@@ -98,6 +95,10 @@ cc.Class({
 
      update (dt) 
      {
+            //调用根据数值调整色调方法
+            this.DynamicColor();
+
+
          //不是时停才能下降
          if(MapData.DownSpeed != 0)
          {
@@ -126,8 +127,6 @@ cc.Class({
     {
         //开启狭路
         PointX.IsGorge = true;
-        //关闭碰撞器
-        this.node.getComponent(cc.BoxCollider).enabled = false;
         //修改透明度实现隐藏
         this.node.opacity = 0;
         //人物脚本获取当前透明物体引用
@@ -137,8 +136,6 @@ cc.Class({
     //Y轴重置方法
     ReY()
     {
-            //开启碰撞器
-            this.node.getComponent(cc.BoxCollider).enabled = true;
             //设置Y轴值
             this.node.y = MapData.PointY;
             //重置Y 开启
@@ -167,9 +164,6 @@ cc.Class({
         {
             this.InData = 1;
         }
-
-        //调用动态色调方法
-        this.DynamicColor();
         
         //数值刷新
         this.Data_label.string = this.InData;
@@ -260,16 +254,12 @@ cc.Class({
         Scripts.Map_script.Score_lbl.string = + MapData.Score;
         //调用抖动方法
         this.Shake();
-        //调用修改颜色方法
-        this.DynamicColor();
         if(this.InData < 1)
         {
             //调用隐藏方法
             this.HideObject();
             //重置位置信息
             this.node.setPosition(this.thisX,this.thisY);
-            //关闭自身碰撞器
-            this.node.getComponent(cc.BoxCollider).enabled = false;
             //开启下降
             MapData.DownSpeed = MapData.NowDownSpeed;
         }
@@ -298,7 +288,7 @@ cc.Class({
             else
             {
                 //浅一点点 大概
-                this.node.color = new cc.color(255 - this.InData * MapData.PlayerData,172,0);
+                this.node.color = new cc.color(255 - this.InData * this.InData,172,0);
             }
         }
         //人物数值大于该物体数值
@@ -314,7 +304,7 @@ cc.Class({
             else
             {
                 //浅一点点 大概
-                this.node.color = new cc.color(172,255 - this.InData * MapData.PlayerData,0);
+                this.node.color = new cc.color(172,255 - this.InData * this.InData,0);
             }
         }
         //等于

@@ -77,13 +77,19 @@ cc.Class({
             case "Point_1" :
                 if(MapData.DownSpeed != 0)
                 {
-                    if(this.PlayerScript.accLeft)
+                    //穿透状态不响应
+                    if(!MapData.IsPenetrate)
                     {
-                        this.PlayerScript.IsLeft = false;
-                    }
-                    if(this.PlayerScript.accRight)
-                    {
-                        this.PlayerScript.IsRight = false;
+                        //记录位置
+                        this.Player.position = this.Player.getPosition();
+                        if(this.PlayerScript.accLeft)
+                        {
+                            this.PlayerScript.IsLeft = false;
+                        }
+                        else if(this.PlayerScript.accRight)
+                        {
+                            this.PlayerScript.IsRight = false;
+                        }
                     }
                 }
                 break;
@@ -135,17 +141,76 @@ cc.Class({
             case "Point_2" :
                 if(MapData.DownSpeed != 0)
                 {
-                    if(this.PlayerScript.accLeft)
+                    //狭路状态接触其他矩形物体 禁止继续移动
+                    if(PointX.IsGorge)
                     {
-                        this.PlayerScript.IsLeft = false;
-                    }
-                    if(this.PlayerScript.accRight)
-                    {
-                        this.PlayerScript.IsRight = false;
+                        this.Player.position = this.Player.getPosition();
+                        if(this.PlayerScript.accLeft)
+                        {
+                            this.PlayerScript.IsLeft = false;
+                        }
+                        else if(this.PlayerScript.accRight)
+                        {
+                            this.PlayerScript.IsRight = false;
+                        }
                     }
                 }
             break;
             //#endregion 矩形end
+            default:
+            break;
+        }
+    },
+
+    //持续接触事件
+    onCollisionStay(other,self)
+    {
+        switch(other.node.group)
+        {
+            //#region  竖形物体
+            //竖形物体 持续接触不能移动
+            case "Point_1" :
+                if(MapData.DownSpeed != 0)
+                {
+                    //穿透状态不响应
+                    if(!MapData.IsPenetrate)
+                    {
+                        //记录位置
+                        this.Player.position = this.Player.getPosition();
+                        if(this.PlayerScript.accLeft)
+                        {
+                            this.PlayerScript.IsLeft = false;
+                        }
+                        else if(this.PlayerScript.accRight)
+                        {
+                            this.PlayerScript.IsRight = false;
+                        }
+                    }
+                }
+                break;
+            //#endregion 竖形物体end
+
+            //#region 矩形
+            case "Point_2" :
+                if(MapData.DownSpeed != 0)
+                {
+                    //狭路状态接触其他矩形物体 禁止继续移动
+                    if(PointX.IsGorge)
+                    {
+                        this.Player.position = this.Player.getPosition();
+                        if(this.PlayerScript.accLeft)
+                        {
+                            this.PlayerScript.IsLeft = false;
+                        }
+                        else if(this.PlayerScript.accRight)
+                        {
+                            this.PlayerScript.IsRight = false;
+                        }
+                    }
+                }
+            break;
+            //#endregion 矩形end
+
             default:
             break;
         }
@@ -159,19 +224,13 @@ cc.Class({
          {
             //离开竖形物体
             case "Point_1" :
-                this.scheduleOnce(function()
-                {
                     this.PlayerScript.IsLeft = true;
                     this.PlayerScript.IsRight = true;
-                },0.08)
             break;
             //离开矩形物体
             case "Point_2":
-                this.scheduleOnce(function()
-                {
                     this.PlayerScript.IsLeft = true;
                     this.PlayerScript.IsRight = true;
-                },0.08)
             break;
 
             default:

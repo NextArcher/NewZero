@@ -154,10 +154,10 @@ cc.Class({
          this.Score_lbl.fontSize = MapData.brim / 1.5;
          this.Score_lbl.lineHeight = MapData.brim / 1.5;
          //显示等级 越大显示更高
-         this.Score_lbl.node.zInde = 3;
+         this.Score_lbl.node.zIndex = 1;
 
          //设置进度条 长，宽，子物体位置
-         //this.AddupProgressBar.node.zInde = 2;
+         this.AddupProgressBar.node.zIndex = 1;
          this.AddupProgressBar.node.width = MapData.size.width / 3;
          //this.AddupProgressBar.totalLength = this.AddupProgressBar.width;
          //this.AddupProgressBar.node.height = MapData.size .width / 32;
@@ -208,12 +208,14 @@ cc.Class({
 
     start () 
     {
+
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(i=0;i<this.YellFollNumber();i++)
         {
             //调用生成尾随物体方法
             this.InsYellFollow();
         }
+
     },
 
      update (dt) 
@@ -329,7 +331,9 @@ cc.Class({
     UpLabel()
     {
         this.AddUplbl.string = MapData.AddUpData + "/20";
-
+        //只有在没获得道具时数值才能叠加
+        if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
+        {
             MapData.AddUpData ++;
             //更新累计数值
             this.AddUplbl.string = MapData.AddUpData + "/20";
@@ -365,6 +369,7 @@ cc.Class({
                     }
                 }
             }
+        }
     },
 
      //测试：使用全局变量能否访问

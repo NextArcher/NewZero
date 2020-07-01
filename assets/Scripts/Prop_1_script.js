@@ -93,18 +93,6 @@ cc.Class({
             //接触人物
             case "Collider":
                 cc.log("穿透 Time Start!");
-
-                var P1S ;
-                //遍历关闭矩形物体碰撞器
-                for(i=0;i<MapData.Point_1S.length;i++)
-                {
-                    
-                    //关闭竖形物体碰撞器
-                        P1S = MapData.Point_1S[i].getComponent("Point_1_script");
-                        P1S.boxcol_1.enabled = false;
-                        P1S.boxcol_2.enabled = false;
-    
-                }
                 //隐藏 归位 显示 离开画布
                 this.node.opacity = 0;
                 this.node.position = cc.v2(this.thisX,this.thisY); 

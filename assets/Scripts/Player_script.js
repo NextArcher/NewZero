@@ -36,7 +36,7 @@ cc.Class({
         Collider :
         {
             default : null,
-            type : cc.CircleCollider
+            type : cc.BoxCollider
         },
     },
 
@@ -78,8 +78,9 @@ cc.Class({
          cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
         //设置矩形碰撞
-        this.Collider.getComponent(cc.CircleCollider).offset.y = this.node.height / 2;
-        this.Collider.getComponent(cc.CircleCollider).radius = this.node.width / 3;
+        this.Collider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
+        this.Collider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 2,this.node.width);
+
      },
 //#endregion 有关碰撞的前置方法end
 
@@ -161,12 +162,10 @@ cc.Class({
          switch(event.keyCode)
          {
             case cc.macro.KEY.a:
-                //console.log(this.node.x)
                 this.accLeft = true;
                 this.accRight = false;
                 break;
             case cc.macro.KEY.d:
-                //console.log(this.node.x)
                 this.accRight = true;
                 this.accLeft = false;
                 break;

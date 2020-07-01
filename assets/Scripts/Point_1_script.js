@@ -54,53 +54,26 @@ cc.Class({
              this.ReXY();
          }
 
-        //非穿透状态
-        if(!MapData.IsPenetrate)
-        {
-            //开启碰撞器
-            this.boxcol_1.enabled = true;
-            this.boxcol_2.enabled = true;
-        }
-
      },
 
      onCollisionEnter(other,self)
      {
          switch(other.node.group)
          {
-            //  //人物接触
-            // case "default":
-            //     //接触前方接触器
-            //     if(self.tag == 1)
-            //     {
-            //         if(MapData.DownSpeed != 0)
-            //         {
-            //             MapData.NowDownSpeed = MapData.DownSpeed;
-            //             MapData.DownSpeed = 0;
-            //         }
-            //     }
-            // break;
-            case "Collider":
-                //接触本体接触器
-                if(self.tag == 0)
-                {
-                    if(Scripts.Player_script.accLeft)
-                    {
-                        Scripts.Player_script.IsLeft = false;
-                    }
-                    else if(Scripts.Player_script.accRight)
-                    {
-                        Scripts.Player_script.IsRight = false;
-                    }
-                }
+            case "default":
                 //接触前方接触器
                 if(self.tag == 1)
                 {
-                    if(MapData.DownSpeed != 0)
+                    //穿透状态不响应
+                    if(!MapData.IsPenetrate)
                     {
-                        MapData.NowDownSpeed = MapData.DownSpeed;
-                        MapData.DownSpeed = 0;
-                    } 
+                        if(MapData.DownSpeed != 0)
+                        {
+                            MapData.NowDownSpeed = MapData.DownSpeed;
+                            MapData.DownSpeed = 0;
+                        } 
+                    }
+
                 }
             break;
             case "Point_1":
@@ -135,20 +108,13 @@ cc.Class({
          //人物前方离开
          if(other.node.group == "default")
          {
-             if(MapData.DownSpeed == 0)
+             if(self.tag == 1)
              {
-                 MapData.DownSpeed = MapData.NowDownSpeed;
+                if(MapData.DownSpeed == 0)
+                {
+                    MapData.DownSpeed = MapData.NowDownSpeed;
+                }
              }
-         }
-         //人物离开
-         else if(other.node.group == "Collider")
-         {
-            if(MapData.DownSpeed == 0)
-            {
-                MapData.DownSpeed = MapData.NowDownSpeed;
-            }
-            Scripts.Player_script.IsRight = true;
-            Scripts.Player_script.IsRight = true;
          }
      },
 

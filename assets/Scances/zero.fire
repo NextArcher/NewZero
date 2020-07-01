@@ -189,7 +189,7 @@
       "array": [
         0,
         0,
-        389.7114317029974,
+        340.3479836872844,
         0,
         0,
         0,
@@ -570,7 +570,7 @@
     "_id": "ddHn9+1UpI4LcidbypLRP+"
   },
   {
-    "__type__": "cc.CircleCollider",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -583,8 +583,12 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 48,
-    "_id": "62GWK8MIdHcr+7NM7ZLrup"
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 48,
+      "height": 48
+    },
+    "_id": "5cACEQi8FOSIPkve1Jfb/m"
   },
   {
     "__type__": "cc.Node",
