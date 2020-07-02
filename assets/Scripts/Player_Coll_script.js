@@ -38,11 +38,14 @@ cc.Class({
 
     start () 
     {
+        //更新累计数值
+        Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+        //进度条更新
+        Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+
                 //显示的尾巴个数
                 for(i=0;i<MapData.PlayerData;i++)
                 {
-                    //调用刷新累计数值方法
-                    Scripts.Map_script.UpLabel();
                     //向下遍历数组(从索引1开始) 遇到隐藏的就显示
                     for(j=1;j < PointX.Last.length;j++)
                     {
@@ -107,14 +110,12 @@ cc.Class({
                     //分数增加
                     MapData.PlayerData += this.YellowScript.InData;
                     //调用刷新累计数值方法
-                    Scripts.Map_script.UpLabel();
+                    this.UpLabel(this.YellowScript.InData);
                     //人物分数刷新
                     Scripts.Player_script.UpLabel();
                     //显示的尾巴个数
                     for(i=0;i<this.YellowScript.InData;i++)
                     {
-                        //调用刷新累计数值方法
-                        Scripts.Map_script.UpLabel();
                         //向下遍历数组(从索引1开始) 遇到隐藏的就显示
                         for(j=1;j < PointX.Last.length;j++)
                         {
@@ -239,4 +240,57 @@ cc.Class({
      },
      //#endregion 离开接触事件
     
+    //刷新累计数值方法 由增加数值方法调用
+    UpLabel(Indata)
+    {
+        //只有在没获得道具时数值才能叠加
+        if(!MapData.IsMagnetism && !MapData.IsDouble)
+        {
+            //数值增加
+            MapData.AddUpData += Indata;
+            //更新累计数值
+            Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+            //进度条更新
+            Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+            //累计的数值 大于等于 20 时清空
+            if(MapData.AddUpData >= 20)
+            {
+                MapData.AddUpData = 0;
+                //更新累计数值
+                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+                //进度条更新
+                Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+                //在所有增益状态没有开启时允许执行
+                if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
+                {
+                    //随机生成道具
+                    var rand = Math.floor(Math.random()*3);
+                    switch(rand)
+                    {
+                        case 0:
+                            //生成磁力道具
+                            Scripts.Prop_0_script.SetXY();
+                            break
+                        case 1 :
+                            //生成穿透道具
+                            Scripts.Prop_1_script.SetXY();
+                        break;
+                        case 2:
+                            //生成双倍得分道具
+                            Scripts.Prop_2_script.SetXY();
+                        break;
+                        default:
+                        break;
+                    }
+                }
+            }
+        }
+        //在开启了某一道具状态后接触食物
+        else
+        {
+            return ;
+        }
+    },
+
+
 });

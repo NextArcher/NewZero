@@ -101,8 +101,11 @@ cc.Class({
     
                 //开启穿透状态
                 MapData.IsPenetrate = true;
-                //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
-                MapData.DownSpeed = MapData.NowDownSpeed;
+                if(MapData.DownSpeed == 0)
+                {
+                    //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
+                    MapData.DownSpeed = MapData.NowDownSpeed;
+                }
                 this.scheduleOnce(function()
                 {
                     cc.log("穿透 Time Out!");

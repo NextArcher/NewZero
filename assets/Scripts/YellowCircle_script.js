@@ -45,6 +45,9 @@ cc.Class({
         IsDown : true,
         //磁力动作时长
         Force : 0.24,
+        //允许离开? 用于开启磁力状态移向人物被接触后 就不再下降，没有调用ReXY(),没有显示。
+        //所以在人物接触后会调用HideThis()，将其设为允许离开，就不用执行磁力动作，并且允许下降
+        IsOut : false,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -75,16 +78,12 @@ cc.Class({
 
      update (dt) 
      {
-         if(this.node.y < -MapData.size.height / 2 - this.node.width / 2)
-         {
-             this.ReXY();
-         }
 
         //只有在分辨率内才能吸
         if(this.node.y < MapData.size.height / 2 - this.node.height / 2)
         {
-            //判断是否为磁力状态
-            if(MapData.IsMagnetism)
+            //判断是否为磁力状态 并且 为不允许离开状态
+            if(MapData.IsMagnetism && !this.IsOut)
             {
                 //计时器用于等待动作的完成
                 if(this.timer >= this.Force)
@@ -107,6 +106,12 @@ cc.Class({
             //下降实现
             this.node.y -= MapData.DownSpeed * dt;
         }
+
+        if(this.node.y < -MapData.size.height / 2 - this.node.width / 2)
+        {
+            this.ReXY();
+        }
+
      },
 
      //初次接触
@@ -116,6 +121,7 @@ cc.Class({
         {
            //生成时与其他物体接触 调用修改位置方法
            case "YellowCircle":
+               //非磁力状态接触重置位置
                if(!MapData.IsMagnetism)
                {
                     this.ReXY();
@@ -170,6 +176,8 @@ cc.Class({
         this.RanData();
         //允许下降
         this.IsDown = true;
+        //不允许离开
+        this.IsOut = false;
 
     },
 
@@ -178,6 +186,10 @@ cc.Class({
     {
         //修改透明度实现隐藏
         this.node.opacity = 0;
+        //允许离开
+        this.IsOut = true;
+        //允许下降
+        this.IsDown = true;
     },
     //显示方法
     ShowThis()

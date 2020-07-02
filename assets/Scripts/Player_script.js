@@ -38,17 +38,24 @@ cc.Class({
             default : null,
             type : cc.BoxCollider
         },
+        //矩形碰撞器_1
+        Collider_1 :
+        {
+            default : null,
+            type: cc.BoxCollider,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () 
      {
-         //显示等级 越大显示更高
-         this.node.zIndex = 1;
+        //#region  引用传递
+        //显示等级 越大显示更高
+        this.node.zIndex = 1;
 
-         //将自身填进跟随数组
-         PointX.Last[0] = this.node;
+        //将自身填进跟随数组
+        PointX.Last[0] = this.node;
 
         //传入引用
         Scripts.Player_script = this;
@@ -58,36 +65,9 @@ cc.Class({
         
         //给予引用
         YellowData.player = this;
+        //#endregion 引用传递
 
-         //调用人物前情提要方法
-         this.FrontPlayer();
-         
-         //调用碰撞前情提要方法
-         this.FrontCollider();
-
-     },
-
-//#region 有关碰撞的前置方法
-     //有关碰撞的前置方法
-     FrontCollider()
-     {
-        //开启碰撞检测
-        cc.director.getCollisionManager().enabled = true;
-         //注册事件
-         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
-         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-
-        //设置矩形碰撞
-        this.Collider.getComponent(cc.BoxCollider).offset.y = this.node.height / 2;
-        this.Collider.getComponent(cc.BoxCollider).size = cc.size(this.node.width / 2,this.node.width);
-
-     },
-//#endregion 有关碰撞的前置方法end
-
-//#region 有关人物的前置方法
-     //有关人物的前置方法
-     FrontPlayer()
-     {
+        //#region  设置人物，文本，大小位置初始值
         //根据矩形物体得出人物宽高
         this.node.width = MapData.brim / 2.3;
         this.node.height = MapData.brim / 2.3;
@@ -101,8 +81,25 @@ cc.Class({
 
         //显示人物初始值
         this.Label_1.string = MapData.PlayerData;
+        //#endregion 设置人物，文本，大小位置初始值end
+         
+        //#region 碰撞器设置
+        //开启碰撞检测
+        cc.director.getCollisionManager().enabled = true;
+        //注册事件
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
+
+        //设置矩形碰撞
+        this.Collider.offset.y = this.node.height / 2;
+        this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+
+        //设置矩形碰撞_1
+        this.Collider_1.offset.y = this.node.height / 4;
+        this.Collider_1.size = cc.size(this.node.width,this.node.width / 2);
+        //#endregion 碰撞器设置end
+
      },
-//#endregion 有关人物的前置方法end
 
     start () 
     {
@@ -112,7 +109,6 @@ cc.Class({
 
     },
 
-    //
      update (dt) 
      {
          //调用移动方法
@@ -189,7 +185,6 @@ cc.Class({
      },
 //#endregion 松键事件end
 
-
 //#region  持续接触事件
      //持续接触事件
      onCollisionStay(other,self)
@@ -223,7 +218,6 @@ cc.Class({
      },
 //#endregion 持续接触事件end
 
-     
 //#region 减少数值方法
      //减少数值方法
      ReduceData()

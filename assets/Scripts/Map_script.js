@@ -21,7 +21,7 @@ window.MapData =
     //当前下降速度
     NowDownSpeed : 0,
     //下降速度 原108
-    DownSpeed : 32,
+    DownSpeed : 16,
     //人物数值 原3
     PlayerData : 3,
     //重置Y?
@@ -114,14 +114,23 @@ cc.Class({
             type : cc.Label,
         },
         //进度条对象
-        AddupProgressBar:
+        ProgressBar:
         {
             default : null,
             type : cc.ProgressBar,
         },
-        //进度条子物体
-        AddupProgressBarSon: cc.Node,
-
+        //进度条父物体对象
+        Pro_Base:
+        {
+            default : null,
+            type : cc.Node,
+        },
+        //进度条子物体对象
+        Pro_Son:
+        {
+            default : null,
+            type : cc.Node,
+        },
     },
 
      onLoad () 
@@ -149,20 +158,25 @@ cc.Class({
 
          //设置累计长度标签组件
          this.AddUplbl.fontSize = this.Player.width;
-         this.AddUplbl.lineHeight = this.Player.height;
          //设置得分标签组件
          this.Score_lbl.fontSize = MapData.brim / 1.5;
          this.Score_lbl.lineHeight = MapData.brim / 1.5;
          //显示等级 越大显示更高
          this.Score_lbl.node.zIndex = 1;
 
-         //设置进度条 长，宽，子物体位置
-         this.AddupProgressBar.node.zIndex = 1;
-         this.AddupProgressBar.node.width = MapData.size.width / 3;
-         //this.AddupProgressBar.totalLength = this.AddupProgressBar.width;
-         //this.AddupProgressBar.node.height = MapData.size .width / 32;
+         //设置进度条父物体  该物体只是个Sprite(精灵)用于作背景
+         this.Pro_Base.zIndex = 1;
+         this.Pro_Base.width = MapData.size.width / 3;
+         this.Pro_Base.height = this.Pro_Base.width / 13;
 
-         this.AddupProgressBarSon.width = this.AddupProgressBar.node.width;
+         //设置进度条宽，高，数值
+         this.ProgressBar.node.width = this.Pro_Base.width / 1.064;
+         this.ProgressBar.node.height = this.Pro_Base.height / 2;
+         this.ProgressBar.totalLength = this.ProgressBar.node.width;
+
+         //设置进度条子物体高度 = 进度条高度
+         this.Pro_Son.height = this.ProgressBar.node.height;
+         
 
 
          //#region  生成物体
@@ -327,50 +341,6 @@ cc.Class({
     },
 //#endregion 获取生成尾随物体个数方法end
 
-    //刷新累计数值方法 由增加数值方法调用
-    UpLabel()
-    {
-        this.AddUplbl.string = MapData.AddUpData + "/20";
-        //只有在没获得道具时数值才能叠加
-        if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
-        {
-            MapData.AddUpData ++;
-            //更新累计数值
-            this.AddUplbl.string = MapData.AddUpData + "/20";
-            //进度条更新
-            this.AddupProgressBar.progress = MapData.AddUpData / 20;
-            //累计的数值 大于等于 20 时清空
-            if(MapData.AddUpData >= 20)
-            {
-                MapData.AddUpData = 0;
-                //更新累计数值
-                this.AddUplbl.string = MapData.AddUpData + "/20";
-                //在所有增益状态没有开启时允许执行
-                if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
-                {
-                    //随机生成道具
-                    var rand = Math.floor(Math.random()*3);
-                    switch(rand)
-                    {
-                        case 0:
-                            //生成磁力道具
-                            Scripts.Prop_0_script.SetXY();
-                            break
-                        case 1 :
-                            //生成穿透道具
-                            Scripts.Prop_1_script.SetXY();
-                        break;
-                        case 2:
-                            //生成双倍得分道具
-                            Scripts.Prop_2_script.SetXY();
-                        break;
-                        default:
-                        break;
-                    }
-                }
-            }
-        }
-    },
 
      //测试：使用全局变量能否访问
      Print(src)
