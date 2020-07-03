@@ -48,18 +48,14 @@ cc.Class({
         {
             default : 0
         },
-        //记录当前X轴值
-        thisX :
-        {
-            default : 0,
-        },
-        //记录当前Y轴值
-        thisY :
-        {
-            default : 0,
-        },
         //加快减少数值
         ReduceSpeed : 0.3,
+        //父节点
+        UpNode : 
+        {
+            default : null,
+            type : cc.Node,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -91,35 +87,21 @@ cc.Class({
         this.Gorge();
         //记录X轴的值
         this.thisX = this.node.x;
+        //是否为显示状态
+        this.IsEnable = true;
     },
 
      update (dt) 
      {
-            //调用根据数值调整色调方法
-            this.DynamicColor();
-
-
-         //不是时停才能下降
-         if(MapData.DownSpeed != 0)
+         if(MapData.DownSpeed == 0)
          {
-             //下降实现 DownSpeed在地图脚本
-             this.node.y -= dt * MapData.DownSpeed;
+            //复原Y轴
+            this.node.y = 0;
          }
 
-         //当前物体的Y轴小于可视范围
-         if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
-         {
-            //重置Y 开启
-            MapData.IsReY = true;
-         }
+        //调用根据数值调整色调方法
+        this.DynamicColor();
 
-        //额 秀逗了 人物的Y轴值是不变的
-        //因为Y轴改变是矩形物体,所以在矩形物体脚本判断人物是否已超过当前物体
-        if(this.node.y + this.node.height / 2  < this.player.node.y )
-        {
-            //关闭狭路状态
-            PointX.IsGorge = false;
-        }
      },
 
     //隐藏方法
@@ -129,6 +111,8 @@ cc.Class({
         PointX.IsGorge = true;
         //修改透明度实现隐藏
         this.node.opacity = 0;
+        //非显示状态
+        this.IsEnable = false;
         //人物脚本获取当前透明物体引用
         PointX.x = this;
     },
@@ -136,22 +120,20 @@ cc.Class({
     //Y轴重置方法
     ReY()
     {
-            //设置Y轴值
-            this.node.y = MapData.PointY;
-            //重置Y 开启
-            MapData.IsReY = true;
-            //修改物体透明度实现显示
-            this.node.opacity = 255;
+        //避免偏差
+        this.node.y = 0;
 
-            //调用随机数值方法
-            this.RandomData();
+        //修改物体透明度实现显示
+        this.node.opacity = 255;
+        //显示状态
+        this.IsEnable = true;
 
-            //加快下降
-            MapData.DownSpeed += 2;
-            //人物移速等于下降速度
-            Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
+        //调用随机数值方法
+         this.RandomData();
 
-            this.ReduceSpeed = 0.3;
+        //重置加快减少数值
+        this.ReduceSpeed = 0.3;
+
     },
 
     //随机数值方法
@@ -169,35 +151,17 @@ cc.Class({
         this.Data_label.string = this.InData;
     },
 
-    //初次接触事件
-    onCollisionEnter(other,self)
-    {
-        if(other.node.group == "default")
-        {
-            if(!PointX.IsGorge)
-            {
-                 //只有下降速度不为零时
-                 if(MapData.DownSpeed != 0)
-                 {
-                    //记录当前下降速度
-                    MapData.NowDownSpeed = MapData.DownSpeed;
-                 }
-                //砸瓦鲁多!!
-                MapData.DownSpeed = 0;
-                //记录Y轴
-                this.thisY = this.node.y;
-            }
-        }
-    },
-
     //持续接触事件
-    onCollisionStay(other,slef)
+    onCollisionStay(other,self)
     {
         //有时会有矩形接触矩形触发 所以加上限制
         if(other.node.group == "default")
         {
-                //非狭路状态
-                if(!PointX.IsGorge)
+            //只对人物碰撞器0响应
+            if(other.tag == 0)
+            {
+                //显示状态
+                if(this.IsEnable)
                 {
                     //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
                     if(this.timer >= 1)
@@ -216,7 +180,12 @@ cc.Class({
                         this.ReduceSpeed += 0.01;
                     }
                 }
+                else { return; }
+            }
+            else { return; }
+
         }
+        else { return; }
     },
 
     //接触器离开事件
@@ -225,16 +194,14 @@ cc.Class({
         //当人物碰撞器离开人物后 
         if(other.node.group == "default")
         {
-            if(MapData.DownSpeed == 0)
-            {
-                //重置位置信息
-                this.node.setPosition(this.thisX,this.thisY);
-            }
-            else
-            {
-                return ;
-            }
+                if(MapData.DownSpeed == 0)
+                {
+                    //重置位置信息
+                    this.node.setPosition(this.thisX,0);
+                }
+                else { return; }
         }
+        else { return; }
     },
 
     //减少数值方法
@@ -259,9 +226,9 @@ cc.Class({
             //调用隐藏方法
             this.HideObject();
             //重置位置信息
-            this.node.setPosition(this.thisX,this.thisY);
+            this.node.setPosition(this.thisX,0);
             //开启下降
-            MapData.DownSpeed = MapData.NowDownSpeed;
+            //MapData.DownSpeed = MapData.NowDownSpeed;
         }
         //当其数值大等于0时刷新 否则会显示负数
         else if(this.InData >= 0)
@@ -331,7 +298,7 @@ cc.Class({
         //JS生成范围带负数方法：生成的随机数 - 随机范围的一半
         //当前位置 = 时停前的位置 + 随机数 相当于一直基于时停前的位置进行抖动
         this.node.x = this.thisX + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
-        this.node.y = this.thisY + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
+        this.node.y = 0 + (this.ReduceSpeed * 10) - (Math.random() * this.ReduceSpeed * 20);
     },
 
 });

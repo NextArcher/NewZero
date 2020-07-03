@@ -1,3 +1,4 @@
+//尾随物体脚本
 
 cc.Class({
     extends: cc.Component,

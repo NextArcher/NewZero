@@ -1,4 +1,4 @@
-
+//磁铁道具脚本
 
 cc.Class({
     extends: cc.Component,

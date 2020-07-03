@@ -131,6 +131,12 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
+        //方块组父物体
+        Point_2S :
+        {
+            default : null,
+            type : cc.Node,
+        },
     },
 
      onLoad () 
@@ -154,10 +160,8 @@ cc.Class({
          MapData.tem += MapData.brim / 2;
         
          //获取矩形Y轴生成点
-         MapData.PointY = MapData.size.height / 2 + MapData.brim;
+         this.Point_2S.y = MapData.PointY = MapData.size.height / 2 + MapData.brim;
 
-         //设置累计长度标签组件
-         this.AddUplbl.fontSize = this.Player.width;
          //设置得分标签组件
          this.Score_lbl.fontSize = MapData.brim / 1.5;
          this.Score_lbl.lineHeight = MapData.brim / 1.5;
@@ -176,8 +180,11 @@ cc.Class({
 
          //设置进度条子物体高度 = 进度条高度
          this.Pro_Son.height = this.ProgressBar.node.height;
-         
 
+         //设置累计长度标签组件
+         this.AddUplbl.fontSize = this.Player.width;
+         this.AddUplbl.node.y = -this.Pro_Base.height * 2;
+         
 
          //#region  生成物体
         
@@ -230,22 +237,24 @@ cc.Class({
             this.InsYellFollow();
         }
 
+        this.timer = 0;
+
     },
 
      update (dt) 
      {
-         //重置Y?
-         if(MapData.IsReY)
-         {
-             //根据矩形物体数量遍历执行重置方法
-             for(i=0;i<MapData.Point_2S.length;i++)
-             {
-                //执行矩形物体脚本内部重置Y方法
-                MapData.Point_2S[i].getComponent("Point_2_script").ReY();
-             }
-             //已重置
-             MapData.IsReY = false;
-         }
+        //  //重置Y?
+        //  if(MapData.IsReY)
+        //  {
+        //      //根据矩形物体数量遍历执行重置方法
+        //      for(i=0;i<MapData.Point_2S.length;i++)
+        //      {
+        //         //执行矩形物体脚本内部重置Y方法
+        //         MapData.Point_2S[i].getComponent("Point_2_script").ReY();
+        //      }
+        //      //已重置
+        //      MapData.IsReY = false;
+        //  }
      },
 
 //#region 生成矩形方法
@@ -254,13 +263,16 @@ cc.Class({
      {
             //生成矩形对象
             var newPoin_2 = cc.instantiate(this.Point_2);
+            newPoin_2.name = "Point_2_" + a;
             //设置父节点
-            this.node.addChild(newPoin_2);
+            this.Point_2S.addChild(newPoin_2);
+            //传达父节点
+            newPoin_2.getComponent("Point_2_script").UpNode = this.Point_2S;
             //设置矩形边长
             newPoin_2.width = MapData.brim;
             newPoin_2.height = MapData.brim;
             //设置位置信息
-            newPoin_2.setPosition(MapData.arr1[a],MapData.PointY,0);
+            newPoin_2.setPosition(MapData.arr1[a],0,0);
             //使用全局变量获取引用
             Point_2Data.script = this;
 

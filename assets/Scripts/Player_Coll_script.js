@@ -1,4 +1,4 @@
-
+//人物圆形子物体碰撞器
 
 cc.Class({
     extends: cc.Component,
@@ -143,7 +143,7 @@ cc.Class({
                 if(MapData.DownSpeed != 0)
                 {
                     //狭路状态接触其他矩形物体 禁止继续移动
-                    if(PointX.IsGorge)
+                    if(other.node.getComponent("Point_2_script").IsEnable)
                     {
                         this.Player.position = this.Player.getPosition();
                         if(this.PlayerScript.accLeft)
@@ -176,8 +176,6 @@ cc.Class({
                     //穿透状态不响应
                     if(!MapData.IsPenetrate)
                     {
-                        //记录位置
-                        this.Player.position = this.Player.getPosition();
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
@@ -196,7 +194,7 @@ cc.Class({
                 if(MapData.DownSpeed != 0)
                 {
                     //狭路状态接触其他矩形物体 禁止继续移动
-                    if(PointX.IsGorge)
+                    if(other.node.getComponent("Point_2_script").IsEnable)
                     {
                         this.Player.position = this.Player.getPosition();
                         if(this.PlayerScript.accLeft)

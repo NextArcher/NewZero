@@ -7,8 +7,8 @@ window.PointX =
     x : null,
     //尾部组
     Last : Array(),
-    //tag1接触?
-    IsTag1 : false,
+    //接触另一个方块?
+    IsContactOther : false,
 }
 
 cc.Class({
@@ -92,10 +92,12 @@ cc.Class({
 
         //设置矩形碰撞
         this.Collider.offset.y = this.node.height / 2;
+        this.Collider.offset.x = 0;
         this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
 
         //设置矩形碰撞_1
         this.Collider_1.offset.y = this.node.height / 4;
+        this.Collider_1.offset.x = 0;
         this.Collider_1.size = cc.size(this.node.width,this.node.width / 2);
         //#endregion 碰撞器设置end
 
@@ -106,6 +108,10 @@ cc.Class({
 
         //定义移速
         this.SpeedX = MapData.DownSpeed;
+        //第一次调用接触事件的对象
+        this.Other_0 = null;
+        //用于区分第一与第二次调用接触事件
+        this.IsOne = true;
 
     },
 
@@ -185,6 +191,33 @@ cc.Class({
      },
 //#endregion 松键事件end
 
+     onCollisionEnter(other,self)
+     {
+         switch(other.node.group)
+         {
+             case "Point_2":
+                 if(self.tag == 0)
+                 {
+                    // cc.log("初次接触");
+                    // if(this.IsOne)
+                    // {
+                    //     this.Other_0 = other;
+                    //     this.IsOne = false;
+                    // }
+                    // else
+                    // {
+                    //     cc.log( other === this.Other_0 );
+                    //     this.IsOne = true;
+                    //     this.Other_0 = null;
+                    // }
+                 }
+             break;
+
+             default:
+             break;
+         }
+     },
+
 //#region  持续接触事件
      //持续接触事件
      onCollisionStay(other,self)
@@ -194,21 +227,91 @@ cc.Class({
         {
             //#region 矩形
             case "Point_2" :
-                if(!PointX.IsGorge)
+                //碰撞器0响应
+                if(self.tag == 0)
                 {
-                    //数值的减少速度与矩形物体同步
-                    if(this.timer >= 1)
+                    //第一次接触
+                    //这有什么意义呢？
+                    //当此碰撞器,接触另外两个(非同节点)接触器时,优先调用该方法的将获取其对象，下一个调用的与之对比，得出是否为同一个对象
+                    if(this.IsOne)
                     {
-                        //执行减少数值方法
-                        this.ReduceData();
-                        //重置计时器
-                        this.timer = 0;
+                        //获取第一个接触的对象
+                        this.Other_0 = other;
+                        //关闭第一次接触
+                        this.IsOne = false;
                     }
+                    //第一次接触以外的
                     else
                     {
-                        //开始计时
-                        this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
-                    }   
+                        //#region 接触一个方块
+                        //对比得出为同一对象的 只需判断一个方块的显示状态
+                        if(this.Other_0 === other)
+                        {
+                            //接触对象是否显示
+                            if(other.node.getComponent("Point_2_script").IsEnable)
+                            {
+                                if(MapData.DownSpeed != 0)
+                                {
+                                    MapData.NowDownSpeed = MapData.DownSpeed;
+                                    MapData.DownSpeed = 0;
+                                }
+                            }
+                            //当这个方块隐藏时，就允许下降
+                            else
+                            {
+                                if(MapData.DownSpeed == 0)
+                                {
+                                    MapData.DownSpeed = MapData.NowDownSpeed;
+                                }
+                            }
+                        }
+                        //#endregion 接触一个方块end
+                        
+                        //#region  接触两个方块
+                        //对比得出为不同对象的，要判断两个方块的显示状态
+                        else if(this.Other_0 != other)
+                        {
+                            //接触对象是否显示
+                            if(other.node.getComponent("Point_2_script").IsEnable && this.Other_0.node.getComponent("Point_2_script").IsEnable)
+                            {
+                                if(MapData.DownSpeed != 0)
+                                {
+                                    MapData.NowDownSpeed = MapData.DownSpeed;
+                                    MapData.DownSpeed = 0;
+                                }
+                            }
+                            //接触两个方块时 要两个都消失才能过
+                            else if( !other.node.getComponent("Point_2_script").IsEnable && !this.Other_0.node.getComponent("Point_2_script").IsEnable )
+                            {
+                                if(MapData.DownSpeed == 0)
+                                {
+                                    MapData.DownSpeed = MapData.NowDownSpeed;
+                                }
+                            }
+                        }
+                        //#endregion 接触两个方块end
+
+                        //因为初次调用与后一次调用的对比结果已经有了，所以在此初始化，以作下次使用
+                        this.IsOne = true;
+                        this.Other_0 = null;
+                    }
+                    if(other.node.getComponent("Point_2_script").IsEnable)
+                    {
+                        //数值的减少速度与矩形物体同步
+                        if(this.timer >= 1)
+                        {
+                            //执行减少数值方法
+                            this.ReduceData();
+                            //重置计时器
+                            this.timer = 0;
+                        }
+                        else
+                        {
+                            //开始计时
+                            this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
+                        }
+                    }
+
                 }
             break;
             //#endregion 矩形end

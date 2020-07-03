@@ -1,4 +1,4 @@
-
+//障碍物脚本
 
 cc.Class({
     extends: cc.Component,
@@ -39,19 +39,24 @@ cc.Class({
 
     start () 
     {
-
+        //允许下降
+        this.IsDown = true;
     },
 
      update (dt) 
      {
-         //不是时停才能下降
-         if(MapData.DownSpeed != 0)
+         if(this.IsDown)
          {
-            //下降实现 DownSpeed在地图脚本
-            this.node.y -= MapData.DownSpeed * dt;
-            //根据底点与相同X轴的顶点距离，判断是否调用设置XY的方法
-            this.Interval();
+             //不是时停才能下降
+             if(MapData.DownSpeed != 0)
+             {
+                //下降实现 DownSpeed在地图脚本
+                this.node.y -= MapData.DownSpeed * dt;
+                //根据底点与相同X轴的顶点距离，判断是否调用设置XY的方法
+                this.Interval();
+             }
          }
+
          if(this.node.y < -MapData.size.height - this.node.height / 2)
          {
              this.ReXY();
@@ -114,9 +119,12 @@ cc.Class({
                             MapData.NowDownSpeed = MapData.DownSpeed;
                             MapData.DownSpeed = 0;
                         } 
+                        else { break; }
                     }
+                    else { break; }
 
                 }
+                else { break; }
             break;
             //接触另一个障碍物
             case "Point_1":
@@ -152,7 +160,7 @@ cc.Class({
      //#region  重置XY方法
      ReXY()
      {
-
+         this.IsDown = false;
          //向下取整随机bool值
          this.IsDouble = Math.floor(Math.random()*2);
          if(this.IsDouble)
@@ -174,7 +182,8 @@ cc.Class({
         this.thisX = MapData.arr2[Math.floor(Math.random()*MapData.arr2.length)];
         this.node.position = cc.v2(this.thisX,this.ReY());
 
-        //this.Interval();
+        this.IsDown = true;
+
      },
      //#endregion 重置XY方法
 
