@@ -23,7 +23,7 @@ window.MapData =
     //下降速度 原108
     DownSpeed : 16,
     //人物数值 原3
-    PlayerData : 3,
+    PlayerData : 10,
     //重置Y?
     IsReY : false,
     //矩形物体组
@@ -220,7 +220,7 @@ cc.Class({
              //调用生成竖形物体方法
             this.InsPoint_1();
              //调用黄圆生成方法
-            this.InsYellowCircle();
+            //this.InsYellowCircle();
          }
 
          //#endregion 生成物体end

@@ -2,8 +2,6 @@
 
 window.PointX =
 {
-    //狭路状态?
-    IsGorge : false,
     x : null,
     //尾部组
     Last : Array(),
@@ -86,9 +84,15 @@ cc.Class({
         //#region 碰撞器设置
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
+        cc.director.getCollisionManager().enabledDebugDraw = true;
+        // cc.director.getCollisionManager().enabledDrawBoundingBox = true;
         //注册事件
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
+        // this.node.on('touchmove',this.onTouchMove,this);
+        // this.delta = new cc.Vec2();
+        // this.IsOne_1 = true;
+        // this.lastPos = new cc.Vec2();
 
         //设置矩形碰撞
         this.Collider.offset.y = this.node.height / 2;
@@ -98,7 +102,7 @@ cc.Class({
         //设置矩形碰撞_1
         this.Collider_1.offset.y = this.node.height / 4;
         this.Collider_1.offset.x = 0;
-        this.Collider_1.size = cc.size(this.node.width,this.node.width / 2);
+        this.Collider_1.size = cc.size(this.node.width,this.node.height / 4);
         //#endregion 碰撞器设置end
 
      },
@@ -191,26 +195,54 @@ cc.Class({
      },
 //#endregion 松键事件end
 
+
+     //滑动事件(未完全)
+     onTouchMove(event)
+     {
+         this.lastPos = this.node.getPosition;
+
+         this.delta = event.getDelta();
+         this.node.x += this.delta.x;
+
+         if(this.lastPos.x == this.node.x)
+         {
+             return;
+         }
+         //移动前的位置 大于 移动后的位置
+         else if(this.lastPos > this.node.x)
+         {
+             //即为右移
+             this.accRight = true;
+             this.accLeft = false;
+         }
+         else if(this.lastPos < this.node.x)
+         {
+             this.accLeft = true;
+             this.accRight = false;
+         }
+
+     },
+
      onCollisionEnter(other,self)
      {
          switch(other.node.group)
          {
              case "Point_2":
-                 if(self.tag == 0)
+                 //在消除一个后迅速初次接触另一个方块就会时停,所以只能停一次
+                 if(Point_2Data.IsOne)
                  {
-                    // cc.log("初次接触");
-                    // if(this.IsOne)
-                    // {
-                    //     this.Other_0 = other;
-                    //     this.IsOne = false;
-                    // }
-                    // else
-                    // {
-                    //     cc.log( other === this.Other_0 );
-                    //     this.IsOne = true;
-                    //     this.Other_0 = null;
-                    // }
+                    if(self.tag == 0)
+                    {
+                        //由人物前端接触时停，不然会影响到圆碰撞器
+                        if(MapData.DownSpeed != 0)
+                        {
+                            MapData.NowDownSpeed = MapData.DownSpeed;
+                            MapData.DownSpeed = 0;
+                        }
+                    }
+                    Point_2Data.IsOne = false;
                  }
+                 else { return; }
              break;
 
              default:
@@ -262,6 +294,9 @@ cc.Class({
                                 if(MapData.DownSpeed == 0)
                                 {
                                     MapData.DownSpeed = MapData.NowDownSpeed;
+                                    //设置这个方块的碰撞器，用于即使在穿过时也不会与其发生接触事件
+                                    other.size = cc.size(0,0);
+                                    this.Other_0.size = cc.size(0,0);
                                 }
                             }
                         }
@@ -286,6 +321,9 @@ cc.Class({
                                 if(MapData.DownSpeed == 0)
                                 {
                                     MapData.DownSpeed = MapData.NowDownSpeed;
+                                    //设置两个方块的碰撞器大小，用于即使在穿过时也不会与其发生接触事件
+                                    other.size = cc.size(0,0);
+                                    this.Other_0.size = cc.size(0,0);
                                 }
                             }
                         }
@@ -301,7 +339,7 @@ cc.Class({
                         if(this.timer >= 1)
                         {
                             //执行减少数值方法
-                            this.ReduceData();
+                            //this.ReduceData();
                             //重置计时器
                             this.timer = 0;
                         }
@@ -313,6 +351,7 @@ cc.Class({
                     }
 
                 }
+                else { return; }
             break;
             //#endregion 矩形end
             default:
@@ -361,7 +400,9 @@ cc.Class({
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
             cc.director.getCollisionManager().enabled = false;
-            //显示结束UI
+            this.accLeft = this.IsLeft = false;
+            this.accRight = this.IsRight = false;
+            this.node.position = this.node.getPosition();
             //彻底暂停游戏
             cc.Game.pause();
         }

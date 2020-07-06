@@ -54,7 +54,6 @@ cc.Class({
                 //如果消失在画布中
                 if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
                 {
-                    cc.log("磁铁道具归位");
                     this.node.position = cc.v2(this.thisX,this.thisY);
                     //离开画布
                     this.IsIns = false;
@@ -89,7 +88,6 @@ cc.Class({
         switch(other.node.group)
         {
             case "Collider":
-                cc.log("磁力 Time Start!");
 
                 this.node.opacity = 0;
                 this.node.position = cc.v2(this.thisX,this.thisY);
@@ -101,7 +99,6 @@ cc.Class({
                 //10000(毫秒) == 10 (秒)后关闭磁力状态
                 this.scheduleOnce(function()
                 {
-                    cc.log("磁力 Time Out!");
                     //关闭磁力状态
                     MapData.IsMagnetism = false;
                 },10)

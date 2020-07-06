@@ -14,6 +14,7 @@ cc.Class({
     {
         this.width = MapData.size.width;
         this.height = MapData.brim;
+        this.HideArray = new Array();
     },
 
     start () 
@@ -33,11 +34,6 @@ cc.Class({
             //调用重置XY方法
             this.ReXY();
         }
-        if(this.node.y + this.node.height / 2  < Scripts.Player_script.node.y)
-        {
-            //关闭狭路状态
-            PointX.IsGorge = false;
-        }
     },
 
     //重置位置方法
@@ -45,6 +41,9 @@ cc.Class({
     {
         //重置Y轴
         this.node.y = MapData.PointY;
+
+        //重置一次
+        Point_2Data.IsOne = true;
 
         //遍历方块组 调用重置XY方法
         for(i = 0 ; i < MapData.Point_2S.length ; i++)

@@ -56,7 +56,6 @@ cc.Class({
                 //如果消失在画布中
                 if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
                 {
-                    cc.log("穿透道具归位");
                     this.node.position = cc.v2(this.thisX,this.thisY);
                     //离开画布
                     this.IsIns = false;
@@ -92,7 +91,6 @@ cc.Class({
         {
             //接触人物
             case "Collider":
-                cc.log("穿透 Time Start!");
                 //隐藏 归位 显示 离开画布
                 this.node.opacity = 0;
                 this.node.position = cc.v2(this.thisX,this.thisY); 
@@ -108,7 +106,6 @@ cc.Class({
                 }
                 this.scheduleOnce(function()
                 {
-                    cc.log("穿透 Time Out!");
                     //10秒后关闭
                     MapData.IsPenetrate = false;
                     //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭

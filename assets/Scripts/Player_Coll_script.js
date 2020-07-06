@@ -142,10 +142,9 @@ cc.Class({
             case "Point_2" :
                 if(MapData.DownSpeed != 0)
                 {
-                    //狭路状态接触其他矩形物体 禁止继续移动
+                    //接触的矩形物体为隐藏状态时 禁止继续移动
                     if(other.node.getComponent("Point_2_script").IsEnable)
                     {
-                        this.Player.position = this.Player.getPosition();
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
@@ -190,24 +189,23 @@ cc.Class({
             //#endregion 竖形物体end
 
             //#region 矩形
-            case "Point_2" :
-                if(MapData.DownSpeed != 0)
-                {
-                    //狭路状态接触其他矩形物体 禁止继续移动
-                    if(other.node.getComponent("Point_2_script").IsEnable)
-                    {
-                        this.Player.position = this.Player.getPosition();
-                        if(this.PlayerScript.accLeft)
-                        {
-                            this.PlayerScript.IsLeft = false;
-                        }
-                        else if(this.PlayerScript.accRight)
-                        {
-                            this.PlayerScript.IsRight = false;
-                        }
-                    }
-                }
-            break;
+            // case "Point_2" :
+            //     if(MapData.DownSpeed != 0)
+            //     {
+            //         //狭路状态接触其他矩形物体 禁止继续移动
+            //         if(other.node.getComponent("Point_2_script").IsEnable)
+            //         {
+            //             if(this.PlayerScript.accLeft)
+            //             {
+            //                 this.PlayerScript.IsLeft = false;
+            //             }
+            //             else if(this.PlayerScript.accRight)
+            //             {
+            //                 this.PlayerScript.IsRight = false;
+            //             }
+            //         }
+            //     }
+            // break;
             //#endregion 矩形end
 
             default:

@@ -7,6 +7,8 @@ window.Point_2Data =
     Player: null,
     //矩形初始数值
     data: 1,
+    //人物初次接触只能时停一次
+    IsOne : true,
 }
 
 cc.Class({
@@ -66,9 +68,9 @@ cc.Class({
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
         //获取碰撞组件
-        var box = this.getComponent(cc.BoxCollider);
+        this.box = this.getComponent(cc.BoxCollider);
         //设置碰撞XY轴大小
-        box.size = cc.size(MapData.brim,MapData.brim);
+        this.box.size = cc.size(MapData.brim,MapData.brim);
 
         //设置文字大小
         this.Data_label.fontSize = MapData.brim / 2;
@@ -107,8 +109,6 @@ cc.Class({
     //隐藏方法
     HideObject()
     {
-        //开启狭路
-        PointX.IsGorge = true;
         //修改透明度实现隐藏
         this.node.opacity = 0;
         //非显示状态
@@ -127,6 +127,8 @@ cc.Class({
         this.node.opacity = 255;
         //显示状态
         this.IsEnable = true;
+        //重置碰撞器大小
+        this.box.size = cc.size(this.node.width,this.node.height);
 
         //调用随机数值方法
          this.RandomData();
@@ -227,8 +229,6 @@ cc.Class({
             this.HideObject();
             //重置位置信息
             this.node.setPosition(this.thisX,0);
-            //开启下降
-            //MapData.DownSpeed = MapData.NowDownSpeed;
         }
         //当其数值大等于0时刷新 否则会显示负数
         else if(this.InData >= 0)

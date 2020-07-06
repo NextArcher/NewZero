@@ -270,9 +270,8 @@
     "player": null,
     "Just": 0,
     "Lose": 0,
-    "thisX": 0,
-    "thisY": null,
     "ReduceSpeed": 0.3,
+    "UpNode": null,
     "_id": ""
   },
   {

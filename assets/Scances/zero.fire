@@ -491,6 +491,20 @@
     "_id": "6c4RUQ1d9GqI1FOMVlzOzd"
   },
   {
+    "__type__": "0f970Ju2/lCHbh/AOURof8W",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "Player": {
+      "__id__": 5
+    },
+    "PlayerScript": null,
+    "_id": "13Tz3O4ltCNrTE62T9+W3b"
+  },
+  {
     "__type__": "cc.CircleCollider",
     "_name": "",
     "_objFlags": 0,
@@ -505,21 +519,7 @@
       "y": 0
     },
     "_radius": 50,
-    "_id": "39bvmRgkFPjYaFES7g4VP5"
-  },
-  {
-    "__type__": "0f970Ju2/lCHbh/AOURof8W",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 8
-    },
-    "_enabled": true,
-    "Player": {
-      "__id__": 5
-    },
-    "PlayerScript": null,
-    "_id": "13Tz3O4ltCNrTE62T9+W3b"
+    "_id": "30tOV4uuZKEL/LVsn+OHe6"
   },
   {
     "__type__": "cc.Sprite",
