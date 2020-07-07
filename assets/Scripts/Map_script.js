@@ -21,9 +21,9 @@ window.MapData =
     //当前下降速度
     NowDownSpeed : 0,
     //下降速度 原108
-    DownSpeed : 16,
+    DownSpeed : 0,
     //人物数值 原3
-    PlayerData : 10,
+    PlayerData : 3,
     //重置Y?
     IsReY : false,
     //矩形物体组
@@ -137,6 +137,12 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
+        //摄像机
+        Camera_0 :
+        {
+            default : null,
+            type : cc.Camera,
+        },
     },
 
      onLoad () 
@@ -160,7 +166,7 @@ cc.Class({
          MapData.tem += MapData.brim / 2;
         
          //获取矩形Y轴生成点
-         this.Point_2S.y = MapData.PointY = MapData.size.height / 2 + MapData.brim;
+         this.Point_2S.y = MapData.PointY = MapData.size.height / 2 + MapData.brim * 4;
 
          //设置得分标签组件
          this.Score_lbl.fontSize = MapData.brim / 1.5;
@@ -220,7 +226,7 @@ cc.Class({
              //调用生成竖形物体方法
             this.InsPoint_1();
              //调用黄圆生成方法
-            //this.InsYellowCircle();
+            this.InsYellowCircle();
          }
 
          //#endregion 生成物体end
@@ -243,18 +249,7 @@ cc.Class({
 
      update (dt) 
      {
-        //  //重置Y?
-        //  if(MapData.IsReY)
-        //  {
-        //      //根据矩形物体数量遍历执行重置方法
-        //      for(i=0;i<MapData.Point_2S.length;i++)
-        //      {
-        //         //执行矩形物体脚本内部重置Y方法
-        //         MapData.Point_2S[i].getComponent("Point_2_script").ReY();
-        //      }
-        //      //已重置
-        //      MapData.IsReY = false;
-        //  }
+
      },
 
 //#region 生成矩形方法
@@ -352,6 +347,12 @@ cc.Class({
         return number;
     },
 //#endregion 获取生成尾随物体个数方法end
+
+    //随机背景颜色方法
+    BackColor()
+    {
+        this.Camera_0.BackColor = new cc.color(Math.random()*255,Math.Math.random()*255,Math.random()*255);
+    },
 
 
      //测试：使用全局变量能否访问

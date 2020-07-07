@@ -78,13 +78,12 @@ cc.Class({
             //#region  竖形物体
             //竖形物体 初次接触也不能继续移动
             case "Point_1" :
-                if(MapData.DownSpeed != 0)
+                //接触本体碰撞器
+                if(other.tag == 0)
                 {
                     //穿透状态不响应
                     if(!MapData.IsPenetrate)
                     {
-                        //记录位置
-                        this.Player.position = this.Player.getPosition();
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
@@ -170,7 +169,7 @@ cc.Class({
             //#region  竖形物体
             //竖形物体 持续接触不能移动
             case "Point_1" :
-                if(MapData.DownSpeed != 0)
+                if(other.tag == 0)
                 {
                     //穿透状态不响应
                     if(!MapData.IsPenetrate)
@@ -187,26 +186,6 @@ cc.Class({
                 }
                 break;
             //#endregion 竖形物体end
-
-            //#region 矩形
-            // case "Point_2" :
-            //     if(MapData.DownSpeed != 0)
-            //     {
-            //         //狭路状态接触其他矩形物体 禁止继续移动
-            //         if(other.node.getComponent("Point_2_script").IsEnable)
-            //         {
-            //             if(this.PlayerScript.accLeft)
-            //             {
-            //                 this.PlayerScript.IsLeft = false;
-            //             }
-            //             else if(this.PlayerScript.accRight)
-            //             {
-            //                 this.PlayerScript.IsRight = false;
-            //             }
-            //         }
-            //     }
-            // break;
-            //#endregion 矩形end
 
             default:
             break;

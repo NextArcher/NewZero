@@ -89,7 +89,6 @@ cc.Class({
                 if(this.timer >= this.Force)
                 {
                     var moveTo = cc.moveTo(this.Force,Scripts.Player_script.node.getPosition());
-                    moveTo.setTag = 1;
                     this.node.runAction(moveTo);
                     //不允许下降
                     this.IsDown = false;
@@ -100,6 +99,8 @@ cc.Class({
                     this.timer += dt;
                 }
             }
+            //关闭磁力状态时 允许下降 不需要等到被接触或ReXY();
+            else { this.IsDown = true; }
         }
         if(this.IsDown)
         {
@@ -107,7 +108,7 @@ cc.Class({
             this.node.y -= MapData.DownSpeed * dt;
         }
 
-        if(this.node.y < -MapData.size.height / 2 - this.node.width / 2)
+        if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
         {
             this.ReXY();
         }

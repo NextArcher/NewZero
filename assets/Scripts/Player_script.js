@@ -84,7 +84,7 @@ cc.Class({
         //#region 碰撞器设置
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
-        cc.director.getCollisionManager().enabledDebugDraw = true;
+        //cc.director.getCollisionManager().enabledDebugDraw = true;
         // cc.director.getCollisionManager().enabledDrawBoundingBox = true;
         //注册事件
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
@@ -95,14 +95,16 @@ cc.Class({
         // this.lastPos = new cc.Vec2();
 
         //设置矩形碰撞
+        this.Collider.tag = 0;
         this.Collider.offset.y = this.node.height / 2;
         this.Collider.offset.x = 0;
-        this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+        this.Collider.size = cc.size(this.node.width,this.node.width / 2);
 
         //设置矩形碰撞_1
-        this.Collider_1.offset.y = this.node.height / 4;
+        this.Collider_1.tag = 1;
+        this.Collider_1.offset.y = this.node.height / 3;
         this.Collider_1.offset.x = 0;
-        this.Collider_1.size = cc.size(this.node.width,this.node.height / 4);
+        this.Collider_1.size = cc.size(this.node.width,this.node.height / 3);
         //#endregion 碰撞器设置end
 
      },
@@ -116,13 +118,14 @@ cc.Class({
         this.Other_0 = null;
         //用于区分第一与第二次调用接触事件
         this.IsOne = true;
+        this.timer_1 = 0;
 
     },
 
      update (dt) 
      {
-         //调用移动方法
-         this.Move(dt);
+        //调用移动方法
+        this.Move(dt);
      },
 
 //#region 人物移动方法
@@ -242,7 +245,6 @@ cc.Class({
                     }
                     Point_2Data.IsOne = false;
                  }
-                 else { return; }
              break;
 
              default:
@@ -293,10 +295,8 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
+                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
-                                    //设置这个方块的碰撞器，用于即使在穿过时也不会与其发生接触事件
-                                    other.size = cc.size(0,0);
-                                    this.Other_0.size = cc.size(0,0);
                                 }
                             }
                         }
@@ -320,10 +320,8 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
+                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
-                                    //设置两个方块的碰撞器大小，用于即使在穿过时也不会与其发生接触事件
-                                    other.size = cc.size(0,0);
-                                    this.Other_0.size = cc.size(0,0);
                                 }
                             }
                         }
@@ -338,8 +336,10 @@ cc.Class({
                         //数值的减少速度与矩形物体同步
                         if(this.timer >= 1)
                         {
+                            //调用方块的减少数值方法
+                            other.node.getComponent("Point_2_script").ReduceData();
                             //执行减少数值方法
-                            //this.ReduceData();
+                            this.ReduceData();
                             //重置计时器
                             this.timer = 0;
                         }
@@ -360,6 +360,29 @@ cc.Class({
      },
 //#endregion 持续接触事件end
 
+     onCollisionExit(other,self)
+     {
+         switch(other.node.group)
+         {
+             case "Point_2":
+                 if(self.tag == 1)
+                 {
+                    if(MapData.DownSpeed != 0)
+                    {
+                        if(!other.node.getComponent("Point_2_script").IsEnable)
+                        {
+                            this.Collider.size = cc.size(this.node.width,this.node.width / 2);
+                        }
+                    }
+                 }
+             break;
+
+             default:
+             break;
+         }
+     },
+
+
 //#region 减少数值方法
      //减少数值方法
      ReduceData()
@@ -373,7 +396,7 @@ cc.Class({
             if(MapData.PlayerData <= PointX.Last.length)
             {
                 //向上遍历数组 遇到没有隐藏的 就隐藏
-                for(i = PointX.Last.length;i > 1;i--)
+                for(i = PointX.Last.length; i > 1; i--)
                 {
                     //遇到没有隐藏的
                     if(PointX.Last[i - 1].getComponent("following_script").node.opacity != 0)
@@ -404,7 +427,7 @@ cc.Class({
             this.accRight = this.IsRight = false;
             this.node.position = this.node.getPosition();
             //彻底暂停游戏
-            cc.Game.pause();
+            cc.director.pause();
         }
         //数值大等于0时刷新 否则会显示负数
         else if(MapData.PlayerData >= 0)

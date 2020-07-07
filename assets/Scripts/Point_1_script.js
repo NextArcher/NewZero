@@ -86,13 +86,15 @@ cc.Class({
 
                 }
             break;
-            //接触另一个障碍物
             case "Point_1":
                 this.ReXY();
             break;
             //接触方块
             case "Point_2":
-                this.ReXY();
+                if(MapData.DownSpeed != 0)
+                {
+                    this.ReXY();
+                }
             break;
 
              default:
@@ -126,14 +128,17 @@ cc.Class({
                 }
                 else { break; }
             break;
-            //接触另一个障碍物
             case "Point_1":
                 this.ReXY();
             break;
             //接触方块
             case "Point_2":
-                this.ReXY();
+                if(MapData.DownSpeed != 0)
+                {
+                    this.ReXY();
+                }
             break;
+
             default:
             break;
          }
@@ -160,7 +165,6 @@ cc.Class({
      //#region  重置XY方法
      ReXY()
      {
-         this.IsDown = false;
          //向下取整随机bool值
          this.IsDouble = Math.floor(Math.random()*2);
          if(this.IsDouble)
@@ -174,15 +178,15 @@ cc.Class({
              this.node.height = MapData.brim;
          }
         //设置碰撞大小
+        this.boxcol_1.tag = 0;
         this.boxcol_1.size = cc.size(this.node.width * 1.5,this.node.height);
         //设置前方碰撞大小
+        this.boxcol_2.tag = 1;
         this.boxcol_2.size = cc.size(this.node.width,this.node.width);
         this.boxcol_2.offset.y = -this.node.height / 2;
         //在固定的四个生成点中得出随机一个
-        this.thisX = MapData.arr2[Math.floor(Math.random()*MapData.arr2.length)];
+        this.thisX = MapData.arr2[Math.floor(Math.random() * MapData.arr2.length)];
         this.node.position = cc.v2(this.thisX,this.ReY());
-
-        this.IsDown = true;
 
      },
      //#endregion 重置XY方法

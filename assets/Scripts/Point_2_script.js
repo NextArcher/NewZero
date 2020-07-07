@@ -58,6 +58,16 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
+        box_0 :
+        {
+            default : null,
+            type : cc.BoxCollider,
+        },
+        // box_1 :
+        // {
+        //     default : null,
+        //     type : cc.BoxCollider,
+        // },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -67,10 +77,13 @@ cc.Class({
 
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
-        //获取碰撞组件
-        this.box = this.getComponent(cc.BoxCollider);
         //设置碰撞XY轴大小
-        this.box.size = cc.size(MapData.brim,MapData.brim);
+        this.box_0.tag = 0;
+        this.box_0.size = cc.size(MapData.brim,MapData.brim);
+
+        // this.box_1.tag = 1;
+        // this.box_1.size = cc.size(MapData.brim,MapData.brim / 4);
+        // this.box_1.offset.y = -MapData.brim / 3;
 
         //设置文字大小
         this.Data_label.fontSize = MapData.brim / 2;
@@ -127,8 +140,6 @@ cc.Class({
         this.node.opacity = 255;
         //显示状态
         this.IsEnable = true;
-        //重置碰撞器大小
-        this.box.size = cc.size(this.node.width,this.node.height);
 
         //调用随机数值方法
          this.RandomData();
@@ -153,55 +164,14 @@ cc.Class({
         this.Data_label.string = this.InData;
     },
 
-    //持续接触事件
-    onCollisionStay(other,self)
-    {
-        //有时会有矩形接触矩形触发 所以加上限制
-        if(other.node.group == "default")
-        {
-            //只对人物碰撞器0响应
-            if(other.tag == 0)
-            {
-                //显示状态
-                if(this.IsEnable)
-                {
-                    //间隔自减实现视觉上的减少效果(主要是因为太快了，没看清数值的变化就消失了)
-                    if(this.timer >= 1)
-                    {
-        
-                        //调用减少数值方法
-                        this.ReduceData();
-        
-                        //计时器归零
-                        this.timer = 0;
-                    }
-                    else
-                    {
-                        //开始计时
-                        this.timer += this.ReduceSpeed;
-                        this.ReduceSpeed += 0.01;
-                    }
-                }
-                else { return; }
-            }
-            else { return; }
-
-        }
-        else { return; }
-    },
-
     //接触器离开事件
     onCollisionExit(other,self)
     {
         //当人物碰撞器离开人物后 
         if(other.node.group == "default")
         {
-                if(MapData.DownSpeed == 0)
-                {
-                    //重置位置信息
-                    this.node.setPosition(this.thisX,0);
-                }
-                else { return; }
+            //重置位置信息
+            this.node.setPosition(this.thisX,0);
         }
         else { return; }
     },
@@ -220,7 +190,8 @@ cc.Class({
             MapData.Score ++;
         }
         //显示得分
-        Scripts.Map_script.Score_lbl.string = + MapData.Score;
+        Scripts.Map_script.Score_lbl.string = MapData.Score;
+        this.ReduceSpeed += 0.1;
         //调用抖动方法
         this.Shake();
         if(this.InData < 1)
@@ -246,7 +217,7 @@ cc.Class({
         if(MapData.PlayerData < this.InData)
         {
             //人物数值 +1 还是小于物体数值时
-            if(MapData.PlayerData+1 < this.InData)
+            if(MapData.PlayerData + 1 < this.InData)
             {
                 //高红
                 this.node.color = new cc.color(255,0,0);

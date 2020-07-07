@@ -29,7 +29,7 @@ cc.Class({
             this.node.y -= MapData.DownSpeed * dt;
         }
         //当前物体的Y轴小于可视范围
-        if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
+        if(this.node.y < -MapData.size.height / 2 - this.height / 2)
         {
             //调用重置XY方法
             this.ReXY();
@@ -57,7 +57,7 @@ cc.Class({
             //加快下降
             MapData.DownSpeed += 2;
             //人物移速等于下降速度
-            Scripts.Player_script.getComponent("Player_script").SpeedX = MapData.DownSpeed;
+            Scripts.Player_script.getComponent("Player_script").SpeedX += 2;
         }
         else { return; }
 
