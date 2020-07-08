@@ -1,5 +1,8 @@
 //黄圆物体脚本
 
+
+var IsMoveToPlayer = false;                 //声明是否正在移向玩家
+
 //黄圆数据
 window.YellowData =
 {
@@ -82,17 +85,17 @@ cc.Class({
         //只有在分辨率内才能吸
         if(this.node.y < MapData.size.height / 2 - this.node.height / 2)
         {
-            //判断是否为磁力状态 并且 为不允许离开状态
-            if(MapData.IsMagnetism && !this.IsOut)
+            //判断是否为磁力状态 并且 为不允许离开状态 或者 正在移向玩家
+            if((MapData.IsMagnetism && !this.IsOut) || IsMoveToPlayer)
             {
                 //计时器用于等待动作的完成
                 if(this.timer >= this.Force)
                 {
                     var moveTo = cc.moveTo(this.Force,Scripts.Player_script.node.getPosition());
-                    this.node.runAction(moveTo);
-                    //不允许下降
-                    this.IsDown = false;
-                    this.timer = 0;
+                    this.node.runAction(moveTo);            //开启运动
+                    this.IsDown = false;                    //不允许下降
+                    IsMoveToPlayer = true;                  //正在移向玩家状态
+                    this.timer = 0;                         //计时器归0
                 }
                 else
                 {
@@ -100,7 +103,10 @@ cc.Class({
                 }
             }
             //关闭磁力状态时 允许下降 不需要等到被接触或ReXY();
-            else { this.IsDown = true; }
+            else 
+            { 
+                this.IsDown = true; 
+            }
         }
         if(this.IsDown)
         {
@@ -185,12 +191,10 @@ cc.Class({
     //隐藏方法
     HideThis()
     {
-        //修改透明度实现隐藏
-        this.node.opacity = 0;
-        //允许离开
-        this.IsOut = true;
-        //允许下降
-        this.IsDown = true;
+        this.node.opacity = 0;        //修改透明度实现隐藏
+        this.IsOut = true;            //允许离开
+        this.IsDown = true;           //允许下降
+        IsMoveToPlayer = false;       //非移向玩家状态
     },
     //显示方法
     ShowThis()

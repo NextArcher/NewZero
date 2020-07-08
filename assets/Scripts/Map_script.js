@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.001,
+    FollSpeed : 0.003,
     //累计长度
     AddUpData : 0,
     //磁力状态?

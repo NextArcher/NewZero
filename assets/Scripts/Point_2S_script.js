@@ -14,7 +14,7 @@ cc.Class({
     {
         this.width = MapData.size.width;
         this.height = MapData.brim;
-        this.HideArray = new Array();
+        this.IsDown = true;                 //是否允许下降
     },
 
     start () 
@@ -24,7 +24,7 @@ cc.Class({
 
     update (dt) 
     {
-        if(MapData.DownSpeed != 0)
+        if(MapData.DownSpeed != 0 && this.IsDown)
         {
             this.node.y -= MapData.DownSpeed * dt;
         }
@@ -39,6 +39,8 @@ cc.Class({
     //重置位置方法
     ReXY()
     {
+        //停止下降
+        this.IsDown = false;
         //重置Y轴
         this.node.y = MapData.PointY;
 
@@ -55,11 +57,13 @@ cc.Class({
         if(MapData.DownSpeed > 10)
         {
             //加快下降
-            MapData.DownSpeed += 2;
+            MapData.DownSpeed += 3;
             //人物移速等于下降速度
-            Scripts.Player_script.getComponent("Player_script").SpeedX += 2;
+            Scripts.Player_script.getComponent("Player_script").SpeedX += 3;
         }
-        else { return; }
+
+        //允许下降
+        this.IsDown = true;
 
     },
 

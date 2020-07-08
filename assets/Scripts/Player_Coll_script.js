@@ -219,7 +219,7 @@ cc.Class({
     UpLabel(Indata)
     {
         //只有在没获得道具时数值才能叠加
-        if(!MapData.IsMagnetism && !MapData.IsDouble)
+        if(!MapData.IsMagnetism && !MapData.IsDouble && !MapData.IsPenetrate)
         {
             //数值增加
             MapData.AddUpData += Indata;
@@ -235,11 +235,11 @@ cc.Class({
                 Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
                 //进度条更新
                 Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
-                //在所有增益状态没有开启时允许执行
-                if(!MapData.IsMagnetism && !MapData.IsPenetrate && !MapData.IsDouble)
+                //在所有道具不在画布中时 生成道具
+                if(!Scripts.Prop_0_script.IsIns && !Scripts.Prop_1_script.IsIns && !Scripts.Prop_2_script.IsIns)
                 {
                     //随机生成道具
-                    var rand = Math.floor(Math.random()*3);
+                    var rand = Math.floor(Math.random() * 3);
                     switch(rand)
                     {
                         case 0:

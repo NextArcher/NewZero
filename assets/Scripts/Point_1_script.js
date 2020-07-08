@@ -182,7 +182,7 @@ cc.Class({
         this.boxcol_1.size = cc.size(this.node.width * 1.5,this.node.height);
         //设置前方碰撞大小
         this.boxcol_2.tag = 1;
-        this.boxcol_2.size = cc.size(this.node.width,this.node.width);
+        this.boxcol_2.size = cc.size(this.node.width * 1.5,this.node.width);
         this.boxcol_2.offset.y = -this.node.height / 2;
         //在固定的四个生成点中得出随机一个
         this.thisX = MapData.arr2[Math.floor(Math.random() * MapData.arr2.length)];

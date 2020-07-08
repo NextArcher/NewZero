@@ -89,7 +89,7 @@ cc.Class({
         //注册事件
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-        // this.node.on('touchmove',this.onTouchMove,this);
+         this.node.on('touchmove',this.onTouchMove,this);
         // this.delta = new cc.Vec2();
         // this.IsOne_1 = true;
         // this.lastPos = new cc.Vec2();
@@ -112,20 +112,20 @@ cc.Class({
     start () 
     {
 
-        //定义移速
-        this.SpeedX = MapData.DownSpeed;
-        //第一次调用接触事件的对象
-        this.Other_0 = null;
-        //用于区分第一与第二次调用接触事件
-        this.IsOne = true;
-        this.timer_1 = 0;
+        this.SpeedX = MapData.DownSpeed;        //定义移速
+        this.Other_0 = null;                    //第一次调用接触事件的对象
+        this.IsOne = true;                      //用于区分第一与第二次调用接触事件
+        this.Move_0 = 0;                        //移动前的X轴值
+        this.touchMove = new cc.Vec2();         //鼠标上一帧位置
 
     },
 
      update (dt) 
      {
+         //记录移动前的X轴
+         this.Move_0 = this.node.x;
         //调用移动方法
-        this.Move(dt);
+        //this.Move(dt);
      },
 
 //#region 人物移动方法
@@ -202,27 +202,28 @@ cc.Class({
      //滑动事件(未完全)
      onTouchMove(event)
      {
-         this.lastPos = this.node.getPosition;
-
-         this.delta = event.getDelta();
-         this.node.x += this.delta.x;
-
-         if(this.lastPos.x == this.node.x)
+         //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
+         this.touchMove = Scripts.Map_script.Camera_0.node.convertToNodeSpaceAR(event.getLocation());
+         if(this.touchMove.x > this.node.x)            //鼠标往右移了
          {
-             return;
-         }
-         //移动前的位置 大于 移动后的位置
-         else if(this.lastPos > this.node.x)
-         {
-             //即为右移
              this.accRight = true;
              this.accLeft = false;
+             if(this.IsRight)
+             {
+                this.node.x = this.touchMove.x;
+             }
          }
-         else if(this.lastPos < this.node.x)
+         else if(this.touchMove.x < this.node.x)       //鼠标往左移了
          {
              this.accLeft = true;
              this.accRight = false;
+             if(this.IsLeft)
+             {
+                //当前位置 = 滑动前的位置
+                this.node.x = this.touchMove.x;
+             }
          }
+         //对比touchmove 大了就是右边，小了就是左边
 
      },
 
@@ -411,6 +412,7 @@ cc.Class({
                     }
                 }
             }
+
         }
 
         //人物数值小于0时游戏结束
@@ -422,6 +424,7 @@ cc.Class({
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
+            this.node.off('touchmove',this.onTouchMove,this);
             cc.director.getCollisionManager().enabled = false;
             this.accLeft = this.IsLeft = false;
             this.accRight = this.IsRight = false;

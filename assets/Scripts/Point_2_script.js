@@ -96,8 +96,6 @@ cc.Class({
 
     start () 
     {
-        //获取玩家脚本
-        this.player = Point_2Data.Player.getComponent('Player_script');
         //获取限定X轴方法
         this.Gorge();
         //记录X轴的值

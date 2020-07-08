@@ -39,7 +39,7 @@ cc.Class({
 
     start () 
     {
-
+        
     },
 
     update (dt) 
@@ -101,7 +101,7 @@ cc.Class({
                 {
                     //关闭磁力状态
                     MapData.IsMagnetism = false;
-                },10)
+                },8)
             break;
             case "Point_2":
                 this.SetXY();
