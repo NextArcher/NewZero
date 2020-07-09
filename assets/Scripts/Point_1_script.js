@@ -1,5 +1,11 @@
 //障碍物脚本
 
+
+var topPoint = 0;
+var downPoint = 0;
+var toPlayerX = 0;
+
+
 cc.Class({
     extends: cc.Component,
 
@@ -57,6 +63,8 @@ cc.Class({
              }
          }
 
+         //this.toPlayerDist();
+
          if(this.node.y < -MapData.size.height - this.node.height / 2)
          {
              this.ReXY();
@@ -83,7 +91,6 @@ cc.Class({
                             MapData.DownSpeed = 0;
                         } 
                     }
-
                 }
             break;
             case "Point_1":
@@ -182,8 +189,8 @@ cc.Class({
         this.boxcol_1.size = cc.size(this.node.width * 1.5,this.node.height);
         //设置前方碰撞大小
         this.boxcol_2.tag = 1;
-        this.boxcol_2.size = cc.size(this.node.width * 1.5,this.node.width);
-        this.boxcol_2.offset.y = -this.node.height / 2;
+        this.boxcol_2.size = cc.size(this.node.width * 1.5,this.node.width / 2);
+        this.boxcol_2.offset.y = -this.node.height / 2 - this.node.width / 3;
         //在固定的四个生成点中得出随机一个
         this.thisX = MapData.arr2[Math.floor(Math.random() * MapData.arr2.length)];
         this.node.position = cc.v2(this.thisX,this.ReY());
@@ -268,5 +275,49 @@ cc.Class({
          return dist;
      },
      //#endregion 计算同X轴的两点间的距离方法end
+
+
+     toPlayerDist()
+     {
+         topPoint = this.node.y + this.node.height / 2 + MapData.brim / 4.6;
+         downPoint = this.node.y - this.node.height / 2 - MapData.brim / 4.6;
+         if(Scripts.Player_script.node.y < topPoint && Scripts.Player_script.node.y > downPoint)
+         {
+            if(Scripts.Player_script.node.x > 0)
+            {
+                toPlayerX = this.Distance(Scripts.Player_script.node.x + MapData.brim / 4.6,this.node.x);
+                if(toPlayerX <= this.node.width / 2)
+                {
+                    if(Scripts.Player_script.accLeft)
+                    {
+                        Scripts.Player_script.IsLeft = false;
+                    }
+                    else if(Scripts.Player_script.accRight)
+                    {
+                        Scripts.Player_script.IsRight = false;
+                    }
+                }
+                else { return; }
+            }
+            else if(Scripts.Player_script.node.x < 0)
+            {
+                var toPlayerX = this.Distance(Scripts.Player_script.node.x - MapData.brim / 4.6,this.node.x);
+                if(toPlayerX <= this.node.width / 2)
+                {
+                    if(Scripts.Player_script.accLeft)
+                    {
+                        Scripts.Player_script.IsLeft = false;
+                    }
+                    else if(Scripts.Player_script.accRight)
+                    {
+                        Scripts.Player_script.IsRight = false;
+                    }
+                }
+                else { return; }
+            }
+         }
+         else { return; }
+     },
+
 
 });

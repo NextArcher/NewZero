@@ -29,6 +29,7 @@ cc.Class({
         var coll = this.node.getComponent(cc.CircleCollider);
         coll.radius = this.Player.width / 2;
 
+
         //获人物脚本
         this.PlayerScript = this.Player.getComponent("Player_script");
 
@@ -78,8 +79,12 @@ cc.Class({
             //#region  竖形物体
             //竖形物体 初次接触也不能继续移动
             case "Point_1" :
+                if(other.tag == 1)
+                {
+                    break;
+                }
                 //接触本体碰撞器
-                if(other.tag == 0)
+                else if(other.tag == 0)
                 {
                     //穿透状态不响应
                     if(!MapData.IsPenetrate)
@@ -87,10 +92,12 @@ cc.Class({
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
+                            this.PlayerScript.IsRight = true;
                         }
                         else if(this.PlayerScript.accRight)
                         {
                             this.PlayerScript.IsRight = false;
+                            this.PlayerScript.IsLeft = true;
                         }
                     }
                 }
@@ -147,10 +154,12 @@ cc.Class({
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
+                            this.PlayerScript.IsRight = true;
                         }
                         else if(this.PlayerScript.accRight)
                         {
                             this.PlayerScript.IsRight = false;
+                            this.PlayerScript.IsLeft = true;
                         }
                     }
                 }
@@ -169,7 +178,11 @@ cc.Class({
             //#region  竖形物体
             //竖形物体 持续接触不能移动
             case "Point_1" :
-                if(other.tag == 0)
+                if(other.tag == 1)
+                {
+                    break;
+                }
+                else if(other.tag == 0)
                 {
                     //穿透状态不响应
                     if(!MapData.IsPenetrate)
@@ -177,10 +190,12 @@ cc.Class({
                         if(this.PlayerScript.accLeft)
                         {
                             this.PlayerScript.IsLeft = false;
+                            this.PlayerScript.IsRight = true;
                         }
                         else if(this.PlayerScript.accRight)
                         {
                             this.PlayerScript.IsRight = false;
+                            this.PlayerScript.IsLeft = true;
                         }
                     }
                 }

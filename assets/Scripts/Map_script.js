@@ -153,7 +153,8 @@ cc.Class({
 
          cc.log("AD键控制移动");
          //获取分辨率
-         MapData.size = cc.winSize;
+         //MapData.size = cc.winSize;
+         MapData.size = cc.view.getVisibleSize();
          cc.log(MapData.size);
 
          //设置下降速度
@@ -191,6 +192,9 @@ cc.Class({
          this.AddUplbl.fontSize = this.Player.width;
          this.AddUplbl.node.y = -this.Pro_Base.height * 2;
          
+         this.node.on('touchstart',this.onTouchStart,this);                 //点击事件
+         this.node.on('touchmove',this.onTouchMove,this);                   //滑动事件
+         this.node.on('touchend',this.onTouchEnd,this);                     //抬起事件
 
          //#region  生成物体
         
@@ -354,6 +358,23 @@ cc.Class({
         this.Camera_0.BackColor = new cc.color(Math.random()*255,Math.Math.random()*255,Math.random()*255);
     },
 
+    //点击事件
+    onTouchStart(event)
+    {
+        Scripts.Player_script.onTouchStart(event);          //调用玩家的点击事件
+    },
+
+    //滑动事件
+    onTouchMove(event)
+    {
+        Scripts.Player_script.onTouchMove(event);           //调用玩家的滑动事件
+    },
+
+    //抬起事件
+    onTouchEnd(event)
+    {
+
+    },
 
      //测试：使用全局变量能否访问
      Print(src)

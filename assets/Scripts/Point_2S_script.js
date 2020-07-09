@@ -57,9 +57,9 @@ cc.Class({
         if(MapData.DownSpeed > 10)
         {
             //加快下降
-            MapData.DownSpeed += 3;
+            //MapData.DownSpeed += 3;
             //人物移速等于下降速度
-            Scripts.Player_script.getComponent("Player_script").SpeedX += 3;
+            //Scripts.Player_script.getComponent("Player_script").SpeedX += 3;
         }
 
         //允许下降

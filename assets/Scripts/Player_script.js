@@ -89,16 +89,12 @@ cc.Class({
         //注册事件
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-         this.node.on('touchmove',this.onTouchMove,this);
-        // this.delta = new cc.Vec2();
-        // this.IsOne_1 = true;
-        // this.lastPos = new cc.Vec2();
 
         //设置矩形碰撞
         this.Collider.tag = 0;
-        this.Collider.offset.y = this.node.height / 2;
+        this.Collider.size = cc.size(this.node.width,this.node.width / 4);
+        this.Collider.offset.y = this.node.height / 2 + this.node.width / 8;
         this.Collider.offset.x = 0;
-        this.Collider.size = cc.size(this.node.width,this.node.width / 2);
 
         //设置矩形碰撞_1
         this.Collider_1.tag = 1;
@@ -116,7 +112,8 @@ cc.Class({
         this.Other_0 = null;                    //第一次调用接触事件的对象
         this.IsOne = true;                      //用于区分第一与第二次调用接触事件
         this.Move_0 = 0;                        //移动前的X轴值
-        this.touchMove = new cc.Vec2();         //鼠标上一帧位置
+        this.touchMove = new cc.Vec2();         //移动前的位置
+        this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
 
     },
 
@@ -198,32 +195,62 @@ cc.Class({
      },
 //#endregion 松键事件end
 
+     //点击事件
+     onTouchStart(event)
+     {
+
+     },
 
      //滑动事件(未完全)
      onTouchMove(event)
      {
          //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
          this.touchMove = Scripts.Map_script.Camera_0.node.convertToNodeSpaceAR(event.getLocation());
-         if(this.touchMove.x > this.node.x)            //鼠标往右移了
+         //获取相比上一帧的移动距离
+         this.onAtouchMove =  event.getDelta();
+         if(this.onAtouchMove.x > 0)      //右移
          {
-             this.accRight = true;
-             this.accLeft = false;
-             if(this.IsRight)
-             {
-                this.node.x = this.touchMove.x;
-             }
+            if(this.IsRight)
+            {
+                //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
+                if(this.node.x >= MapData.size.width / 2 - this.node.width / 2)
+                {
+                    return;
+                }
+                else
+                {
+                    //右移实现 当前位置 + 鼠标相比上一帧移动的距离
+                    this.node.x += this.onAtouchMove.x;
+                    this.accRight = true;
+                    this.accLeft = false;
+                }
+            }
+            else { return; }
          }
-         else if(this.touchMove.x < this.node.x)       //鼠标往左移了
+         else if(this.onAtouchMove.x < 0)     //左移
          {
-             this.accLeft = true;
-             this.accRight = false;
-             if(this.IsLeft)
-             {
-                //当前位置 = 滑动前的位置
-                this.node.x = this.touchMove.x;
-             }
+            if(this.IsLeft)
+            {
+                //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
+                if(this.node.x <= -MapData.size.width / 2 + this.node.width / 2) 
+                {
+                    //不能再继续左移了 
+                    return;
+                }
+                else
+                {
+                    //左移实现
+                   this.node.x += this.onAtouchMove.x;
+                   this.accLeft = true;
+                   this.accRight = false;
+                }
+            }
+            else { return; }
          }
-         //对比touchmove 大了就是右边，小了就是左边
+         else if(this.onAtouchMove.x == 0)
+         {
+             return;
+         }
 
      },
 
@@ -296,7 +323,7 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
-                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+                                    //this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
                                 }
                             }
@@ -321,7 +348,7 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
-                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+                                    //this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
                                 }
                             }
@@ -366,13 +393,13 @@ cc.Class({
          switch(other.node.group)
          {
              case "Point_2":
-                 if(self.tag == 1)
+                 if(self.tag == 0)
                  {
                     if(MapData.DownSpeed != 0)
                     {
                         if(!other.node.getComponent("Point_2_script").IsEnable)
                         {
-                            this.Collider.size = cc.size(this.node.width,this.node.width / 2);
+                            //this.Collider.size = cc.size(this.node.width,this.node.width / 2);
                         }
                     }
                  }
@@ -424,12 +451,15 @@ cc.Class({
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-            this.node.off('touchmove',this.onTouchMove,this);
+            Scripts.Map_script.node.off('touchstart',this.onTouchStart,this);                 //关闭点击事件
+            Scripts.Map_script.node.off('touchmove',this.onTouchMove,this);                   //关闭滑动事件
+            Scripts.Map_script.node.off('touchend',this.onTouchEnd,this);                     //关闭抬起事件
+
             cc.director.getCollisionManager().enabled = false;
             this.accLeft = this.IsLeft = false;
             this.accRight = this.IsRight = false;
             this.node.position = this.node.getPosition();
-            //彻底暂停游戏
+            //暂停游戏
             cc.director.pause();
         }
         //数值大等于0时刷新 否则会显示负数
