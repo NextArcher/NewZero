@@ -1,5 +1,7 @@
 //磁铁道具脚本
 
+
+var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -39,10 +41,21 @@ cc.Class({
 
     start () 
     {
-        
+        this.nowTime = 0;
+        this.timer = 0;
     },
 
     update (dt) 
+    {
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+    },
+
+    fixedUpdate(dt)
     {
         //在画布中？
         if(this.IsIns)
@@ -60,27 +73,33 @@ cc.Class({
                 }
             }
         }
-        else
+
+        if(this.timer != 0)
         {
-            return;
+            Scripts.Map_script.AddUplbl.string = "磁铁:" + this.timer.toFixed(2);           //保留2位小数
+            this.timer -= dt;
+            if(this.timer <= 0)
+            {
+                MapData.IsMagnetism = false;                //关闭磁力状态
+                Scripts.Map_script.Pro_Base.active = true;  //显示进度条
+                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
+                this.timer = 0;
+            }
+            else { return; }
         }
+        else { return; }
     },
 
     //修改XY方法
     SetXY()
     {
-
-        //计算出X轴的范围
-        var posX = MapData.arr1[Math.floor(Math.random()* MapData.arr1.length)];
-        //Y轴的最小生成点
-        var posYmiN = MapData.PointY + MapData.brim / 2 + this.node.height;
-        //计算出Y轴的最大生成点
-        var posYmaX = posYmiN + MapData.size.height - this.node.height;
+        var posX = MapData.arr1[Math.floor(Math.random()* MapData.arr1.length)];            //计算出X轴的范围
+        var posYmiN = MapData.PointY + MapData.brim / 2 + this.node.height;                 //Y轴的最小生成点
+        var posYmaX = posYmiN + MapData.size.height - this.node.height;                     //计算出Y轴的最大生成点
         //调用Map的获取随机数方法 修改当前物体的位置
         this.node.x = Scripts.Map_script.GetRandomNum(-posX,posX);
         this.node.y = Scripts.Map_script.GetRandomNum(posYmiN,posYmaX);
-        //在画布中
-        this.IsIns = true;
+        this.IsIns = true;                                                                  //在画布中
     },
 
     onCollisionEnter(other,self)
@@ -88,20 +107,13 @@ cc.Class({
         switch(other.node.group)
         {
             case "Collider":
-
-                this.node.opacity = 0;
-                this.node.position = cc.v2(this.thisX,this.thisY);
-                this.node.opacity = 255;
-                //离开画布
-                this.IsIns = false;
-                MapData.IsMagnetism = true;
-    
-                //10000(毫秒) == 10 (秒)后关闭磁力状态
-                this.scheduleOnce(function()
-                {
-                    //关闭磁力状态
-                    MapData.IsMagnetism = false;
-                },8)
+                this.node.opacity = 0;                                  //隐藏
+                this.node.position = cc.v2(this.thisX,this.thisY);      //离开
+                this.node.opacity = 255;                                //显示
+                this.IsIns = false;                                     //离开画布状态
+                MapData.IsMagnetism = true;                             //开启磁力状态
+                Scripts.Map_script.Pro_Base.active = false;             //隐藏累计进度条
+                this.timer = 10;                                        //开始计时
             break;
             case "Point_2":
                 this.SetXY();

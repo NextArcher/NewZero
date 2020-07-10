@@ -1,5 +1,6 @@
 //双倍得分道具脚本
 
+var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -41,10 +42,21 @@ cc.Class({
 
     start () 
     {
-
+        this.nowTime = 0;
+        this.timer = 0;
     },
 
     update (dt) 
+    {
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+    },
+
+    fixedUpdate(dt)
     {
         //在画布中？
         if(this.IsIns)
@@ -62,10 +74,20 @@ cc.Class({
                 }
             }
         }
-        else
+        if(this.timer != 0)
         {
-            return;
+            Scripts.Map_script.AddUplbl.string = "双倍得分:" + this.timer.toFixed(2);
+            this.timer -= dt;
+            if(this.timer <= 0)
+            {
+                MapData.IsDouble = false;                                                      //关闭双倍得分
+                Scripts.Map_script.Pro_Base.active = true;                                     //显示进度条
+                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
+                this.timer = 0;
+            }
+            else { return; }
         }
+        else { return; }
     },
 
     //修改XY方法
@@ -92,19 +114,20 @@ cc.Class({
         {
             case "Collider":
                 //开启双倍得分状态，隐藏，修改位置，显示
-                MapData.IsDouble = true;
                 this.node.opacity = 0;
                 this.node.position = cc.v2(this.thisX,this.thisY);
                 this.node.opacity = 255;
-                //离开画布
-                this.IsIns = false;
+                this.IsIns = false;                                     //离开画布
+                MapData.IsDouble = true;                                //开启双倍得分
+                Scripts.Map_script.Pro_Base.active = false;             //隐藏累计进度条
+                this.timer = 15;                                        //开始计时
     
-                //10000(毫秒) == 10 (秒)后关闭磁力状态
-                this.scheduleOnce(function()
-                {
-                    //关闭双倍得分
-                    MapData.IsDouble = false;
-                },15)
+                // //10000(毫秒) == 10 (秒)后关闭磁力状态
+                // this.scheduleOnce(function()
+                // {
+                //     //关闭双倍得分
+                //     MapData.IsDouble = false;
+                // },15)
             break;
             case "Point_2":
                 this.SetXY();

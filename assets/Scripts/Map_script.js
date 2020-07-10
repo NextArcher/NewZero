@@ -189,8 +189,11 @@ cc.Class({
          this.Pro_Son.height = this.ProgressBar.node.height;
 
          //设置累计长度标签组件
-         this.AddUplbl.fontSize = this.Player.width;
-         this.AddUplbl.node.y = -this.Pro_Base.height * 2;
+         this.AddUplbl.node.zIndex = 1;
+         this.AddUplbl.lineHeight = MapData.brim / 4;
+         this.AddUplbl.fontSize = MapData.brim / 4;
+         this.AddUplbl.node.position = this.Pro_Base.getPosition();
+         this.AddUplbl.node.y -= MapData.brim / 4;
          
          this.node.on('touchstart',this.onTouchStart,this);                 //点击事件
          this.node.on('touchmove',this.onTouchMove,this);                   //滑动事件
@@ -251,10 +254,10 @@ cc.Class({
 
     },
 
-     update (dt) 
-     {
+    //  update (dt) 
+    //  {
 
-     },
+    //  },
 
 //#region 生成矩形方法
      //生成矩形方法

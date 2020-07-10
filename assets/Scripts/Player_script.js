@@ -1,12 +1,14 @@
 //人物脚本
 
+
+var touchSpeed = 0;             //滑动速度
+var touchTime = 0.016;          //滑动时间
+var CellTime = 0.016;           //每0.016调用一次fixedUpdate
 window.PointX =
 {
     x : null,
     //尾部组
     Last : Array(),
-    //接触另一个方块?
-    IsContactOther : false,
 }
 
 cc.Class({
@@ -114,10 +116,22 @@ cc.Class({
         this.Move_0 = 0;                        //移动前的X轴值
         this.touchMove = new cc.Vec2();         //移动前的位置
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
+        this.nowTime = 0;                       //当前dt
 
     },
 
      update (dt) 
+     {
+         //每0.016秒执行fixedUpdate;
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+     },
+
+     fixedUpdate(dt)
      {
          //记录移动前的X轴
          this.Move_0 = this.node.x;
@@ -205,51 +219,48 @@ cc.Class({
      onTouchMove(event)
      {
          //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
-         this.touchMove = Scripts.Map_script.Camera_0.node.convertToNodeSpaceAR(event.getLocation());
+         this.touchMove = this.node.x;
          //获取相比上一帧的移动距离
-         this.onAtouchMove =  event.getDelta();
-         if(this.onAtouchMove.x > 0)      //右移
+         this.onAtouchMove =  event.getDeltaX();
+         //速度 = 路程 / 时间
+         touchSpeed = this.onAtouchMove / touchTime;
+         if(this.onAtouchMove > 0)      //右移
          {
             if(this.IsRight)
             {
                 //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
-                if(this.node.x >= MapData.size.width / 2 - this.node.width / 2)
+                if(this.node.x <= (MapData.size.width / 2 - this.node.width / 2))
                 {
-                    return;
+                    this.accRight = true;
+                    this.accLeft = false;
+                    //右移实现 当前位置 + 鼠标相比上一帧移动的距离
+                    this.node.x += touchSpeed * touchTime;
                 }
                 else
                 {
-                    //右移实现 当前位置 + 鼠标相比上一帧移动的距离
-                    this.node.x += this.onAtouchMove.x;
-                    this.accRight = true;
-                    this.accLeft = false;
+                    //玩家位置 = 上一帧的位置;
+                    this.node.x = this.touchMove;
                 }
             }
-            else { return; }
          }
-         else if(this.onAtouchMove.x < 0)     //左移
+         else if(this.onAtouchMove < 0)     //左移
          {
             if(this.IsLeft)
             {
                 //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
-                if(this.node.x <= -MapData.size.width / 2 + this.node.width / 2) 
+                if(this.node.x >= (-MapData.size.width / 2 + this.node.width / 2)) 
                 {
-                    //不能再继续左移了 
-                    return;
+                    this.accLeft = true;
+                    this.accRight = false;
+                    //左移实现
+                    this.node.x -= -touchSpeed * touchTime;
                 }
                 else
                 {
-                    //左移实现
-                   this.node.x += this.onAtouchMove.x;
-                   this.accLeft = true;
-                   this.accRight = false;
+                    //玩家位置 = 上一帧的位置;
+                    this.node.x = this.touchMove;
                 }
             }
-            else { return; }
-         }
-         else if(this.onAtouchMove.x == 0)
-         {
-             return;
          }
 
      },
@@ -323,7 +334,7 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
-                                    //this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 4);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
                                 }
                             }
@@ -348,7 +359,7 @@ cc.Class({
                             {
                                 if(MapData.DownSpeed == 0)
                                 {
-                                    //this.Collider.size = cc.size(this.node.width / 2,this.node.width / 2);
+                                    this.Collider.size = cc.size(this.node.width / 2,this.node.width / 4);
                                     MapData.DownSpeed = MapData.NowDownSpeed;
                                 }
                             }
@@ -399,7 +410,7 @@ cc.Class({
                     {
                         if(!other.node.getComponent("Point_2_script").IsEnable)
                         {
-                            //this.Collider.size = cc.size(this.node.width,this.node.width / 2);
+                            this.Collider.size = cc.size(this.node.width,this.node.width / 4);
                         }
                     }
                  }

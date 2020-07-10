@@ -1,9 +1,10 @@
 //障碍物脚本
 
 
-var topPoint = 0;
-var downPoint = 0;
-var toPlayerX = 0;
+var topPoint = 0;           //其他障碍物顶点
+var downPoint = 0;          //当前物体的底点
+var toPlayerX = 0;          //与玩家的X轴距离
+var CellTime = 0.016;
 
 
 cc.Class({
@@ -45,31 +46,41 @@ cc.Class({
 
     start () 
     {
-        //允许下降
-        this.IsDown = true;
+        this.IsDown = true;        //允许下降
+        this.nowTime = 0;           //当前dt
     },
 
      update (dt) 
      {
-         if(this.IsDown)
+         //每0.016秒调用fixedUpdate;
+         this.nowTime += dt;
+         while(this.nowTime >= CellTime)
          {
-             //不是时停才能下降
-             if(MapData.DownSpeed != 0)
-             {
-                //下降实现 DownSpeed在地图脚本
-                this.node.y -= MapData.DownSpeed * dt;
-                //根据底点与相同X轴的顶点距离，判断是否调用设置XY的方法
-                this.Interval();
-             }
+             this.fixedUpdate(CellTime);
+             this.nowTime -= CellTime;
          }
+     },
 
-         //this.toPlayerDist();
+     fixedUpdate(dt)
+     {
+        if(this.IsDown)
+        {
+            //不是时停才能下降
+            if(MapData.DownSpeed != 0)
+            {
+               //下降实现 DownSpeed在地图脚本
+               this.node.y -= MapData.DownSpeed * dt;
+               //根据底点与相同X轴的顶点距离，判断是否调用设置XY的方法
+               this.Interval();
+            }
+        }
 
-         if(this.node.y < -MapData.size.height - this.node.height / 2)
-         {
-             this.ReXY();
-         }
+        //this.toPlayerDist();
 
+        if(this.node.y < -MapData.size.height - this.node.height / 2)
+        {
+            this.ReXY();
+        }
      },
 
      //#region 初次接触方法
@@ -184,13 +195,15 @@ cc.Class({
              //原始长度
              this.node.height = MapData.brim;
          }
-        //设置碰撞大小
-        this.boxcol_1.tag = 0;
-        this.boxcol_1.size = cc.size(this.node.width * 1.5,this.node.height);
         //设置前方碰撞大小
         this.boxcol_2.tag = 1;
-        this.boxcol_2.size = cc.size(this.node.width * 1.5,this.node.width / 2);
-        this.boxcol_2.offset.y = -this.node.height / 2 - this.node.width / 3;
+        this.boxcol_2.size = cc.size(this.node.width,this.node.width / 2);
+        this.boxcol_2.offset.y = -this.node.height / 2 + this.node.width / 3;
+        //设置碰撞大小
+        this.boxcol_1.tag = 0;
+        this.boxcol_1.size = cc.size(this.node.width,this.node.height - this.boxcol_2.size.height);
+        this.boxcol_1.offset.y = 0 + this.boxcol_2.size.height / 2;
+
         //在固定的四个生成点中得出随机一个
         this.thisX = MapData.arr2[Math.floor(Math.random() * MapData.arr2.length)];
         this.node.position = cc.v2(this.thisX,this.ReY());

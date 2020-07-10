@@ -1,5 +1,7 @@
 //穿透道具脚本
 
+
+var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -41,10 +43,21 @@ cc.Class({
 
     start () 
     {
-
+        this.nowTime = 0;
+        this.timer = 0;
     },
 
     update (dt) 
+    {
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+    },
+
+    fixedUpdate(dt)
     {
         //在画布中？
         if(this.IsIns)
@@ -62,10 +75,21 @@ cc.Class({
                 }
             }
         }
-        else
+
+        if(this.timer != 0)
         {
-            return;
+            Scripts.Map_script.AddUplbl.string = "穿透:" + this.timer.toFixed(2);
+            this.timer -= dt;
+            if(this.timer <= 0)
+            {
+                MapData.IsPenetrate = false;                                                   //关闭穿透状态
+                Scripts.Map_script.Pro_Base.active = true;                                     //显示进度条
+                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
+                this.timer = 0;
+            }
+            else { return; }
         }
+        else { return; }
     },
 
     //修改XY方法
@@ -96,20 +120,20 @@ cc.Class({
                 this.node.position = cc.v2(this.thisX,this.thisY); 
                 this.node.opacity = 255;
                 this.IsIns = false;
-    
-                //开启穿透状态
-                MapData.IsPenetrate = true;
-                if(MapData.DownSpeed == 0)
-                {
-                    //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
-                    MapData.DownSpeed = MapData.NowDownSpeed;
-                }
-                this.scheduleOnce(function()
-                {
-                    //10秒后关闭
-                    MapData.IsPenetrate = false;
-                    //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭
-                },10);
+                MapData.IsPenetrate = true;                             //开启穿透状态
+                Scripts.Map_script.Pro_Base.active = false;             //隐藏累计进度条
+                this.timer = 10;                                        //开始计时
+                // if(MapData.DownSpeed == 0)
+                // {
+                //     //为避免刚接触时停 就开启穿透 而导致时间无法继续流动 所以在这里让其流动
+                //     MapData.DownSpeed = MapData.NowDownSpeed;
+                // }
+                // this.scheduleOnce(function()
+                // {
+                //     //10秒后关闭
+                //     MapData.IsPenetrate = false;
+                //     //不用遍历关闭碰撞器 因为即时关闭会导致人物卡住 所以在重置位置信息时关闭
+                // },10);
             break;
             case "Point_2":
                 this.SetXY();

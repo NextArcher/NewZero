@@ -2,6 +2,7 @@
 
 
 var IsMoveToPlayer = false;                 //声明是否正在移向玩家
+var CellTime = 0.016;
 
 //黄圆数据
 window.YellowData =
@@ -51,6 +52,16 @@ cc.Class({
         //允许离开? 用于开启磁力状态移向人物被接触后 就不再下降，没有调用ReXY(),没有显示。
         //所以在人物接触后会调用HideThis()，将其设为允许离开，就不用执行磁力动作，并且允许下降
         IsOut : false,
+        audioSuorce :           //声明音频组件
+        {
+            default : null,
+            type : cc.AudioSource,
+        },
+        audioClip :
+        {
+            default : null,
+            type : cc.AudioClip,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -76,12 +87,21 @@ cc.Class({
 
     start () 
     {
-
+        this.nowTime = 0;
     },
 
      update (dt) 
      {
+         this.nowTime += dt;
+         while(this.nowTime >= CellTime)
+         {
+             this.fixedUpdate(CellTime);
+             this.nowTime -= CellTime;
+         }
+     },
 
+     fixedUpdate(dt)
+     {
         //只有在分辨率内才能吸
         if(this.node.y < MapData.size.height / 2 - this.node.height / 2)
         {
@@ -118,7 +138,6 @@ cc.Class({
         {
             this.ReXY();
         }
-
      },
 
      //初次接触
@@ -126,6 +145,16 @@ cc.Class({
      {
         switch(other.node.group)
         {
+            case "Collider":
+                if(MapData.IsMagnetism)
+                {
+                    cc.audioEngine.play(this.audioClip,false,0.3)       //播放磁铁吸收音效
+                }
+                else
+                {
+                    this.audioSuorce.play();            //播放音频
+                }
+            break;
            //生成时与其他物体接触 调用修改位置方法
            case "YellowCircle":
                //非磁力状态接触重置位置

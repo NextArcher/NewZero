@@ -29,10 +29,6 @@ cc.Class({
         var coll = this.node.getComponent(cc.CircleCollider);
         coll.radius = this.Player.width / 2;
 
-
-        //获人物脚本
-        this.PlayerScript = this.Player.getComponent("Player_script");
-
         //被接触的黄圆脚本
         this.YellowScript = null;
     },
@@ -79,26 +75,20 @@ cc.Class({
             //#region  竖形物体
             //竖形物体 初次接触也不能继续移动
             case "Point_1" :
-                if(other.tag == 1)
+                //接触本体碰撞器 并且 非穿透状态
+                if(other.tag == 0 && !MapData.IsPenetrate)
                 {
-                    break;
-                }
-                //接触本体碰撞器
-                else if(other.tag == 0)
-                {
-                    //穿透状态不响应
-                    if(!MapData.IsPenetrate)
+                    //玩家位置 = 上一帧的位置;
+                    Scripts.Player_script.node.x = Scripts.Player_script.touchMove;
+                    if(Scripts.Player_script.accLeft)
                     {
-                        if(this.PlayerScript.accLeft)
-                        {
-                            this.PlayerScript.IsLeft = false;
-                            this.PlayerScript.IsRight = true;
-                        }
-                        else if(this.PlayerScript.accRight)
-                        {
-                            this.PlayerScript.IsRight = false;
-                            this.PlayerScript.IsLeft = true;
-                        }
+                        Scripts.Player_script.IsLeft = false;
+                        Scripts.Player_script.IsRight = true;
+                    }
+                    else if(Scripts.Player_script.accRight)
+                    {
+                        Scripts.Player_script.IsRight = false;
+                        Scripts.Player_script.IsLeft = true;
                     }
                 }
                 break;
@@ -151,15 +141,17 @@ cc.Class({
                     //接触的矩形物体为隐藏状态时 禁止继续移动
                     if(other.node.getComponent("Point_2_script").IsEnable)
                     {
-                        if(this.PlayerScript.accLeft)
+                        //玩家位置 = 上一帧的位置;
+                        Scripts.Player_script.node.x = Scripts.Player_script.touchMove;
+                        if(Scripts.Player_script.accLeft)
                         {
-                            this.PlayerScript.IsLeft = false;
-                            this.PlayerScript.IsRight = true;
+                            Scripts.Player_script.IsLeft = false;
+                            Scripts.Player_script.IsRight = true;
                         }
-                        else if(this.PlayerScript.accRight)
+                        else if(Scripts.Player_script.accRight)
                         {
-                            this.PlayerScript.IsRight = false;
-                            this.PlayerScript.IsLeft = true;
+                            Scripts.Player_script.IsRight = false;
+                            Scripts.Player_script.IsLeft = true;
                         }
                     }
                 }
@@ -177,29 +169,29 @@ cc.Class({
         {
             //#region  竖形物体
             //竖形物体 持续接触不能移动
-            case "Point_1" :
-                if(other.tag == 1)
-                {
-                    break;
-                }
-                else if(other.tag == 0)
-                {
-                    //穿透状态不响应
-                    if(!MapData.IsPenetrate)
-                    {
-                        if(this.PlayerScript.accLeft)
-                        {
-                            this.PlayerScript.IsLeft = false;
-                            this.PlayerScript.IsRight = true;
-                        }
-                        else if(this.PlayerScript.accRight)
-                        {
-                            this.PlayerScript.IsRight = false;
-                            this.PlayerScript.IsLeft = true;
-                        }
-                    }
-                }
-                break;
+            // case "Point_1" :
+            //     if(other.tag == 1)
+            //     {
+            //         break;
+            //     }
+            //     else if(other.tag == 0)
+            //     {
+            //         //穿透状态不响应
+            //         if(!MapData.IsPenetrate)
+            //         {
+            //             if(Scripts.Player_script.accLeft)
+            //             {
+            //                 Scripts.Player_script.IsLeft = false;
+            //                 Scripts.Player_script.IsRight = true;
+            //             }
+            //             else if(Scripts.Player_script.accRight)
+            //             {
+            //                 Scripts.Player_script.IsRight = false;
+            //                 Scripts.Player_script.IsLeft = true;
+            //             }
+            //         }
+            //     }
+            //     break;
             //#endregion 竖形物体end
 
             default:
@@ -215,13 +207,13 @@ cc.Class({
          {
             //离开竖形物体
             case "Point_1" :
-                    this.PlayerScript.IsLeft = true;
-                    this.PlayerScript.IsRight = true;
+                Scripts.Player_script.IsLeft = true;
+                Scripts.Player_script.IsRight = true;
             break;
             //离开矩形物体
             case "Point_2":
-                    this.PlayerScript.IsLeft = true;
-                    this.PlayerScript.IsRight = true;
+                Scripts.Player_script.IsLeft = true;
+                Scripts.Player_script.IsRight = true;
             break;
 
             default:

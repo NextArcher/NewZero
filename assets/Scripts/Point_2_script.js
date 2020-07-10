@@ -1,5 +1,7 @@
 //矩形可消除物体脚本
 
+
+var CellTime = 0.016;
 //声明全局变量 用于获取人物脚本引用
 window.Point_2Data =
 {
@@ -68,6 +70,16 @@ cc.Class({
         //     default : null,
         //     type : cc.BoxCollider,
         // },
+        audioSuorce :           //声明音频组件
+        {
+            default : null,
+            type : cc.AudioSource,
+        },
+        audioClip :
+        {
+            default : null,
+            type : cc.AudioClip,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -96,25 +108,31 @@ cc.Class({
 
     start () 
     {
-        //获取限定X轴方法
-        this.Gorge();
-        //记录X轴的值
-        this.thisX = this.node.x;
-        //是否为显示状态
-        this.IsEnable = true;
+        this.Gorge();                    //获取限定X轴方法
+        this.thisX = this.node.x;        //记录X轴的值
+        this.IsEnable = true;            //是否为显示状态
+        this.nowTime = 0;
     },
 
      update (dt) 
+     {
+         this.nowTime += dt;
+         while(this.nowTime >= CellTime)
+         {
+             this.fixedUpdate(CellTime);
+             this.nowTime -= CellTime;
+         }
+     },
+
+     fixedUpdate(dt)
      {
          if(MapData.DownSpeed == 0)
          {
             //复原Y轴
             this.node.y = 0;
          }
-
         //调用根据数值调整色调方法
         this.DynamicColor();
-
      },
 
     //隐藏方法
@@ -189,6 +207,14 @@ cc.Class({
         }
         //显示得分
         Scripts.Map_script.Score_lbl.string = MapData.Score;
+        if(MapData.IsDouble)
+        {
+            cc.audioEngine.play(this.audioClip,false,0.3)       //播放双倍得分音效
+        }
+        else
+        {
+            this.audioSuorce.play();            //播放音频
+        }
         this.ReduceSpeed += 0.1;
         //调用抖动方法
         this.Shake();

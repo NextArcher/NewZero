@@ -1,5 +1,6 @@
+//方块组脚本
 
-
+var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -19,10 +20,20 @@ cc.Class({
 
     start () 
     {
-
+        this.nowTime = 0;
     },
 
     update (dt) 
+    {
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+    },
+
+    fixedUpdate(dt)
     {
         if(MapData.DownSpeed != 0 && this.IsDown)
         {
@@ -57,7 +68,7 @@ cc.Class({
         if(MapData.DownSpeed > 10)
         {
             //加快下降
-            //MapData.DownSpeed += 3;
+            MapData.DownSpeed += 3;
             //人物移速等于下降速度
             //Scripts.Player_script.getComponent("Player_script").SpeedX += 3;
         }
