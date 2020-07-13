@@ -10,7 +10,7 @@ cc.Class({
         Coll :
         {
             default : null,
-            type : cc.CircleCollider,
+            type : cc.BoxCollider,
         },
         //初始位置
         thisX : 0,
@@ -30,10 +30,7 @@ cc.Class({
 
         //设置大小
         this.node.width = MapData.brim / 3;
-        this.node.heigth = this.node.width;
-
-        //碰撞半径
-        this.Coll.radius = this.node.width / 2;
+        this.node.heigth = this.node.width * 2;
 
         //初始位置
         this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;

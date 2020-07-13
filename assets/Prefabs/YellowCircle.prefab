@@ -24,20 +24,20 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 5
+        "__id__": 6
       },
       {
-        "__id__": 6
+        "__id__": 7
       },
       {
         "__id__": 8
       },
       {
-        "__id__": 7
+        "__id__": 9
       }
     ],
     "_prefab": {
-      "__id__": 9
+      "__id__": 10
     },
     "_opacity": 255,
     "_color": {
@@ -49,8 +49,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 24,
-      "height": 24
+      "width": 126,
+      "height": 84
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -98,16 +98,19 @@
     "_components": [
       {
         "__id__": 3
+      },
+      {
+        "__id__": 4
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
+      "r": 255,
+      "g": 97,
       "b": 0,
       "a": 255
     },
@@ -126,7 +129,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        0,
+        67.2,
         0,
         0,
         0,
@@ -185,6 +188,33 @@
     "_id": ""
   },
   {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "alignMode": 1,
+    "_target": null,
+    "_alignFlags": 4,
+    "_left": 0,
+    "_right": 0,
+    "_top": 1,
+    "_bottom": 1,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": false,
+    "_isAbsBottom": false,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 0,
+    "_originalHeight": 0,
+    "_id": ""
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -211,7 +241,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "6253422a-4c82-4566-96e3-fdf0b7dd4ef1"
+      "__uuid__": "60bad1a7-9dfa-4875-863d-68ef50140257"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -246,7 +276,7 @@
     "Force": 0.24,
     "IsOut": false,
     "audioSuorce": {
-      "__id__": 7
+      "__id__": 8
     },
     "audioClip": {
       "__uuid__": "c2f133a8-9d1e-4705-bad9-ba0248173e60"
@@ -272,7 +302,7 @@
     "_id": ""
   },
   {
-    "__type__": "cc.CircleCollider",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -285,7 +315,11 @@
       "x": 0,
       "y": 0
     },
-    "_radius": 24,
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 84,
+      "height": 42
+    },
     "_id": ""
   },
   {

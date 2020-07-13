@@ -11,7 +11,7 @@ cc.Class({
         box : 
         {
             default : null,
-            type : cc.CircleCollider,
+            type : cc.BoxCollider,
         },
         //记录X轴
         thisX : 0,
@@ -28,12 +28,10 @@ cc.Class({
          //给予引用
         Scripts.Prop_0_script = this;
          //设置宽高
-         this.node.width = MapData.brim / 3;
-         this.node.height = this.node.width;
+         this.node.width = MapData.brim / 2.4;
+         this.node.height = this.node.width * 1.5;
          //设置碰撞组件
          cc.director.getCollisionManager().enabled = true;
-         this.box = this.node.getComponent(cc.CircleCollider);
-         this.box.radius = this.node.width / 2;
          //设置位置信息
          this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
          this.node.y = this.thisY = 0;

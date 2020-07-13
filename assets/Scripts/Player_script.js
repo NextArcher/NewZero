@@ -113,11 +113,9 @@ cc.Class({
         this.SpeedX = MapData.DownSpeed;        //定义移速
         this.Other_0 = null;                    //第一次调用接触事件的对象
         this.IsOne = true;                      //用于区分第一与第二次调用接触事件
-        this.Move_0 = 0;                        //移动前的X轴值
         this.touchMove = new cc.Vec2();         //移动前的位置
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
         this.nowTime = 0;                       //当前dt
-
     },
 
      update (dt) 
@@ -133,8 +131,6 @@ cc.Class({
 
      fixedUpdate(dt)
      {
-         //记录移动前的X轴
-         this.Move_0 = this.node.x;
         //调用移动方法
         //this.Move(dt);
      },
@@ -462,9 +458,7 @@ cc.Class({
             //关闭按键响应
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
             cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-            Scripts.Map_script.node.off('touchstart',this.onTouchStart,this);                 //关闭点击事件
-            Scripts.Map_script.node.off('touchmove',this.onTouchMove,this);                   //关闭滑动事件
-            Scripts.Map_script.node.off('touchend',this.onTouchEnd,this);                     //关闭抬起事件
+            MapData.IsTouch = false;                                                                //关闭滑动响应
 
             cc.director.getCollisionManager().enabled = false;
             this.accLeft = this.IsLeft = false;

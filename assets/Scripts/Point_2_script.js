@@ -213,6 +213,7 @@ cc.Class({
         }
         else
         {
+            this.audioSuorce.volume = 0.3;
             this.audioSuorce.play();            //播放音频
         }
         this.ReduceSpeed += 0.1;

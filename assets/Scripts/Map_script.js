@@ -44,6 +44,7 @@ window.MapData =
     IsDouble : false,
     //得分
     Score : 0,
+    IsTouch : true,     //响应滑动?
 },
 
 //全脚本收录
@@ -192,8 +193,6 @@ cc.Class({
          this.AddUplbl.node.zIndex = 1;
          this.AddUplbl.lineHeight = MapData.brim / 4;
          this.AddUplbl.fontSize = MapData.brim / 4;
-         this.AddUplbl.node.position = this.Pro_Base.getPosition();
-         this.AddUplbl.node.y -= MapData.brim / 4;
          
          this.node.on('touchstart',this.onTouchStart,this);                 //点击事件
          this.node.on('touchmove',this.onTouchMove,this);                   //滑动事件
@@ -341,7 +340,7 @@ cc.Class({
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
-            MapData.FollSpeed += 0.0001;
+            MapData.FollSpeed += 0.001;
     },
 //#endregion 生成尾随物体方法end
 
@@ -349,7 +348,7 @@ cc.Class({
     //获取生成尾随物体个数
     YellFollNumber()
     {
-        var number = MapData.size.height / this.Player.width;
+        var number = MapData.size.height / this.Player.height;
 
         return number;
     },
@@ -358,19 +357,23 @@ cc.Class({
     //随机背景颜色方法
     BackColor()
     {
-        this.Camera_0.BackColor = new cc.color(Math.random()*255,Math.Math.random()*255,Math.random()*255);
+        this.Camera_0.BackColor = new cc.color(Math.random()*255,Math.Math.random() * 255,Math.random() * 255);
     },
 
     //点击事件
     onTouchStart(event)
     {
-        Scripts.Player_script.onTouchStart(event);          //调用玩家的点击事件
+        if(MapData.IsTouch)                                     //是否响应
+            Scripts.Player_script.onTouchStart(event);          //调用玩家的点击事件
+        else { return; }
     },
 
     //滑动事件
     onTouchMove(event)
     {
-        Scripts.Player_script.onTouchMove(event);           //调用玩家的滑动事件
+        if(MapData.IsTouch)                                     //是否响应
+            Scripts.Player_script.onTouchMove(event);           //调用玩家的滑动事件
+        else { return; }
     },
 
     //抬起事件

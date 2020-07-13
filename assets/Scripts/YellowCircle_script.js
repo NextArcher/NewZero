@@ -69,15 +69,14 @@ cc.Class({
      onLoad () 
      {
          //设置该物体大小
-         this.node.width = MapData.brim / 3;
-         this.node.height = this.node.width;
+         this.node.width = MapData.brim / 2;
+         this.node.height = this.node.width / 1.5;
 
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
 
-        this.node.getComponent(cc.CircleCollider).radius = this.node.width / 2;
         //设置文字大小
-        this.Label_1.fontSize = this.node.width;
+        this.Label_1.fontSize = this.node.height;
 
         //调用修改位置方法
         this.ReXY();
@@ -152,6 +151,7 @@ cc.Class({
                 }
                 else
                 {
+                    this.audioSuorce.volume = 0.3;
                     this.audioSuorce.play();            //播放音频
                 }
             break;

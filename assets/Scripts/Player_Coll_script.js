@@ -162,43 +162,6 @@ cc.Class({
         }
     },
 
-    //持续接触事件
-    onCollisionStay(other,self)
-    {
-        switch(other.node.group)
-        {
-            //#region  竖形物体
-            //竖形物体 持续接触不能移动
-            // case "Point_1" :
-            //     if(other.tag == 1)
-            //     {
-            //         break;
-            //     }
-            //     else if(other.tag == 0)
-            //     {
-            //         //穿透状态不响应
-            //         if(!MapData.IsPenetrate)
-            //         {
-            //             if(Scripts.Player_script.accLeft)
-            //             {
-            //                 Scripts.Player_script.IsLeft = false;
-            //                 Scripts.Player_script.IsRight = true;
-            //             }
-            //             else if(Scripts.Player_script.accRight)
-            //             {
-            //                 Scripts.Player_script.IsRight = false;
-            //                 Scripts.Player_script.IsLeft = true;
-            //             }
-            //         }
-            //     }
-            //     break;
-            //#endregion 竖形物体end
-
-            default:
-            break;
-        }
-    },
-
     //#region 离开接触事件
      //接触离开
      onCollisionExit(other,self)

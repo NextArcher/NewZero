@@ -11,7 +11,7 @@ cc.Class({
         box : 
         {
             default : null,
-            type : cc.CircleCollider,
+            type : cc.BoxCollider,
         },
         //记录位置信息
         thisX : 0,
@@ -30,11 +30,8 @@ cc.Class({
         cc.director.getCollisionManager().enabled = true;
 
         //设置大小
-        this.node.width = MapData.brim / 3;
-        this.node.heigth = this.node.width;
-
-        //碰撞半径
-        this.box.radius = this.node.width / 2;
+        this.node.width = MapData.brim / 2.4;
+        this.node.heigth = this.node.width * 1.5;
 
         //初始位置
         this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
