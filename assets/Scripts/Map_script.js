@@ -45,6 +45,7 @@ window.MapData =
     //得分
     Score : 0,
     IsTouch : true,     //响应滑动?
+    VolumeData : 0.5,           //音量
 },
 
 //全脚本收录
@@ -148,15 +149,20 @@ cc.Class({
 
      onLoad () 
      {
+         //全局变量实例化
+         MapData.arr1.length = MapData.arr2.length = MapData.Point_2S.length = MapData.YellowCircleS.length = MapData.Point_1S.length = PointX.Last.length = 0;
+         MapData.PlayerData = 3;
+         MapData.IsMagnetism = MapData.IsPenetrate = MapData.IsDouble = false;
+         cc.director.getCollisionManager().enabled = true;
+         MapData.IsTouch = true;
+         cc.director.resume();               //时间开始流动
 
          //传入引用
          Scripts.Map_script = this;
-
-         cc.log("AD键控制移动");
+         
          //获取分辨率
          //MapData.size = cc.winSize;
          MapData.size = cc.view.getVisibleSize();
-         cc.log(MapData.size);
 
          //设置下降速度
          MapData.DownSpeed = MapData.size.width;
@@ -241,15 +247,12 @@ cc.Class({
 
     start () 
     {
-
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(i=0;i<this.YellFollNumber();i++)
         {
             //调用生成尾随物体方法
             this.InsYellFollow();
         }
-
-        this.timer = 0;
 
     },
 

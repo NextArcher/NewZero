@@ -455,17 +455,10 @@ cc.Class({
             //停止下降
             MapData.DownSpeed = 0;
             cc.log("游戏结束");
-            //关闭按键响应
-            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
-            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
-            MapData.IsTouch = false;                                                                //关闭滑动响应
-
-            cc.director.getCollisionManager().enabled = false;
-            this.accLeft = this.IsLeft = false;
-            this.accRight = this.IsRight = false;
-            this.node.position = this.node.getPosition();
             //暂停游戏
             cc.director.pause();
+            MapData.IsTouch = false;                                                                //关闭滑动响应
+
         }
         //数值大等于0时刷新 否则会显示负数
         else if(MapData.PlayerData >= 0)

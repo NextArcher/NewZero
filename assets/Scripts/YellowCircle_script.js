@@ -147,11 +147,11 @@ cc.Class({
             case "Collider":
                 if(MapData.IsMagnetism)
                 {
-                    cc.audioEngine.play(this.audioClip,false,0.3)       //播放磁铁吸收音效
+                    cc.audioEngine.play(this.audioClip,false,MapData.VolumeData)       //播放磁铁吸收音效
                 }
                 else
                 {
-                    this.audioSuorce.volume = 0.3;
+                    this.audioSuorce.volume = MapData.VolumeData;
                     this.audioSuorce.play();            //播放音频
                 }
             break;

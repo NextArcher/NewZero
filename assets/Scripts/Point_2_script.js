@@ -7,8 +7,6 @@ window.Point_2Data =
 {
     //人物引用
     Player: null,
-    //矩形初始数值
-    data: 1,
     //人物初次接触只能时停一次
     IsOne : true,
 }
@@ -65,17 +63,12 @@ cc.Class({
             default : null,
             type : cc.BoxCollider,
         },
-        // box_1 :
-        // {
-        //     default : null,
-        //     type : cc.BoxCollider,
-        // },
         audioSuorce :           //声明音频组件
         {
             default : null,
             type : cc.AudioSource,
         },
-        audioClip :
+        audioClip :         //声明音源对象
         {
             default : null,
             type : cc.AudioClip,
@@ -86,6 +79,10 @@ cc.Class({
 
      onLoad () 
      {
+         //全局变量实例化
+         Point_2Data.player = null;
+         Point_2Data.IsOne = true;
+
 
         //开启碰撞检测
         cc.director.getCollisionManager().enabled = true;
@@ -93,16 +90,11 @@ cc.Class({
         this.box_0.tag = 0;
         this.box_0.size = cc.size(MapData.brim,MapData.brim);
 
-        // this.box_1.tag = 1;
-        // this.box_1.size = cc.size(MapData.brim,MapData.brim / 4);
-        // this.box_1.offset.y = -MapData.brim / 3;
-
         //设置文字大小
         this.Data_label.fontSize = MapData.brim / 2;
-        //this.Data_label.lineHeight = MapData.brim / 2;
 
         //显示数值
-         this.Data_label.string = Point_2Data.data;
+         this.Data_label.string = 1;
 
      },
 
@@ -209,11 +201,11 @@ cc.Class({
         Scripts.Map_script.Score_lbl.string = MapData.Score;
         if(MapData.IsDouble)
         {
-            cc.audioEngine.play(this.audioClip,false,0.3)       //播放双倍得分音效
+            cc.audioEngine.play(this.audioClip,false,MapData.VolumeData)       //播放双倍得分音效
         }
         else
         {
-            this.audioSuorce.volume = 0.3;
+            this.audioSuorce.volume = MapData.VolumeData;
             this.audioSuorce.play();            //播放音频
         }
         this.ReduceSpeed += 0.1;
