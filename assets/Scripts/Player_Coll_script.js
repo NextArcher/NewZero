@@ -41,10 +41,10 @@ cc.Class({
         Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
 
                 //显示的尾巴个数
-                for(i=0;i<MapData.PlayerData;i++)
+                for(var i = 0;i < MapData.PlayerData;i++)
                 {
                     //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                    for(j=1;j < PointX.Last.length;j++)
+                    for(var j = 1;j < PointX.Last.length;j++)
                     {
                         //尾随物体组.获取脚本.node组件.opacity属性
                         //索引0(人物)并没有following_script脚本
@@ -110,10 +110,10 @@ cc.Class({
                     //人物分数刷新
                     Scripts.Player_script.UpLabel();
                     //显示的尾巴个数
-                    for(i=0;i<this.YellowScript.InData;i++)
+                    for(var i = 0;i < this.YellowScript.InData;i++)
                     {
                         //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                        for(j=1;j < PointX.Last.length;j++)
+                        for(var j = 1;j < PointX.Last.length;j++)
                         {
                             //尾随物体组.获取脚本.node组件.opacity属性
                             //索引0(人物)并没有following_script脚本

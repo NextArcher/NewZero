@@ -59,7 +59,7 @@ cc.Class({
         Point_2Data.IsOne = true;
 
         //遍历方块组 调用重置XY方法
-        for(i = 0 ; i < MapData.Point_2S.length ; i++)
+        for(var i = 0 ; i < MapData.Point_2S.length ; i++)
         {
             MapData.Point_2S[i].getComponent("Point_2_script").ReY();
         }
@@ -67,10 +67,8 @@ cc.Class({
         //当下降值大于10 防止接触另一个矩形归0后又+2
         if(MapData.DownSpeed > 10)
         {
-            //加快下降
-            MapData.DownSpeed += 3;
-            //人物移速等于下降速度
-            //Scripts.Player_script.getComponent("Player_script").SpeedX += 3;
+            Scripts.Map_script.GetPoint_1();    //调用实例障碍物方法
+            MapData.DownSpeed += 3;             //加快下降
         }
 
         //允许下降

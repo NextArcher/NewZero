@@ -4,6 +4,7 @@
 var touchSpeed = 0;             //滑动速度
 var touchTime = 0.016;          //滑动时间
 var CellTime = 0.016;           //每0.016调用一次fixedUpdate
+var IsOneDeath = true;          //第一次死亡?
 window.PointX =
 {
     x : null,
@@ -43,6 +44,16 @@ cc.Class({
         {
             default : null,
             type: cc.BoxCollider,
+        },
+        ResMenu :           //复活菜单
+        {
+            default : null,
+            type : cc.Node,
+        },
+        EndMenu :           //结束菜单
+        {
+            default : null,
+            type : cc.Node,
         },
     },
 
@@ -116,6 +127,8 @@ cc.Class({
         this.touchMove = new cc.Vec2();         //移动前的位置
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
         this.nowTime = 0;                       //当前dt
+
+        this.ResMenu.active = false;            //隐藏复活菜单
     },
 
      update (dt) 
@@ -431,7 +444,7 @@ cc.Class({
             if(MapData.PlayerData <= PointX.Last.length)
             {
                 //向上遍历数组 遇到没有隐藏的 就隐藏
-                for(i = PointX.Last.length; i > 1; i--)
+                for(var i = PointX.Last.length; i > 1; i--)
                 {
                     //遇到没有隐藏的
                     if(PointX.Last[i - 1].getComponent("following_script").node.opacity != 0)
@@ -452,12 +465,22 @@ cc.Class({
         //人物数值小于0时游戏结束
         if(MapData.PlayerData < 0)
         {
-            //停止下降
-            MapData.DownSpeed = 0;
-            cc.log("游戏结束");
-            //暂停游戏
-            cc.director.pause();
-            MapData.IsTouch = false;                                                                //关闭滑动响应
+            if(MapData.DownSpeed != 0)
+            {
+                MapData.NowDownSpeed = MapData.DownSpeed;
+                MapData.DownSpeed = 0;                                  //停止下降
+            }
+            cc.director.pause();                                        //暂停游戏
+            MapData.IsTouch = false;                                    //关闭滑动响应
+            if(IsOneDeath)                                              //第一次死亡？
+            {
+                this.ResMenu.active = true;                             //显示复活窗口
+                IsOneDeath = false;                                     //非一次死亡
+            }
+            else
+            {
+                this.EndMenu.active = true;
+            }
 
         }
         //数值大等于0时刷新 否则会显示负数

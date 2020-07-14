@@ -204,10 +204,12 @@ cc.Class({
          this.node.on('touchmove',this.onTouchMove,this);                   //滑动事件
          this.node.on('touchend',this.onTouchEnd,this);                     //抬起事件
 
+         this.Point_1Poll = new cc.NodePool();                              //声明障碍物对象池
+
          //#region  生成物体
         
          //循环得出矩形物体生成点
-        for(i=0;i<5;i++)
+        for(var i = 0;i < 5;i++)
         {
             //这里理应得出X轴的4个点,难道忘了有负数的吗? 
             MapData.arr1[i] = MapData.tem;
@@ -216,7 +218,7 @@ cc.Class({
         }
 
         //循环生成一波矩形物体
-        for(i=0;i<5;i++)
+        for(var i = 0;i < 5;i++)
         {
             //调用生成方法
             this.InsPoint_2(i);
@@ -224,7 +226,7 @@ cc.Class({
 
         //获取最左边生成点
         MapData.yem = MapData.arr1[0] + MapData.brim / 2;
-        for(i=0;i<4;i++)
+        for(var i = 0;i < 4;i++)
         {
             //记录生成点
             MapData.arr2[i] = MapData.yem;
@@ -232,13 +234,15 @@ cc.Class({
             MapData.yem += MapData.brim;
         }
 
-        //生成8个物体
-         for(i=0;i<8;i++)
+        //生成20个物体
+         for(var i = 0;i < 20;i++)
          {
+             if(i <= 8)                             //固定生成8个食物
+             {
+                this.InsYellowCircle();             //调用黄圆生成方法
+             }
              //调用生成竖形物体方法
             this.InsPoint_1();
-             //调用黄圆生成方法
-            this.InsYellowCircle();
          }
 
          //#endregion 生成物体end
@@ -248,10 +252,10 @@ cc.Class({
     start () 
     {
         //调用计算尾随个数方法得出循环生成几个尾随物体
-        for(i=0;i<this.YellFollNumber();i++)
+        for(var i = 0;i < this.YellFollNumber();i++)
         {
             //调用生成尾随物体方法
-            this.InsYellFollow();
+            this.InsYellFollow(i);
         }
 
     },
@@ -265,23 +269,15 @@ cc.Class({
      //生成矩形方法
      InsPoint_2(a)
      {
-            //生成矩形对象
-            var newPoin_2 = cc.instantiate(this.Point_2);
+            var newPoin_2 = cc.instantiate(this.Point_2);                               //生成矩形对象
             newPoin_2.name = "Point_2_" + a;
-            //设置父节点
-            this.Point_2S.addChild(newPoin_2);
-            //传达父节点
-            newPoin_2.getComponent("Point_2_script").UpNode = this.Point_2S;
-            //设置矩形边长
-            newPoin_2.width = MapData.brim;
+            this.Point_2S.addChild(newPoin_2);                                          //设置父节点
+            newPoin_2.getComponent("Point_2_script").UpNode = this.Point_2S;            //传达父节点
+            newPoin_2.width = MapData.brim;                                             //设置矩形边长
             newPoin_2.height = MapData.brim;
-            //设置位置信息
-            newPoin_2.setPosition(MapData.arr1[a],0,0);
-            //使用全局变量获取引用
-            Point_2Data.script = this;
-
-            //传入索引 获取 对象
-            MapData.Point_2S[a] = newPoin_2;
+            newPoin_2.setPosition(MapData.arr1[a],0,0);                                 //设置位置信息
+            Point_2Data.script = this;                                                  //使用全局变量获取引用
+            MapData.Point_2S[a] = newPoin_2;                                            //传入索引 获取 对象
      },
 //#endregion 生成矩形方法end
 
@@ -306,14 +302,32 @@ cc.Class({
      //生成竖形物体方法
      InsPoint_1()
      {
-         //生成竖形物体
-         var newpoint_1 = cc.instantiate(this.Point_1);
-         //设置父物体
-         this.node.addChild(newpoint_1);
-         //传入索引获取对象
-         MapData.Point_1S.push(newpoint_1);
+         let newpoint_1 = cc.instantiate(this.Point_1);         //生成竖形物体
+         MapData.Point_1S.push(newpoint_1);                     //传入索引获取对象
+         if(MapData.Point_1S.length >= 9)                       //生成第8个后的全部放进对象池
+         {
+            this.Point_1Poll.put(newpoint_1);                      //加入对象池
+         }
+         else
+         {
+            this.node.addChild(newpoint_1);                        //设置父物体
+         }
+         return;
      },
 //#endregion 生成生成竖形物体方法end
+
+//#region 实例化障碍物方法
+     GetPoint_1()
+     {
+         let newpoint_1 = null;
+         if(this.Point_1Poll.size() > 0)            //对象池内的可用对象 大于 零 时读取对象，设置父物体
+         {
+             newpoint_1 = this.Point_1Poll.get();
+         }
+         else { return; }
+         this.node.addChild(newpoint_1);
+     },
+//#endregion 实例化障碍物方法end
 
 //#region 在指定数值范围内生成随机数方法
      //限制随机数范围方法 例:3,20
@@ -332,7 +346,7 @@ cc.Class({
 
 //#region 生成尾随物体方法
     //生成尾随物体方法
-    InsYellFollow()
+    InsYellFollow(i)
     {
             //生成对象
             var newYell = cc.instantiate(this.YellFollow);

@@ -21,11 +21,6 @@ cc.Class({
         fol : 0,
         //自身速度
         speed : 0,
-        // circlecollider :
-        // {
-        //     default : null,
-        //     type : cc.CircleCollider,
-        // },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -61,11 +56,6 @@ cc.Class({
             this.node.y = this.OnA.y - this.OnA.height;            //修改Y轴值
             this.fol = this.node.y;                                //获取上一个物体的尾端
         }
-
-        // //获取
-        // this.circlecollider = this.node.getComponent(cc.CircleCollider);
-        // this.circlecollider.size = cc.size(this.node.width,this.node.height);
-        // this.circlecollider.offset.y = -this.node.height / 2;
         this.speed = MapData.FollSpeed;
 
         this.nowTime = 0;
@@ -86,7 +76,9 @@ cc.Class({
 
      fixedUpdate(dt)
      {
-            if(this.timer >= this.speed)
+         if(this.OnA.x != this.node.x)
+         {
+            if(this.timer >= this.speed + 0.01)
             {
                 //动作越长 与跟随的物体间隔越大
                 //动作越短 间隔小 卡顿
@@ -100,6 +92,8 @@ cc.Class({
             {
                 this.timer += dt;
             }
+         }
+         else { this.node.stopAction(this.moveTo); }
      },
 
      Distance(start,end)

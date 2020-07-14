@@ -1,9 +1,12 @@
 //障碍物脚本
 
 
-var topPoint = 0;           //其他障碍物顶点
-var downPoint = 0;          //当前物体的底点
-var toPlayerX = 0;          //与玩家的X轴距离
+// var topPoint = 0;           //其他障碍物顶点
+// var downPoint = 0;          //当前物体的底点
+// var toPlayerX = 0;          //与玩家的X轴距离
+var TopPoint = 0;              //顶点
+var EndPoint = 0;              //底点
+var TEDist = 0;                //顶点和底点的距离
 var CellTime = 0.016;
 
 
@@ -74,8 +77,6 @@ cc.Class({
                this.Interval();
             }
         }
-
-        //this.toPlayerDist();
 
         if(this.node.y < -MapData.size.height - this.node.height / 2)
         {
@@ -233,9 +234,9 @@ cc.Class({
      Interval()
      {
          //获取底点，物体位置 - 自身一半
-         this.EndPoint = this.node.y - this.node.height / 2 ;
+         EndPoint = this.node.y - this.node.height / 2 ;
          //遍历障碍物组
-         for(i=0;i<MapData.Point_1S.length;i++)
+         for(var i = 0;i < MapData.Point_1S.length;i++)
          {
              //遍历到的对象非自身
              if(MapData.Point_1S[i] != this.node)
@@ -244,11 +245,11 @@ cc.Class({
                  if(this.node.x == MapData.Point_1S[i].x)
                  {
                     //获得顶点,物体位置 + 自身一半
-                    this.TopPoint = MapData.Point_1S[i].y + MapData.Point_1S[i].height / 2;
+                    TopPoint = MapData.Point_1S[i].y + MapData.Point_1S[i].height / 2;
                     //计算两点间的距离
-                    this.dist = this.Distance(this.TopPoint,this.EndPoint);
+                    TEDist = this.Distance(TopPoint,EndPoint);
                     //如果两点间的距离 小于 原长度
-                    if(this.dist < MapData.brim)
+                    if(TEDist < MapData.brim)
                     {
                         //调用设置XY轴方法
                         this.ReXY();
@@ -260,6 +261,7 @@ cc.Class({
                         continue;
                     }
                  }
+                 else { continue; }
              }
              //当遍历到的对象是本身时
              else
@@ -290,47 +292,47 @@ cc.Class({
      //#endregion 计算同X轴的两点间的距离方法end
 
 
-     toPlayerDist()
-     {
-         topPoint = this.node.y + this.node.height / 2 + MapData.brim / 4.6;
-         downPoint = this.node.y - this.node.height / 2 - MapData.brim / 4.6;
-         if(Scripts.Player_script.node.y < topPoint && Scripts.Player_script.node.y > downPoint)
-         {
-            if(Scripts.Player_script.node.x > 0)
-            {
-                toPlayerX = this.Distance(Scripts.Player_script.node.x + MapData.brim / 4.6,this.node.x);
-                if(toPlayerX <= this.node.width / 2)
-                {
-                    if(Scripts.Player_script.accLeft)
-                    {
-                        Scripts.Player_script.IsLeft = false;
-                    }
-                    else if(Scripts.Player_script.accRight)
-                    {
-                        Scripts.Player_script.IsRight = false;
-                    }
-                }
-                else { return; }
-            }
-            else if(Scripts.Player_script.node.x < 0)
-            {
-                var toPlayerX = this.Distance(Scripts.Player_script.node.x - MapData.brim / 4.6,this.node.x);
-                if(toPlayerX <= this.node.width / 2)
-                {
-                    if(Scripts.Player_script.accLeft)
-                    {
-                        Scripts.Player_script.IsLeft = false;
-                    }
-                    else if(Scripts.Player_script.accRight)
-                    {
-                        Scripts.Player_script.IsRight = false;
-                    }
-                }
-                else { return; }
-            }
-         }
-         else { return; }
-     },
+    //  toPlayerDist()
+    //  {
+    //      topPoint = this.node.y + this.node.height / 2 + MapData.brim / 4.6;
+    //      downPoint = this.node.y - this.node.height / 2 - MapData.brim / 4.6;
+    //      if(Scripts.Player_script.node.y < topPoint && Scripts.Player_script.node.y > downPoint)
+    //      {
+    //         if(Scripts.Player_script.node.x > 0)
+    //         {
+    //             toPlayerX = this.Distance(Scripts.Player_script.node.x + MapData.brim / 4.6,this.node.x);
+    //             if(toPlayerX <= this.node.width / 2)
+    //             {
+    //                 if(Scripts.Player_script.accLeft)
+    //                 {
+    //                     Scripts.Player_script.IsLeft = false;
+    //                 }
+    //                 else if(Scripts.Player_script.accRight)
+    //                 {
+    //                     Scripts.Player_script.IsRight = false;
+    //                 }
+    //             }
+    //             else { return; }
+    //         }
+    //         else if(Scripts.Player_script.node.x < 0)
+    //         {
+    //             var toPlayerX = this.Distance(Scripts.Player_script.node.x - MapData.brim / 4.6,this.node.x);
+    //             if(toPlayerX <= this.node.width / 2)
+    //             {
+    //                 if(Scripts.Player_script.accLeft)
+    //                 {
+    //                     Scripts.Player_script.IsLeft = false;
+    //                 }
+    //                 else if(Scripts.Player_script.accRight)
+    //                 {
+    //                     Scripts.Player_script.IsRight = false;
+    //                 }
+    //             }
+    //             else { return; }
+    //         }
+    //      }
+    //      else { return; }
+    //  },
 
 
 });
