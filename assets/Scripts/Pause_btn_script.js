@@ -93,6 +93,7 @@ cc.Class({
                 MapData.AddUpData = 0;              //更新累计数值
                 Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
                 Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+                Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
                 cc.loader.releaseAll();
                 cc.director.loadScene('One');       //加载场景
                 

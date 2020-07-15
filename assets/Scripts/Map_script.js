@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.003,
+    FollSpeed : 0.009,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -251,6 +251,7 @@ cc.Class({
 
     start () 
     {
+        cc.director.preloadScene('Zero');               //预加载开始场景
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(var i = 0;i < this.YellFollNumber();i++)
         {
@@ -312,7 +313,6 @@ cc.Class({
          {
             this.node.addChild(newpoint_1);                        //设置父物体
          }
-         return;
      },
 //#endregion 生成生成竖形物体方法end
 
@@ -382,7 +382,6 @@ cc.Class({
     {
         if(MapData.IsTouch)                                     //是否响应
             Scripts.Player_script.onTouchStart(event);          //调用玩家的点击事件
-        else { return; }
     },
 
     //滑动事件
@@ -390,7 +389,6 @@ cc.Class({
     {
         if(MapData.IsTouch)                                     //是否响应
             Scripts.Player_script.onTouchMove(event);           //调用玩家的滑动事件
-        else { return; }
     },
 
     //抬起事件

@@ -177,7 +177,7 @@
       "array": [
         0,
         0,
-        341.2140090910689,
+        340.3479836872844,
         0,
         0,
         0,
@@ -465,7 +465,7 @@
     "_lineHeight": 64,
     "_enableWrapText": true,
     "_N$file": {
-      "__uuid__": "bc7da09b-67a8-42ce-a052-1fdcaf86b3a8"
+      "__uuid__": "d835d490-a3f6-43e9-883f-667df63ea535"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
@@ -758,7 +758,7 @@
     "_lineHeight": 40,
     "_enableWrapText": false,
     "_N$file": {
-      "__uuid__": "bc7da09b-67a8-42ce-a052-1fdcaf86b3a8"
+      "__uuid__": "d835d490-a3f6-43e9-883f-667df63ea535"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
@@ -1179,7 +1179,7 @@
     "_lineHeight": 40,
     "_enableWrapText": false,
     "_N$file": {
-      "__uuid__": "bc7da09b-67a8-42ce-a052-1fdcaf86b3a8"
+      "__uuid__": "d835d490-a3f6-43e9-883f-667df63ea535"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
@@ -1359,7 +1359,7 @@
     },
     "_enabled": true,
     "_clip": {
-      "__uuid__": "a12d3c63-e715-472b-b52b-cd09c8a42c1e"
+      "__uuid__": "7995d715-e144-450c-8e83-1ac08e5ecec0"
     },
     "_volume": 0.3,
     "_mute": false,
@@ -1618,7 +1618,7 @@
     "_lineHeight": 40,
     "_enableWrapText": false,
     "_N$file": {
-      "__uuid__": "bc7da09b-67a8-42ce-a052-1fdcaf86b3a8"
+      "__uuid__": "d835d490-a3f6-43e9-883f-667df63ea535"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
@@ -1797,9 +1797,7 @@
       "__id__": 30
     },
     "_enabled": true,
-    "_clip": {
-      "__uuid__": "a12d3c63-e715-472b-b52b-cd09c8a42c1e"
-    },
+    "_clip": null,
     "_volume": 0.3,
     "_mute": false,
     "_loop": false,
@@ -1962,7 +1960,7 @@
     },
     "_enabled": true,
     "_clip": {
-      "__uuid__": "a12d3c63-e715-472b-b52b-cd09c8a42c1e"
+      "__uuid__": "7995d715-e144-450c-8e83-1ac08e5ecec0"
     },
     "_volume": 0.5,
     "_mute": false,

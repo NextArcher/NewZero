@@ -13,8 +13,8 @@ cc.Class({
 
     onLoad () 
     {
-        this.width = MapData.size.width;
-        this.height = MapData.brim;
+        this.node.width = MapData.size.width;
+        this.node.height = MapData.brim;
         this.IsDown = true;                 //是否允许下降
     },
 
@@ -40,7 +40,7 @@ cc.Class({
             this.node.y -= MapData.DownSpeed * dt;
         }
         //当前物体的Y轴小于可视范围
-        if(this.node.y < -MapData.size.height / 2 - this.height / 2)
+        if(this.node.y < -MapData.size.height / 2 - this.node.height / 2)
         {
             //调用重置XY方法
             this.ReXY();

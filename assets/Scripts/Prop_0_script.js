@@ -7,18 +7,19 @@ cc.Class({
 
     properties: 
     {
-        //碰撞组件
-        box : 
+        box :                 //碰撞组件
         {
             default : null,
             type : cc.BoxCollider,
         },
-        //记录X轴
-        thisX : 0,
-        //记录Y轴
-        thisY : 0,
-        //是否已出现在分辨率中
-        IsIns : false,
+        thisX : 0,            //记录X轴
+        thisY : 0,            //记录Y轴
+        IsIns : false,        //是否已出现在分辨率中
+        AddUplbl :            //累计数值lbl
+        {
+            default : null,
+            type : cc.Label,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -40,7 +41,8 @@ cc.Class({
     start () 
     {
         this.nowTime = 0;
-        this.timer = 0;
+        this.timer = 0;         //道具剩余时间
+        this.timer_1 = 0;
     },
 
     update (dt) 
@@ -74,13 +76,13 @@ cc.Class({
 
         if(this.timer != 0)
         {
-            Scripts.Map_script.AddUplbl.string = "磁铁:" + this.timer.toFixed(2);           //保留2位小数
+            this.AddUplbl.string = "磁铁：" + this.timer.toFixed();           //保留2位小数
             this.timer -= dt;
             if(this.timer <= 0)
             {
                 MapData.IsMagnetism = false;                //关闭磁力状态
                 Scripts.Map_script.Pro_Base.active = true;  //显示进度条
-                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
+                this.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
                 this.timer = 0;
             }
             else { return; }

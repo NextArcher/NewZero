@@ -21,7 +21,11 @@ cc.Class({
 
     onLoad () 
     {
-        if(MapData.VolumeData != 0)
+        MapData.size = cc.view.getVisibleSize();        //获取分辨率
+
+        cc.director.preloadScene('One');                //预加载游戏场景
+
+        if(MapData.VolumeData != 0)                     //音量开关的显示
         {
             this.Voice_lbl.string = "音量：开";
         }
@@ -30,14 +34,15 @@ cc.Class({
             this.Voice_lbl.string = "音量：关";
         }
 
-        let bannerAd = wx.createBannerAd({
+
+        let bannerAd = wx.createBannerAd({              //获取广告
             adUnitId: 'adunit-ab66b1d524cf7910',
             style: {
                 left: 0,
                 top: 0,
                 width: 350
             }
-          })
+          });
         bannerAd.show();
     },
 
@@ -56,7 +61,7 @@ cc.Class({
                 this.audioSuorce.play();                              //播放音频
                 cc.director.resume();                                 //时间开始流动
                 MapData.IsTouch = true;                               //开启滑动响应
-                cc.director.loadScene('One');
+                cc.director.loadScene('One');                         //加载游戏场景
             break;
 
             case "Voice_btn" :                                        //声音

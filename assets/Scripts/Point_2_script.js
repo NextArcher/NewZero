@@ -181,7 +181,6 @@ cc.Class({
             //重置位置信息
             this.node.setPosition(this.thisX,0);
         }
-        else { return; }
     },
 
     //减少数值方法

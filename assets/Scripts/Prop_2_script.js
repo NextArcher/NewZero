@@ -6,17 +6,19 @@ cc.Class({
 
     properties: 
     {
-        //碰撞器
-        Coll :
+        box :                 //碰撞组件
         {
             default : null,
             type : cc.BoxCollider,
         },
-        //初始位置
-        thisX : 0,
-        thisY : 0,
-
-        IsIns : false,
+        thisX : 0,            //记录X轴
+        thisY : 0,            //记录Y轴
+        IsIns : false,        //是否已出现在分辨率中
+        AddUplbl :            //累计数值lbl
+        {
+            default : null,
+            type : cc.Label,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -73,13 +75,13 @@ cc.Class({
         }
         if(this.timer != 0)
         {
-            Scripts.Map_script.AddUplbl.string = "双倍得分:" + this.timer.toFixed(2);
+            this.AddUplbl.string = "双倍得分：" + this.timer.toFixed();
             this.timer -= dt;
             if(this.timer <= 0)
             {
                 MapData.IsDouble = false;                                                      //关闭双倍得分
                 Scripts.Map_script.Pro_Base.active = true;                                     //显示进度条
-                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
+                this.AddUplbl.string = MapData.AddUpData + "/20";                //更新累计数值
                 this.timer = 0;
             }
             else { return; }

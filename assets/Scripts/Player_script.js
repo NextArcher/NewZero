@@ -4,7 +4,6 @@
 var touchSpeed = 0;             //滑动速度
 var touchTime = 0.016;          //滑动时间
 var CellTime = 0.016;           //每0.016调用一次fixedUpdate
-var IsOneDeath = true;          //第一次死亡?
 window.PointX =
 {
     x : null,
@@ -124,29 +123,31 @@ cc.Class({
         this.SpeedX = MapData.DownSpeed;        //定义移速
         this.Other_0 = null;                    //第一次调用接触事件的对象
         this.IsOne = true;                      //用于区分第一与第二次调用接触事件
-        this.touchMove = new cc.Vec2();         //移动前的位置
+        this.touchMove = 0;                     //移动前的位置
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
         this.nowTime = 0;                       //当前dt
+        this.IsOneDeath = true;                 //第一次死亡?
 
         this.ResMenu.active = false;            //隐藏复活菜单
+
     },
 
-     update (dt) 
-     {
-         //每0.016秒执行fixedUpdate;
-        this.nowTime += dt;
-        while(this.nowTime >= CellTime)
-        {
-            this.fixedUpdate(CellTime);
-            this.nowTime -= CellTime;
-        }
-     },
+    //  update (dt) 
+    //  {
+    //      //每0.016秒执行fixedUpdate;
+    //     this.nowTime += dt;
+    //     while(this.nowTime >= CellTime)
+    //     {
+    //         this.fixedUpdate(CellTime);
+    //         this.nowTime -= CellTime;
+    //     }
+    //  },
 
-     fixedUpdate(dt)
-     {
-        //调用移动方法
-        //this.Move(dt);
-     },
+    //  fixedUpdate(dt)
+    //  {
+    //     //调用移动方法
+    //     //this.Move(dt);
+    //  },
 
 //#region 人物移动方法
      //移动方法
@@ -224,7 +225,7 @@ cc.Class({
 
      },
 
-     //滑动事件(未完全)
+     //滑动事件
      onTouchMove(event)
      {
          //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
@@ -399,7 +400,6 @@ cc.Class({
                     }
 
                 }
-                else { return; }
             break;
             //#endregion 矩形end
             default:
@@ -472,10 +472,10 @@ cc.Class({
             }
             cc.director.pause();                                        //暂停游戏
             MapData.IsTouch = false;                                    //关闭滑动响应
-            if(IsOneDeath)                                              //第一次死亡？
+            if(this.IsOneDeath)                                         //第一次死亡？
             {
                 this.ResMenu.active = true;                             //显示复活窗口
-                IsOneDeath = false;                                     //非一次死亡
+                this.IsOneDeath = false;                                //非一次死亡
             }
             else
             {
