@@ -169,8 +169,6 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
     "_useOriginalSize": true,
     "_string": "1",
     "_N$string": "1",
@@ -246,7 +244,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "2d62a25c-036a-4a91-87f6-8b2214532b06"
+      "__uuid__": "cd130885-c8cc-43bc-b35d-27ea8261d8f2"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -273,7 +271,6 @@
     "Data_label": {
       "__id__": 3
     },
-    "InData": 1,
     "timer": 0,
     "player": null,
     "Just": 0,

@@ -68,12 +68,11 @@ cc.Class({
                     }
                 }
             break;
-            case "Yes_btn" :                    //返回首页
+            case "Yes_btn" :                    //返回首页按钮
                 this.audioSuorce.play();        //播放音效
-                cc.loader.releaseAll();
-                cc.director.loadScene('Zero');
+                cc.director.loadScene('Zero');  //加载场景0
             break;
-            case "No_btn" :                             //继续游戏
+            case "No_btn" :                             //继续游戏按钮
                 this.audioSuorce.play();                //播放音效
                 this.node.rotation = 0;
                 if(cc.director.isPaused())              //判断是否时停
@@ -87,21 +86,47 @@ cc.Class({
                     return;
                 }
             break;
-            case "ReDo_btn" :                       //重玩
+            case "ReDo_btn" :                       //重玩按钮
                 this.audioSuorce.play();            //播放音效
                 MapData.IsTouch = true;             //开启滑动响应
                 MapData.AddUpData = 0;              //更新累计数值
                 Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
                 Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
                 Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
-                cc.loader.releaseAll();
                 cc.director.loadScene('One');       //加载场景
                 
             break;
             //#endregion 返回菜单end
 
             case "Res_btn" :        //看视频复活
-
+                MapData.PlayerData = 3;
+                Scripts.Player_script.Label_1.string = MapData.PlayerData;
+                //显示的尾巴个数
+                for(var i = 0;i < MapData.PlayerData;i++)
+                    {
+                        //向下遍历数组(从索引1开始) 遇到隐藏的就显示
+                        for(var j = 1;j < PointX.Last.length;j++)
+                        {
+                            //尾随物体组.获取脚本.node组件.opacity属性
+                            //索引0(人物)并没有following_script脚本
+                            if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                            {
+                                //显示
+                                PointX.Last[j].getComponent("following_script").node.opacity = 255;
+                                break ;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                             
+                        }
+                    }
+                Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
+                MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
+                MapData.IsTouch = true;                                                 //开启滑动响应
+                this.ResMenu.active = false;
+                cc.director.resume();                                                   //继续游戏
             break;
             case "Close_btn" :      // X
                 this.ResMenu.active = false;

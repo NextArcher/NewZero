@@ -54,6 +54,11 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
+        MenuScore_lbl :     //结算本次得分
+        {
+            default : null,
+            type : cc.Label,
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -99,8 +104,8 @@ cc.Class({
         //cc.director.getCollisionManager().enabledDebugDraw = true;
         // cc.director.getCollisionManager().enabledDrawBoundingBox = true;
         //注册事件
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
+        // cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
+        // cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP,this.onKeyUp,this);
 
         //设置矩形碰撞
         this.Collider.tag = 0;
@@ -132,22 +137,22 @@ cc.Class({
 
     },
 
-    //  update (dt) 
-    //  {
-    //      //每0.016秒执行fixedUpdate;
-    //     this.nowTime += dt;
-    //     while(this.nowTime >= CellTime)
-    //     {
-    //         this.fixedUpdate(CellTime);
-    //         this.nowTime -= CellTime;
-    //     }
-    //  },
+     update (dt) 
+     {
+         //每0.016秒执行fixedUpdate;
+        this.nowTime += dt;
+        while(this.nowTime >= CellTime)
+        {
+            this.fixedUpdate(CellTime);
+            this.nowTime -= CellTime;
+        }
+     },
 
-    //  fixedUpdate(dt)
-    //  {
-    //     //调用移动方法
-    //     //this.Move(dt);
-    //  },
+     fixedUpdate(dt)
+     {
+        //调用移动方法
+        //this.Move(dt);
+     },
 
 //#region 人物移动方法
      //移动方法
@@ -272,7 +277,6 @@ cc.Class({
                 }
             }
          }
-
      },
 
      onCollisionEnter(other,self)
@@ -451,7 +455,8 @@ cc.Class({
                     {
                         //隐藏
                         PointX.Last[i - 1].getComponent("following_script").node.opacity = 0;
-                        break ;
+                        i = 0;          //把0赋值给 i 退出外部循环
+                        break ;         //break并不会退出双重循环，只会退出当前循环
                     }
                     else
                     {
@@ -459,7 +464,6 @@ cc.Class({
                     }
                 }
             }
-
         }
 
         //人物数值小于0时游戏结束
@@ -479,7 +483,9 @@ cc.Class({
             }
             else
             {
-                this.EndMenu.active = true;
+                this.EndMenu.active = true;                             //显示结算菜单
+                this.MenuScore_lbl.fontSize = MapData.brim / 3;
+                this.MenuScore_lbl.string = MapData.Score;              //显示分数
             }
 
         }

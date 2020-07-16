@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.009,
+    FollSpeed : 0.003,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -155,6 +155,7 @@ cc.Class({
          MapData.IsMagnetism = MapData.IsPenetrate = MapData.IsDouble = false;
          cc.director.getCollisionManager().enabled = true;
          MapData.IsTouch = true;
+         MapData.Score = 0;
          cc.director.resume();               //时间开始流动
 
          //传入引用
@@ -307,7 +308,8 @@ cc.Class({
          MapData.Point_1S.push(newpoint_1);                     //传入索引获取对象
          if(MapData.Point_1S.length >= 9)                       //生成第8个后的全部放进对象池
          {
-            this.Point_1Poll.put(newpoint_1);                      //加入对象池
+            //this.Point_1Poll.put(newpoint_1);                      //加入对象池
+            newpoint_1.active = false;
          }
          else
          {
@@ -320,12 +322,22 @@ cc.Class({
      GetPoint_1()
      {
          let newpoint_1 = null;
-         if(this.Point_1Poll.size() > 0)            //对象池内的可用对象 大于 零 时读取对象，设置父物体
-         {
-             newpoint_1 = this.Point_1Poll.get();
-         }
-         else { return; }
-         this.node.addChild(newpoint_1);
+        //  if(this.Point_1Poll.size() > 0)            //对象池内的可用对象 大于 零 时读取对象，设置父物体
+        //  {
+        //      newpoint_1 = this.Point_1Poll.get();
+        //  }
+        //  else { return; }
+        for(var i = 0; i < MapData.Point_1S.length; i++)
+        {
+            if(!MapData.Point_1S[i].active)
+            {
+                MapData.Point_1S[i].active = true;
+                this.node.addChild(MapData.Point_1S[i]);
+
+                break;
+            }
+            else { continue; }
+        }
      },
 //#endregion 实例化障碍物方法end
 
@@ -357,7 +369,7 @@ cc.Class({
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
-            MapData.FollSpeed += 0.001;
+            newYell.getComponent('following_script').speedTime = MapData.FollSpeed += 0.0002;
     },
 //#endregion 生成尾随物体方法end
 
@@ -370,12 +382,6 @@ cc.Class({
         return number;
     },
 //#endregion 获取生成尾随物体个数方法end
-
-    //随机背景颜色方法
-    BackColor()
-    {
-        this.Camera_0.BackColor = new cc.color(Math.random()*255,Math.Math.random() * 255,Math.random() * 255);
-    },
 
     //点击事件
     onTouchStart(event)

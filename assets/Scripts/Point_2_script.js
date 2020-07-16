@@ -22,12 +22,6 @@ cc.Class({
             default : null,
             type : cc.Label
         },
-        //定义数值方法
-        InData :
-        {
-            default : 1,
-            type : cc.Float
-        },
         //定义计时器
         timer :
         {
@@ -104,6 +98,8 @@ cc.Class({
         this.thisX = this.node.x;        //记录X轴的值
         this.IsEnable = true;            //是否为显示状态
         this.nowTime = 0;
+        this.InData = 0;                 //数值
+        this.OnaInData = this.InData;    //随机出的数值
     },
 
      update (dt) 
@@ -123,8 +119,7 @@ cc.Class({
             //复原Y轴
             this.node.y = 0;
          }
-        //调用根据数值调整色调方法
-        this.DynamicColor();
+         this.DynamicColor();
      },
 
     //隐藏方法
@@ -161,7 +156,7 @@ cc.Class({
     RandomData()
     {
         //根据玩家数值得出
-        this.InData = Math.floor(Math.random()* MapData.PlayerData + Math.random()*4);
+        this.OnaInData = this.InData = Math.floor(Math.random()* MapData.PlayerData + Math.random()*4);
         //不能为0 至少是1
         if(this.InData == 0)
         {
@@ -229,44 +224,44 @@ cc.Class({
     //根据数值调整色调方法
     DynamicColor()
     {
-        //人物数值小于该物体数值
-        if(MapData.PlayerData < this.InData)
-        {
-            //人物数值 +1 还是小于物体数值时
-            if(MapData.PlayerData + 1 < this.InData)
+            //人物数值小于该物体数值
+            if(MapData.PlayerData < this.InData)
             {
-                //高红
-                this.node.color = new cc.color(255,0,0);
+                //人物数值 +1 还是小于物体数值时
+                if(MapData.PlayerData + 1 < this.InData)
+                {
+                    //高红
+                    this.node.color = new cc.Color(254,0,0);
+                }
+                //人物数值 小于 该物体数值
+                else
+                {
+                    //浅一点点 大概
+                    this.node.color = new cc.Color(254 - this.InData * 254 / 254,172,0);
+                }
             }
-            //人物数值 小于 该物体数值
+            //人物数值大于该物体数值
+            else if(MapData.PlayerData > this.InData)
+            {
+                //人物数值 -1 还是大于该物体的数值
+                if(MapData.PlayerData-1 > this.InData)
+                {
+                    //高绿
+                    this.node.color = new cc.Color(0,254,0);
+                }
+                //人物数值 大于 该物体数值
+                else
+                {
+                    //浅一点点 大概
+                    this.node.color = new cc.Color(172,254 - this.InData * 254 / 254,0);
+                }
+            }
+            //等于
             else
             {
-                //浅一点点 大概
-                this.node.color = new cc.color(255 - this.InData * this.InData,172,0);
+                //红绿满
+                this.node.color = new cc.Color(254,254,0);
             }
-        }
-        //人物数值大于该物体数值
-        else if(MapData.PlayerData > this.InData)
-        {
-            //人物数值 -1 还是大于该物体的数值
-            if(MapData.PlayerData-1 > this.InData)
-            {
-                //高绿
-                this.node.color = new cc.color(0,255,0);
-            }
-            //人物数值 大于 该物体数值
-            else
-            {
-                //浅一点点 大概
-                this.node.color = new cc.color(172,255 - this.InData * this.InData,0);
-            }
-        }
-        //等于
-        else
-        {
-            //红绿满
-            this.node.color = new cc.color(255,255,0);
-        }
     },
 
     //获取限定X轴移动方法

@@ -1,9 +1,9 @@
 //尾随物体脚本
 
 
-var cellTime = 0.016;
-var dist = 0;
-var speed = 0;
+var cellTime = 0.016;           //fixedUpdate传递
+var dist = 0;                   //距离
+var speed = 0;                  //速度
 cc.Class({
     extends: cc.Component,
 
@@ -34,7 +34,7 @@ cc.Class({
         this.OnA = PointX.Last[PointX.Last.length - 1];
         //将自身添加到数组
         PointX.Last[PointX.Last.length] = this.node;
-        this.OnAtouchMove = null;
+        this.speedTime = 0;             //有Map_script传递，用于指定动作时间
      },
 
     start () 
@@ -49,7 +49,6 @@ cc.Class({
             this.node.y = this.OnA.y - this.OnA.height / 1.2;
             //获取上一个物体的尾端
             this.fol = this.node.y;
-            this.OnAtouchMove = this.OnA.getComponent("Player_script");
         }
         //上一个同样是尾随
         else
@@ -59,12 +58,9 @@ cc.Class({
             this.node.height = this.OnA.height - 1.2;
             this.node.y = this.OnA.y - this.OnA.height;            //修改Y轴值
             this.fol = this.node.y;                                //获取上一个物体的尾端
-            this.OnAtouchMove = this.OnA.getComponent("following_script");
         }
-        this.speed = MapData.FollSpeed;
 
         this.nowTime = 0;
-        this.touchMove = 0;
     },
 
      update (dt) 
@@ -82,13 +78,9 @@ cc.Class({
      {
          if(this.OnA.x != this.node.x)
          {
-            if(this.timer >= this.speed)
+            if(this.timer >= this.speedTime)
             {
-                //动作越长 与跟随的物体间隔越大
-                //动作越短 间隔小 卡顿
-                //OnA是人物Node
-                this.moveTo = cc.moveTo(this.speed,cc.v2(this.OnA.x,this.fol + this.speed * 30));
-                //运行动作
+                this.moveTo = cc.moveTo(this.speedTime,cc.v2(this.OnA.x,this.fol));        //朝上一个移动
                 this.node.runAction(this.moveTo);
                 this.timer = 0;
             }
@@ -97,13 +89,10 @@ cc.Class({
                 this.timer += dt;
             }
          }
-         else 
-         {
-              this.node.stopAllActions(); 
-              this.node.y = this.fol;
-        }
+         else { this.node.stopAction(this.moveTo); }
      },
 
+     //计算同轴上的距离
      Distance(start,end)
      {
          var dist = start > end ? start - end : end - start;

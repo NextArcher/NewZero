@@ -131,6 +131,7 @@ cc.Class({
                         }
                     }
                 }
+                else { break; }
             break;
             //#endregion 食物end
             

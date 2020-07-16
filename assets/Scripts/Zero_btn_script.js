@@ -22,32 +22,34 @@ cc.Class({
     onLoad () 
     {
         MapData.size = cc.view.getVisibleSize();        //获取分辨率
-
         cc.director.preloadScene('One');                //预加载游戏场景
-
         if(MapData.VolumeData != 0)                     //音量开关的显示
         {
-            this.Voice_lbl.string = "音量：开";
+            this.Voice_lbl.string = "声音：开";
         }
         else
         {
-            this.Voice_lbl.string = "音量：关";
+            this.Voice_lbl.string = "声音：关";
         }
 
-
-        let bannerAd = wx.createBannerAd({              //获取广告
+        if(typeof wx === 'undefined')
+        {
+            return;
+        }
+        this.bannerAd = wx.createBannerAd({              //获取广告
             adUnitId: 'adunit-ab66b1d524cf7910',
             style: {
                 left: 0,
                 top: 0,
-                width: 350
+                width: 350,
             }
           });
-        bannerAd.show();
+        this.bannerAd.show();
     },
 
-    start () {
-
+    start () 
+    {
+        this.bannerAd.show();
     },
 
     // update (dt) {},
@@ -61,6 +63,10 @@ cc.Class({
                 this.audioSuorce.play();                              //播放音频
                 cc.director.resume();                                 //时间开始流动
                 MapData.IsTouch = true;                               //开启滑动响应
+                if(typeof wx != 'undefined')
+                {
+                    this.bannerAd.hide();                                 //隐藏广告
+                }
                 cc.director.loadScene('One');                         //加载游戏场景
             break;
 
@@ -68,12 +74,12 @@ cc.Class({
                 if(MapData.VolumeData != 0)                           //关
                 {
                     MapData.VolumeData = 0;
-                    this.Voice_lbl.string = "音量：关";
+                    this.Voice_lbl.string = "声音：关";
                 }
                 else                                                  //开
                 {
                     MapData.VolumeData = 0.5;
-                    this.Voice_lbl.string = "音量：开";
+                    this.Voice_lbl.string = "声音：开";
                     this.audioSuorce.volume = MapData.VolumeData;       //音量
                     this.audioSuorce.play();                            //播放音频
                 }
@@ -85,7 +91,7 @@ cc.Class({
                     return;
                 }
                 wx.shareAppMessage({
-                    title : "标题",
+                    title : "bug集合体",
                     query : 'shareMsg = ' + '附带信息?',
                 });
             break;
