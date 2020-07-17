@@ -1,7 +1,5 @@
 //穿透道具脚本
 
-
-var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -42,17 +40,17 @@ cc.Class({
 
     start () 
     {
-        this.nowTime = 0;
         this.timer = 0;
+        this.nowTime = 0;
     },
 
     update (dt) 
     {
         this.nowTime += dt;
-        while(this.nowTime >= CellTime)
+        while(this.nowTime >= 0.016)
         {
-            this.fixedUpdate(CellTime);
-            this.nowTime -= CellTime;
+            this.fixedUpdate(0.016);
+            this.nowTime = 0;
         }
     },
 

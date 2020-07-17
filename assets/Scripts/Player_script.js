@@ -1,9 +1,7 @@
 //人物脚本
 
-
 var touchSpeed = 0;             //滑动速度
 var touchTime = 0.016;          //滑动时间
-var CellTime = 0.016;           //每0.016调用一次fixedUpdate
 window.PointX =
 {
     x : null,
@@ -58,6 +56,16 @@ cc.Class({
         {
             default : null,
             type : cc.Label,
+        },
+        Record_lbl :            //最高记录
+        {
+            default : null,
+            type : cc.Label,
+        },
+        audioScuore :       //音频组件
+        {
+            default : null,
+            type : cc.AudioSource,
         },
     },
 
@@ -128,30 +136,36 @@ cc.Class({
         this.SpeedX = MapData.DownSpeed;        //定义移速
         this.Other_0 = null;                    //第一次调用接触事件的对象
         this.IsOne = true;                      //用于区分第一与第二次调用接触事件
-        this.touchMove = 0;                     //移动前的位置
+        this.ThisNodeX = 0;                     //移动前的位置
+        this.ThisNodeX_1 = 0;                   //移动前位置
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
-        this.nowTime = 0;                       //当前dt
         this.IsOneDeath = true;                 //第一次死亡?
 
         this.ResMenu.active = false;            //隐藏复活菜单
+        this.nowTime = 0;
 
     },
 
      update (dt) 
      {
-         //每0.016秒执行fixedUpdate;
-        this.nowTime += dt;
-        while(this.nowTime >= CellTime)
-        {
-            this.fixedUpdate(CellTime);
-            this.nowTime -= CellTime;
-        }
+         this.nowTime += dt;
+         while(this.nowTime >= 0.016)
+         {
+             this.fixedUpdate(0.016);
+             this.nowTime = 0;
+         }
      },
 
      fixedUpdate(dt)
      {
         //调用移动方法
         //this.Move(dt);
+        if(PointX.Last[1] != null)              //向尾巴1传递当前位置和移动后的位置
+        {
+            PointX.Last[1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
+            PointX.Last[1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
+        }
+        this.ThisNodeX = this.node.x;           //当前位置 = 移动后的位置
      },
 
 //#region 人物移动方法
@@ -234,7 +248,7 @@ cc.Class({
      onTouchMove(event)
      {
          //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
-         this.touchMove = this.node.x;
+         this.ThisNodeX_1 = this.ThisNodeX = this.node.x;
          //获取相比上一帧的移动距离
          this.onAtouchMove =  event.getDeltaX();
          //速度 = 路程 / 时间
@@ -254,7 +268,7 @@ cc.Class({
                 else
                 {
                     //玩家位置 = 上一帧的位置;
-                    this.node.x = this.touchMove;
+                    this.node.x = this.ThisNodeX;
                 }
             }
          }
@@ -273,7 +287,7 @@ cc.Class({
                 else
                 {
                     //玩家位置 = 上一帧的位置;
-                    this.node.x = this.touchMove;
+                    this.node.x = this.ThisNodeX;
                 }
             }
          }
@@ -483,9 +497,18 @@ cc.Class({
             }
             else
             {
-                this.EndMenu.active = true;                             //显示结算菜单
+                this.audioScuore.volume = MapData.VolumeData;                                      //设置音量
+                this.audioScuore.play();                                                           //播放结束音效
+                this.EndMenu.active = true;                                                        //显示结算菜单
                 this.MenuScore_lbl.fontSize = MapData.brim / 3;
-                this.MenuScore_lbl.string = MapData.Score;              //显示分数
+                this.MenuScore_lbl.string = MapData.Score;                                         //显示分数
+
+                var maxScore = cc.sys.localStorage.getItem("maxScore");                            //读取键
+                if(maxScore < MapData.Score)                                                       //当前得分与读取的兼对比
+                {
+                    cc.sys.localStorage.setItem("maxScore",String(MapData.Score));                 //当前得分大于记录 转换成字符串记录
+                }
+                this.Record_lbl.string = "最高得分：" + cc.sys.localStorage.getItem("maxScore");    //输出最高记录
             }
 
         }

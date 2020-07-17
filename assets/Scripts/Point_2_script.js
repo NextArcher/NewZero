@@ -1,7 +1,5 @@
 //矩形可消除物体脚本
 
-
-var CellTime = 0.016;
 //声明全局变量 用于获取人物脚本引用
 window.Point_2Data =
 {
@@ -97,29 +95,29 @@ cc.Class({
         this.Gorge();                    //获取限定X轴方法
         this.thisX = this.node.x;        //记录X轴的值
         this.IsEnable = true;            //是否为显示状态
-        this.nowTime = 0;
         this.InData = 0;                 //数值
         this.OnaInData = this.InData;    //随机出的数值
+        this.nowTime = 0;
     },
 
      update (dt) 
      {
          this.nowTime += dt;
-         while(this.nowTime >= CellTime)
+         while(this.nowTime >= 0.016)
          {
-             this.fixedUpdate(CellTime);
-             this.nowTime -= CellTime;
+             this.fixedUpdate(0.016);
+             this.nowTime = 0;
          }
      },
 
      fixedUpdate(dt)
      {
-         if(MapData.DownSpeed == 0)
-         {
-            //复原Y轴
-            this.node.y = 0;
-         }
-         this.DynamicColor();
+        if(MapData.DownSpeed == 0)
+        {
+           //复原Y轴
+           this.node.y = 0;
+        }
+        this.DynamicColor();       //调用改变颜色方法
      },
 
     //隐藏方法

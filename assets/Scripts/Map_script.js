@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 0.003,
+    FollSpeed : 3.2,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -236,7 +236,7 @@ cc.Class({
         }
 
         //生成20个物体
-         for(var i = 0;i < 20;i++)
+         for(var i = 0;i < 24;i++)
          {
              if(i <= 8)                             //固定生成8个食物
              {
@@ -252,7 +252,6 @@ cc.Class({
 
     start () 
     {
-        cc.director.preloadScene('Zero');               //预加载开始场景
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(var i = 0;i < this.YellFollNumber();i++)
         {
@@ -308,8 +307,7 @@ cc.Class({
          MapData.Point_1S.push(newpoint_1);                     //传入索引获取对象
          if(MapData.Point_1S.length >= 9)                       //生成第8个后的全部放进对象池
          {
-            //this.Point_1Poll.put(newpoint_1);                      //加入对象池
-            newpoint_1.active = false;
+            this.Point_1Poll.put(newpoint_1);                      //加入对象池
          }
          else
          {
@@ -322,22 +320,12 @@ cc.Class({
      GetPoint_1()
      {
          let newpoint_1 = null;
-        //  if(this.Point_1Poll.size() > 0)            //对象池内的可用对象 大于 零 时读取对象，设置父物体
-        //  {
-        //      newpoint_1 = this.Point_1Poll.get();
-        //  }
-        //  else { return; }
-        for(var i = 0; i < MapData.Point_1S.length; i++)
-        {
-            if(!MapData.Point_1S[i].active)
-            {
-                MapData.Point_1S[i].active = true;
-                this.node.addChild(MapData.Point_1S[i]);
-
-                break;
-            }
-            else { continue; }
-        }
+         if(this.Point_1Poll.size() > 0)            //对象池内的可用对象 大于 零 时读取对象，设置父物体
+         {
+             newpoint_1 = this.Point_1Poll.get();
+             this.node.addChild(newpoint_1);
+         }
+         else { return; }
      },
 //#endregion 实例化障碍物方法end
 
@@ -369,7 +357,7 @@ cc.Class({
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
 
-            newYell.getComponent('following_script').speedTime = MapData.FollSpeed += 0.0002;
+            newYell.getComponent('following_script').speedTime = MapData.FollSpeed += 0.1;
     },
 //#endregion 生成尾随物体方法end
 

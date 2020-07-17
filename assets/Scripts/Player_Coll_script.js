@@ -11,11 +11,15 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
-        //人物脚本
-        PlayerScript : 
+        AddUplbl :      //叠加数值显示
         {
             default : null,
-            type : cc.Component,
+            type : cc.Label,
+        },
+        ProgressBar :       //叠加进度条对象
+        {
+            default : null,
+            type: cc.ProgressBar,
         },
 
     },
@@ -28,6 +32,7 @@ cc.Class({
         cc.director.getCollisionManager().enabled = true;
         var coll = this.node.getComponent(cc.CircleCollider);
         coll.radius = this.Player.width / 2;
+        this.PlayerScript = this.Player.getComponent('Player_script');          //获取父物体脚本
 
         //被接触的黄圆脚本
         this.YellowScript = null;
@@ -36,9 +41,9 @@ cc.Class({
     start () 
     {
         //更新累计数值
-        Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+        this.AddUplbl.string = MapData.AddUpData + "/20";
         //进度条更新
-        Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+        this.ProgressBar.progress = MapData.AddUpData / 20;
 
                 //显示的尾巴个数
                 for(var i = 0;i < MapData.PlayerData;i++)
@@ -71,7 +76,6 @@ cc.Class({
         //根据group属性 区分接触的对象
         switch(other.node.group)
         {
-            
             //#region  竖形物体
             //竖形物体 初次接触也不能继续移动
             case "Point_1" :
@@ -79,16 +83,16 @@ cc.Class({
                 if(other.tag == 0 && !MapData.IsPenetrate)
                 {
                     //玩家位置 = 上一帧的位置;
-                    Scripts.Player_script.node.x = Scripts.Player_script.touchMove;
-                    if(Scripts.Player_script.accLeft)
+                    this.Player.x = this.PlayerScript.ThisNodeX_1;
+                    if(this.PlayerScript.accLeft)
                     {
-                        Scripts.Player_script.IsLeft = false;
-                        Scripts.Player_script.IsRight = true;
+                        this.PlayerScript.IsLeft = false;
+                        this.PlayerScript.IsRight = true;
                     }
-                    else if(Scripts.Player_script.accRight)
+                    else if(this.PlayerScript.accRight)
                     {
-                        Scripts.Player_script.IsRight = false;
-                        Scripts.Player_script.IsLeft = true;
+                        this.PlayerScript.IsRight = false;
+                        this.PlayerScript.IsLeft = true;
                     }
                 }
                 break;
@@ -108,7 +112,7 @@ cc.Class({
                     //调用刷新累计数值方法
                     this.UpLabel(this.YellowScript.InData);
                     //人物分数刷新
-                    Scripts.Player_script.UpLabel();
+                    this.PlayerScript.UpLabel();
                     //显示的尾巴个数
                     for(var i = 0;i < this.YellowScript.InData;i++)
                     {
@@ -143,16 +147,16 @@ cc.Class({
                     if(other.node.getComponent("Point_2_script").IsEnable)
                     {
                         //玩家位置 = 上一帧的位置;
-                        Scripts.Player_script.node.x = Scripts.Player_script.touchMove;
-                        if(Scripts.Player_script.accLeft)
+                        this.Player.x = this.PlayerScript.ThisNodeX_1;
+                        if(this.PlayerScript.accLeft)
                         {
-                            Scripts.Player_script.IsLeft = false;
-                            Scripts.Player_script.IsRight = true;
+                            this.PlayerScript.IsLeft = false;
+                            this.PlayerScript.IsRight = true;
                         }
-                        else if(Scripts.Player_script.accRight)
+                        else if(this.PlayerScript.accRight)
                         {
-                            Scripts.Player_script.IsRight = false;
-                            Scripts.Player_script.IsLeft = true;
+                            this.PlayerScript.IsRight = false;
+                            this.PlayerScript.IsLeft = true;
                         }
                     }
                 }
@@ -171,13 +175,13 @@ cc.Class({
          {
             //离开竖形物体
             case "Point_1" :
-                Scripts.Player_script.IsLeft = true;
-                Scripts.Player_script.IsRight = true;
+                this.PlayerScript.IsLeft = true;
+                this.PlayerScript.IsRight = true;
             break;
             //离开矩形物体
             case "Point_2":
-                Scripts.Player_script.IsLeft = true;
-                Scripts.Player_script.IsRight = true;
+                this.PlayerScript.IsLeft = true;
+                this.PlayerScript.IsRight = true;
             break;
 
             default:
@@ -195,17 +199,17 @@ cc.Class({
             //数值增加
             MapData.AddUpData += Indata;
             //更新累计数值
-            Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+            this.AddUplbl.string = MapData.AddUpData + "/20";
             //进度条更新
-            Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+            this.ProgressBar.progress = MapData.AddUpData / 20;
             //累计的数值 大于等于 20 时清空
             if(MapData.AddUpData >= 20)
             {
                 MapData.AddUpData = 0;
                 //更新累计数值
-                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";
+                this.AddUplbl.string = MapData.AddUpData + "/20";
                 //进度条更新
-                Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+                this.ProgressBar.progress = MapData.AddUpData / 20;
                 //在所有道具不在画布中时 生成道具
                 if(!Scripts.Prop_0_script.IsIns && !Scripts.Prop_1_script.IsIns && !Scripts.Prop_2_script.IsIns)
                 {

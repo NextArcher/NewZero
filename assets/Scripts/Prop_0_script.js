@@ -1,7 +1,5 @@
 //磁铁道具脚本
 
-
-var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -40,18 +38,18 @@ cc.Class({
 
     start () 
     {
-        this.nowTime = 0;
         this.timer = 0;         //道具剩余时间
         this.timer_1 = 0;
+        this.nowTime = 0;
     },
 
     update (dt) 
     {
         this.nowTime += dt;
-        while(this.nowTime >= CellTime)
+        while(this.nowTime >= 0.016)
         {
-            this.fixedUpdate(CellTime);
-            this.nowTime -= CellTime;
+            this.fixedUpdate(0.016);
+            this.nowTime = 0;
         }
     },
 
@@ -113,7 +111,7 @@ cc.Class({
                 this.IsIns = false;                                     //离开画布状态
                 MapData.IsMagnetism = true;                             //开启磁力状态
                 Scripts.Map_script.Pro_Base.active = false;             //隐藏累计进度条
-                this.timer = 10;                                        //开始计时
+                this.timer = 8;                                        //开始计时
             break;
             case "Point_2":
                 this.SetXY();

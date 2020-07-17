@@ -32,6 +32,8 @@ cc.Class({
     onLoad () 
     {
         this.PauseMenu.zIndex = this.ResMenu.zIndex = this.EndMenu.zIndex = 2;        //菜单显示等级
+        this.node.width = MapData.brim / 3;
+        this.node.height = this.node.width;
     },
 
     start () 
@@ -130,6 +132,16 @@ cc.Class({
             break;
             case "Close_btn" :      // X
                 this.ResMenu.active = false;
+            break;
+
+            case "Share_btn" :        //分享成绩
+                if(typeof wx === 'undefined')
+                {
+                    return;
+                }
+                wx.shareAppMessage({
+                    query : 'shareMsg = ' + '附带信息?',
+                });
             break;
 
             default :

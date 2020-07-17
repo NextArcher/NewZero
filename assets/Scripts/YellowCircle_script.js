@@ -2,7 +2,6 @@
 
 
 var IsMoveToPlayer = false;                 //声明是否正在移向玩家
-var CellTime = 0.016;
 
 //黄圆数据
 window.YellowData =
@@ -92,10 +91,10 @@ cc.Class({
      update (dt) 
      {
          this.nowTime += dt;
-         while(this.nowTime >= CellTime)
+         while(this.nowTime >= 0.016)
          {
-             this.fixedUpdate(CellTime);
-             this.nowTime -= CellTime;
+             this.fixedUpdate(0.016);
+             this.nowTime = 0;
          }
      },
 
@@ -147,6 +146,7 @@ cc.Class({
             case "Collider":
                 if(MapData.IsMagnetism)
                 {
+                    this.node.stopAllActions();
                     cc.audioEngine.play(this.audioClip,false,MapData.VolumeData)       //播放磁铁吸收音效
                 }
                 else

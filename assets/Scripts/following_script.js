@@ -1,9 +1,8 @@
 //尾随物体脚本
 
-
-var cellTime = 0.016;           //fixedUpdate传递
 var dist = 0;                   //距离
 var speed = 0;                  //速度
+var Isgreater = false;          //判断左右
 cc.Class({
     extends: cc.Component,
 
@@ -35,6 +34,10 @@ cc.Class({
         //将自身添加到数组
         PointX.Last[PointX.Last.length] = this.node;
         this.speedTime = 0;             //有Map_script传递，用于指定动作时间
+        this.ThisNodeX = 0;
+        this.OnAtouchMove_0 = 0;        //上个物体移动前的位置
+        this.OnAtouchMove_1 = 0;        //上个物体移动后的位置
+        this.nowTime = 0;
      },
 
     start () 
@@ -59,37 +62,22 @@ cc.Class({
             this.node.y = this.OnA.y - this.OnA.height;            //修改Y轴值
             this.fol = this.node.y;                                //获取上一个物体的尾端
         }
-
-        this.nowTime = 0;
     },
 
      update (dt) 
      {
-            //每0.016掉用一次fixedUpdate
-            this.nowTime += dt;
-            while(this.nowTime >= cellTime)
-            {
-                this.fixedUpdate(cellTime);
-                this.nowTime -= cellTime;
-            }
+         this.nowTime += dt;
+         while(this.nowTime >= 0.016)
+         {
+             this.fixedUpdate(0.016);
+             this.nowTime = 0;
+         }
      },
 
      fixedUpdate(dt)
      {
-         if(this.OnA.x != this.node.x)
-         {
-            if(this.timer >= this.speedTime)
-            {
-                this.moveTo = cc.moveTo(this.speedTime,cc.v2(this.OnA.x,this.fol));        //朝上一个移动
-                this.node.runAction(this.moveTo);
-                this.timer = 0;
-            }
-            else
-            {
-                this.timer += dt;
-            }
-         }
-         else { this.node.stopAction(this.moveTo); }
+        //跟随方法(上一物体的原位置，上一物体移动后的位置)
+        this.OnAtouchMove(this.OnAtouchMove_0,this.OnAtouchMove_1);
      },
 
      //计算同轴上的距离
@@ -97,6 +85,33 @@ cc.Class({
      {
          var dist = start > end ? start - end : end - start;
          return dist;
+     },
+
+     //跟随上一物体方法
+     OnAtouchMove(OnAMove,LastMove)
+     {
+         if(OnAMove != LastMove)                                               //上一帧的位置 不等于 当前位置
+         {
+             this.node.x = OnAMove;
+         }
+         else                                                                   //上一帧的位置 等于 当前位置
+         {
+             this.node.x = LastMove;
+         }
+
+         for(var i = 0;i < PointX.Last.length; i++)                 //遍历尾巴，给下一个尾巴传递当前位置与移动后的位置
+         {
+             if(PointX.Last[i] === this.node)
+             {
+                 if(PointX.Last[i + 1] != null)
+                 {
+                     PointX.Last[i + 1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
+                     PointX.Last[i + 1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
+                 }
+                 this.ThisNodeX = this.node.x;                      //当前位置 = 移动后的位置
+             }
+             else  { continue; }
+         }
      },
 
      onCollisionEnter(other,self)

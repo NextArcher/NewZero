@@ -7,8 +7,6 @@
 var TopPoint = 0;              //顶点
 var EndPoint = 0;              //底点
 var TEDist = 0;                //顶点和底点的距离
-var CellTime = 0.016;
-
 
 cc.Class({
     extends: cc.Component,
@@ -50,17 +48,16 @@ cc.Class({
     start () 
     {
         this.IsDown = true;        //允许下降
-        this.nowTime = 0;           //当前dt
+        this.nowTime = 0;
     },
 
      update (dt) 
      {
-         //每0.016秒调用fixedUpdate;
          this.nowTime += dt;
-         while(this.nowTime >= CellTime)
+         while(this.nowTime >= 0.016)
          {
-             this.fixedUpdate(CellTime);
-             this.nowTime -= CellTime;
+             this.fixedUpdate(0.016);
+             this.nowTime = 0;
          }
      },
 

@@ -1,6 +1,5 @@
 //方块组脚本
 
-var CellTime = 0.016;
 cc.Class({
     extends: cc.Component,
 
@@ -26,10 +25,10 @@ cc.Class({
     update (dt) 
     {
         this.nowTime += dt;
-        while(this.nowTime >= CellTime)
+        while(this.nowTime >= 0.016)
         {
-            this.fixedUpdate(CellTime);
-            this.nowTime -= CellTime;
+            this.fixedUpdate(0.016);
+            this.nowTime = 0;
         }
     },
 
@@ -68,7 +67,7 @@ cc.Class({
         if(MapData.DownSpeed > 10)
         {
             Scripts.Map_script.GetPoint_1();    //调用实例障碍物方法
-            MapData.DownSpeed += 3;             //加快下降
+            MapData.DownSpeed += 10;             //加快下降
         }
 
         //允许下降

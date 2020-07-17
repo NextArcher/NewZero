@@ -39,8 +39,8 @@ cc.Class({
         this.bannerAd = wx.createBannerAd({              //获取广告
             adUnitId: 'adunit-ab66b1d524cf7910',
             style: {
-                left: 0,
-                top: 0,
+                left: 20,
+                top: 650,
                 width: 350,
             }
           });
@@ -49,6 +49,10 @@ cc.Class({
 
     start () 
     {
+        if(typeof wx === 'undefined')
+        {
+            return;
+        }
         this.bannerAd.show();
     },
 
@@ -91,7 +95,6 @@ cc.Class({
                     return;
                 }
                 wx.shareAppMessage({
-                    title : "bug集合体",
                     query : 'shareMsg = ' + '附带信息?',
                 });
             break;
