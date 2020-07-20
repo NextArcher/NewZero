@@ -136,8 +136,8 @@ cc.Class({
         this.SpeedX = MapData.DownSpeed;        //定义移速
         this.Other_0 = null;                    //第一次调用接触事件的对象
         this.IsOne = true;                      //用于区分第一与第二次调用接触事件
-        this.ThisNodeX = 0;                     //移动前的位置
-        this.ThisNodeX_1 = 0;                   //移动前位置
+        this.ThisNodeX = 0;                     //移动前的位置(被跟随)
+        this.ThisNodeX_1 = 0;                   //移动前位置(阻碍)
         this.onAtouchMove = new cc.Vec2();      //鼠标相比于上一帧的移动距离
         this.IsOneDeath = true;                 //第一次死亡?
 
@@ -152,7 +152,7 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime = 0;
+             this.nowTime -= 0.016;
          }
      },
 
@@ -248,7 +248,7 @@ cc.Class({
      onTouchMove(event)
      {
          //获取滑动前的位置 = 画布节点.node.转换基于节点的坐标(要转换的坐标)
-         this.ThisNodeX_1 = this.ThisNodeX = this.node.x;
+         this.ThisNodeX = this.ThisNodeX_1 = this.node.x;
          //获取相比上一帧的移动距离
          this.onAtouchMove =  event.getDeltaX();
          //速度 = 路程 / 时间
@@ -267,8 +267,8 @@ cc.Class({
                 }
                 else
                 {
-                    //玩家位置 = 上一帧的位置;
-                    this.node.x = this.ThisNodeX;
+                    //玩家位置 = 上一帧的位置;(阻碍)
+                    this.node.x = this.ThisNodeX_1;
                 }
             }
          }
@@ -286,8 +286,8 @@ cc.Class({
                 }
                 else
                 {
-                    //玩家位置 = 上一帧的位置;
-                    this.node.x = this.ThisNodeX;
+                    //玩家位置 = 上一帧的位置;(阻碍)
+                    this.node.x = this.ThisNodeX_1;
                 }
             }
          }
@@ -490,7 +490,7 @@ cc.Class({
             }
             cc.director.pause();                                        //暂停游戏
             MapData.IsTouch = false;                                    //关闭滑动响应
-            if(this.IsOneDeath)                                         //第一次死亡？
+            if(!this.IsOneDeath)                                         //第一次死亡？
             {
                 this.ResMenu.active = true;                             //显示复活窗口
                 this.IsOneDeath = false;                                //非一次死亡
@@ -499,7 +499,6 @@ cc.Class({
             {
                 this.audioScuore.volume = MapData.VolumeData;                                      //设置音量
                 this.audioScuore.play();                                                           //播放结束音效
-                this.EndMenu.active = true;                                                        //显示结算菜单
                 this.MenuScore_lbl.fontSize = MapData.brim / 3;
                 this.MenuScore_lbl.string = MapData.Score;                                         //显示分数
 
@@ -508,7 +507,10 @@ cc.Class({
                 {
                     cc.sys.localStorage.setItem("maxScore",String(MapData.Score));                 //当前得分大于记录 转换成字符串记录
                 }
+                var KVScore = {"key":"score","value": maxScore};
                 this.Record_lbl.string = "最高得分：" + cc.sys.localStorage.getItem("maxScore");    //输出最高记录
+                this.EndMenu.active = true;                                                        //显示结算菜单
+                this.EndMenu.getComponent('End_Menu_script').ThiShow(KVScore);                            //调用结算窗口加载方法
             }
 
         }

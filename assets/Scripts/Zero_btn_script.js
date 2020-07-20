@@ -49,6 +49,7 @@ cc.Class({
 
     start () 
     {
+        cc.log("check");
         if(typeof wx === 'undefined')
         {
             return;

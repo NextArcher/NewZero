@@ -34,6 +34,13 @@ cc.Class({
         this.PauseMenu.zIndex = this.ResMenu.zIndex = this.EndMenu.zIndex = 2;        //菜单显示等级
         this.node.width = MapData.brim / 3;
         this.node.height = this.node.width;
+
+        // if(typeof wx != 'undefined')
+        // {
+        //     wx.onShow(function(){
+        //         this.Res();
+        //     });
+        // }
     },
 
     start () 
@@ -101,37 +108,59 @@ cc.Class({
             //#endregion 返回菜单end
 
             case "Res_btn" :        //看视频复活
-                MapData.PlayerData = 3;
-                Scripts.Player_script.Label_1.string = MapData.PlayerData;
-                //显示的尾巴个数
-                for(var i = 0;i < MapData.PlayerData;i++)
-                    {
-                        //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                        for(var j = 1;j < PointX.Last.length;j++)
-                        {
-                            //尾随物体组.获取脚本.node组件.opacity属性
-                            //索引0(人物)并没有following_script脚本
-                            if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+            if(typeof wx != 'undefined')
+            {
+                // var rawardedVideo = wx.creatorRawardedVideoAd({             //视频广告未能观看
+                //     adUnitId : ''                                           //广告ID
+                // });
+                if(typeof wx != 'undefined')                                   //用分享代替
+                {
+                    wx.shareAppMessage({                                            //打开分享窗口
+                        query : 'shareMsg = ' + '附带信息?',
+                    });
+                    wx.onShow(function(){                                           //分享回调方法
+                        //#region 复活
+                        MapData.PlayerData = 3;
+                        Scripts.Player_script.Label_1.string = MapData.PlayerData;
+                        //显示的尾巴个数
+                        for(var i = 0;i < MapData.PlayerData;i++)
                             {
-                                //显示
-                                PointX.Last[j].getComponent("following_script").node.opacity = 255;
-                                break ;
+                                //向下遍历数组(从索引1开始) 遇到隐藏的就显示
+                                for(var j = 1;j < PointX.Last.length;j++)
+                                {
+                                    //尾随物体组.获取脚本.node组件.opacity属性
+                                    //索引0(人物)并没有following_script脚本
+                                    if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                                    {
+                                        //显示
+                                        PointX.Last[j].getComponent("following_script").node.opacity = 255;
+                                        break ;
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
+                                     
+                                }
                             }
-                            else
-                            {
-                                continue;
-                            }
-                             
-                        }
-                    }
-                Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
-                MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
-                MapData.IsTouch = true;                                                 //开启滑动响应
-                this.ResMenu.active = false;
-                cc.director.resume();                                                   //继续游戏
-            break;
+                        Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
+                        MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
+                        MapData.IsTouch = true;                                                 //开启滑动响应
+                        //this.ResMenu.active = false;
+                        cc.director.resume();                                                   //继续游戏
+                    //#endregion 复活end
+                    });
+                }
+
+            }
             case "Close_btn" :      // X
-                this.ResMenu.active = false;
+                if(this.ResMenu.active)                         //复活菜单关闭
+                    this.ResMenu.active = false;
+                if(!this.EndMenu.active)                        //结算菜单显示
+                {
+                    this.EndMenu.active = true;
+                    this.EndMenu.getComponent('End_Menu_script').ThiShow();                 //调用结算窗口加载方法
+                }
             break;
 
             case "Share_btn" :        //分享成绩
@@ -148,4 +177,5 @@ cc.Class({
             break;
         }
     },
+
 });

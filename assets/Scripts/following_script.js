@@ -70,7 +70,7 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime = 0;
+             this.nowTime -= 0.016;
          }
      },
 
