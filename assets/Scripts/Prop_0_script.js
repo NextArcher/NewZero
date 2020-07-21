@@ -34,6 +34,7 @@ cc.Class({
          //设置位置信息
          this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
          this.node.y = this.thisY = 0;
+         this.timer = 0;
      },
 
     start () 

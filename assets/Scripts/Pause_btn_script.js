@@ -25,6 +25,11 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
+        wxSubContextView :      //子域渲染精灵
+        {
+            default : null,
+            type : cc.Sprite,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -159,7 +164,7 @@ cc.Class({
                 if(!this.EndMenu.active)                        //结算菜单显示
                 {
                     this.EndMenu.active = true;
-                    this.EndMenu.getComponent('End_Menu_script').ThiShow();                 //调用结算窗口加载方法
+                    this.EndMenu.getComponent('End_Menu_script').ThiShow(cc.sys.localStorage.getItem("maxScore"));                 //调用结算窗口加载方法
                 }
             break;
 

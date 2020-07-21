@@ -145,6 +145,11 @@ cc.Class({
             default : null,
             type : cc.Camera,
         },
+        wxSubContextView :      //显示子域节点
+        {
+            default : null,
+            type : cc.Node,
+        }
     },
 
      onLoad () 
@@ -206,6 +211,8 @@ cc.Class({
          this.node.on('touchend',this.onTouchEnd,this);                     //抬起事件
 
          this.Point_1Poll = new cc.NodePool();                              //声明障碍物对象池
+
+         this.wxSubContextView.zIndex = 3;                                  //子域显示等级 3
 
          //#region  生成物体
         

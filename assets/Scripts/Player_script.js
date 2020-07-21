@@ -507,10 +507,9 @@ cc.Class({
                 {
                     cc.sys.localStorage.setItem("maxScore",String(MapData.Score));                 //当前得分大于记录 转换成字符串记录
                 }
-                var KVScore = {"key":"score","value": maxScore};
                 this.Record_lbl.string = "最高得分：" + cc.sys.localStorage.getItem("maxScore");    //输出最高记录
                 this.EndMenu.active = true;                                                        //显示结算菜单
-                this.EndMenu.getComponent('End_Menu_script').ThiShow(KVScore);                            //调用结算窗口加载方法
+                this.EndMenu.getComponent('End_Menu_script').ThiShow(cc.sys.localStorage.getItem("maxScore"));                            //调用结算窗口加载方法
             }
 
         }

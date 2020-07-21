@@ -36,6 +36,7 @@ cc.Class({
         //初始位置
         this.node.x = this.thisX = MapData.size.width / 2 + MapData.brim;
         this.node.y = this.thisY = -MapData.brim;
+        this.timer = 0;
     },
 
     start () 
