@@ -20,6 +20,11 @@ cc.Class({
             default : null,
             type : cc.Sprite,
         },
+        wxSubContextView :      //显示子域节点
+        {
+            default : null,
+            type : cc.WXSubContextView,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -41,13 +46,14 @@ cc.Class({
 
     ThiShow(maxScore)                                   //加载方法，由玩家数值归0或X按钮调用
     {
-        cc.log("加载结算窗口");
+        console.log("加载结算窗口");
         //获取好友玩家分数，将其排序出前三名
         //获取玩家头像，将其赋值
         if(typeof wx != 'undefined')
         {
+            this.wxSubContextView.enabled = true;       //显示子域
             wx.getOpenDataContext().postMessage({       //向子域传递数据
-                Score : maxScore,                       //键 : 值
+                Score : Number(maxScore),                       //键 : 值
             });
         }
     },

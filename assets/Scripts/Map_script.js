@@ -148,7 +148,7 @@ cc.Class({
         wxSubContextView :      //显示子域节点
         {
             default : null,
-            type : cc.Node,
+            type : cc.WXSubContextView,
         }
     },
 
@@ -212,7 +212,7 @@ cc.Class({
 
          this.Point_1Poll = new cc.NodePool();                              //声明障碍物对象池
 
-         this.wxSubContextView.zIndex = 3;                                  //子域显示等级 3
+         this.wxSubContextView.node.zIndex = 3;                                  //子域显示等级 3
 
          //#region  生成物体
         

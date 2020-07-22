@@ -25,10 +25,10 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
-        wxSubContextView :      //子域渲染精灵
+        wxSubContextView :      //显示子域节点
         {
             default : null,
-            type : cc.Sprite,
+            type : cc.WXSubContextView,
         }
     },
 
@@ -83,6 +83,7 @@ cc.Class({
                 }
             break;
             case "Yes_btn" :                    //返回首页按钮
+                this.wxSubContextView.enabled = false;       //禁用子域图片刷新
                 this.audioSuorce.play();        //播放音效
                 cc.director.loadScene('Zero');  //加载场景0
             break;
@@ -107,6 +108,7 @@ cc.Class({
                 Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
                 Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
                 Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
+                this.wxSubContextView.enabled = false;                                          //禁用子域图片刷新
                 cc.director.loadScene('One');       //加载场景
                 
             break;
@@ -169,6 +171,7 @@ cc.Class({
             break;
 
             case "Share_btn" :        //分享成绩
+                this.wxSubContextView.enabled = false;       //禁用子域图片刷新
                 if(typeof wx === 'undefined')
                 {
                     return;
