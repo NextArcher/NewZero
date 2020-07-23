@@ -213,6 +213,8 @@ cc.Class({
          this.Point_1Poll = new cc.NodePool();                              //声明障碍物对象池
 
          this.wxSubContextView.node.zIndex = 3;                                  //子域显示等级 3
+         this.wxSubContextView.node.opacity = 0;                                 //隐藏子域节点
+         this.wxSubContextView.enabled = false;
 
          //#region  生成物体
         
@@ -268,10 +270,7 @@ cc.Class({
 
     },
 
-    //  update (dt) 
-    //  {
-
-    //  },
+    //update (dt) {},
 
 //#region 生成矩形方法
      //生成矩形方法

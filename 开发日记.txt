@@ -249,3 +249,9 @@ UI按钮样式
 			keyList: ["Score"],
 		获取成功
 			res.data.KVDataList[0]玩家信息可能会是自己的
+--------------------------------------------------------------------------------------------
+今日实现(2020/7/23/周四)
+wxSubContextView组件.enabled = false; //子域不刷新
+wxSubContextView组件.enabled = true；
+wxSubContextView组件.update();		//子域刷新
+在wx.方法中不能用this访问该脚本内的对象

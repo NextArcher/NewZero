@@ -39,10 +39,7 @@ cc.Class({
 
     },
 
-    update (dt) 
-    {
-
-    },
+    // update (dt) {},
 
     ThiShow(maxScore)                                   //加载方法，由玩家数值归0或X按钮调用
     {
@@ -51,7 +48,11 @@ cc.Class({
         //获取玩家头像，将其赋值
         if(typeof wx != 'undefined')
         {
-            this.wxSubContextView.enabled = true;       //显示子域
+            this.wxSubContextView.node.opacity = 255;   //显示子域
+            this.wxSubContextView.enabled = true;       //开启子域组件
+            this.wxSubContextView.update();             //更新内容
+
+            console.log("节点状态：",this.wxSubContextView.node.opacity,"组件状态：",this.wxSubContextView.enabled);
             wx.getOpenDataContext().postMessage({       //向子域传递数据
                 Score : Number(maxScore),                       //键 : 值
             });
