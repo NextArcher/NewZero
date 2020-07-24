@@ -255,3 +255,9 @@ wxSubContextView组件.enabled = false; //子域不刷新
 wxSubContextView组件.enabled = true；
 wxSubContextView组件.update();		//子域刷新
 在wx.方法中不能用this访问该脚本内的对象
+--------------------------------------------------------------------------------------------
+今日实现(2020/7/24/周五)
+微信头像获取
+	不是语法错误，log出spriteFrame的texture属性值是对的情况，图片没有显示，那么就是游戏暂停的锅
+不能将挂载wxSubContextView组件的节点active属性设为false，改回true也不会刷新了
+头像显示，子域的UI，控制子域的刷新频率(不控制会掉帧)

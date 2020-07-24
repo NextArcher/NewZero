@@ -90,6 +90,7 @@ cc.Class({
      //跟随上一物体方法
      OnAtouchMove(OnAMove,LastMove)
      {
+         this.ThisNodeX = this.node.x;                      //当前位置 = 移动后的位置
          if(OnAMove != LastMove)                                               //上一帧的位置 不等于 当前位置
          {
              this.node.x = OnAMove;
@@ -108,7 +109,6 @@ cc.Class({
                      PointX.Last[i + 1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
                      PointX.Last[i + 1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
                  }
-                 this.ThisNodeX = this.node.x;                      //当前位置 = 移动后的位置
              }
              else  { continue; }
          }

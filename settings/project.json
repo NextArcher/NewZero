@@ -74,6 +74,8 @@
     "EditBox",
     "Geom Utils",
     "Label Effect",
+    "Mask",
+    "Mesh",
     "MotionStreak",
     "Native Socket",
     "Physics",
@@ -91,6 +93,7 @@
     "TiledMap",
     "VideoPlayer",
     "Widget",
+    "WebView",
     "3D",
     "3D Primitive",
     "3D Physics/cannon.js",
@@ -120,8 +123,8 @@
       "enable": false
     }
   },
-  "start-scene": "5d1adc9f-2d30-4fa8-8ef6-363f92bf50e8",
   "migrate-history": [
     "cloud-function"
-  ]
+  ],
+  "start-scene": "current"
 }

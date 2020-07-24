@@ -47,21 +47,6 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
-        EndMenu :           //结束菜单
-        {
-            default : null,
-            type : cc.Node,
-        },
-        MenuScore_lbl :     //结算本次得分
-        {
-            default : null,
-            type : cc.Label,
-        },
-        Record_lbl :            //最高记录
-        {
-            default : null,
-            type : cc.Label,
-        },
         audioScuore :       //音频组件
         {
             default : null,
@@ -143,6 +128,7 @@ cc.Class({
 
         this.ResMenu.active = false;            //隐藏复活菜单
         this.nowTime = 0;
+        this.IsDeath = false;                   //是否死亡？
 
     },
 
@@ -165,7 +151,6 @@ cc.Class({
             PointX.Last[1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
             PointX.Last[1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
         }
-        this.ThisNodeX = this.node.x;           //当前位置 = 移动后的位置
      },
 
 //#region 人物移动方法
@@ -291,6 +276,7 @@ cc.Class({
                 }
             }
          }
+         this.ThisNodeX = this.node.x;           //当前位置 = 移动后的位置
      },
 
      onCollisionEnter(other,self)
@@ -323,6 +309,8 @@ cc.Class({
      //持续接触事件
      onCollisionStay(other,self)
      {
+        if(!this.IsDeath)
+        {
         //矩形碰撞
         switch(other.node.group)
         {
@@ -423,6 +411,8 @@ cc.Class({
             default:
             break;
         }
+        }
+        else { return ; }
      },
 //#endregion 持续接触事件end
 
@@ -488,28 +478,21 @@ cc.Class({
                 MapData.NowDownSpeed = MapData.DownSpeed;
                 MapData.DownSpeed = 0;                                  //停止下降
             }
-            cc.director.pause();                                        //暂停游戏
+            //cc.director.pause();                                      //暂停游戏
+            this.IsDeath = true;                                        //玩家死亡
             MapData.IsTouch = false;                                    //关闭滑动响应
-            if(!this.IsOneDeath)                                         //第一次死亡？
+            if(this.IsOneDeath)                                        //第一次死亡？
             {
                 this.ResMenu.active = true;                             //显示复活窗口
                 this.IsOneDeath = false;                                //非一次死亡
+                MapData.maxScore = MapData.Score;                       //将本次得分写入全局变量
             }
             else
             {
                 this.audioScuore.volume = MapData.VolumeData;                                      //设置音量
                 this.audioScuore.play();                                                           //播放结束音效
-                this.MenuScore_lbl.fontSize = MapData.brim / 3;
-                this.MenuScore_lbl.string = MapData.Score;                                         //显示分数
-
-                var maxScore = cc.sys.localStorage.getItem("maxScore");                            //读取键
-                if(maxScore < MapData.Score)                                                       //当前得分与读取的兼对比
-                {
-                    cc.sys.localStorage.setItem("maxScore",String(MapData.Score));                 //当前得分大于记录 转换成字符串记录
-                }
-                this.Record_lbl.string = "最高得分：" + cc.sys.localStorage.getItem("maxScore");    //输出最高记录
-                this.EndMenu.active = true;                                                        //显示结算菜单
-                this.EndMenu.getComponent('End_Menu_script').ThiShow(cc.sys.localStorage.getItem("maxScore"));                            //调用结算窗口加载方法
+                MapData.maxScore = MapData.Score;                                                  //将本次得分写入全局变量
+                cc.director.loadScene("Two");                                                      //加载场景2
             }
 
         }

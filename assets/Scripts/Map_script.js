@@ -44,8 +44,9 @@ window.MapData =
     IsDouble : false,
     //得分
     Score : 0,
-    IsTouch : true,     //响应滑动?
+    IsTouch : true,             //响应滑动?
     VolumeData : 0.5,           //音量
+    maxScore : 0,
 },
 
 //全脚本收录
@@ -145,11 +146,6 @@ cc.Class({
             default : null,
             type : cc.Camera,
         },
-        wxSubContextView :      //显示子域节点
-        {
-            default : null,
-            type : cc.WXSubContextView,
-        }
     },
 
      onLoad () 
@@ -212,10 +208,6 @@ cc.Class({
 
          this.Point_1Poll = new cc.NodePool();                              //声明障碍物对象池
 
-         this.wxSubContextView.node.zIndex = 3;                                  //子域显示等级 3
-         this.wxSubContextView.node.opacity = 0;                                 //隐藏子域节点
-         this.wxSubContextView.enabled = false;
-
          //#region  生成物体
         
          //循环得出矩形物体生成点
@@ -261,6 +253,7 @@ cc.Class({
 
     start () 
     {
+        cc.director.preloadScene("Two");
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(var i = 0;i < this.YellFollNumber();i++)
         {

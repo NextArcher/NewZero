@@ -46,12 +46,13 @@ cc.Class({
 
     update (dt) 
     {
-        this.nowTime += dt;
-        while(this.nowTime >= 0.016)
-        {
-            this.fixedUpdate(0.016);
-            this.nowTime -= 0.016;
-        }
+            this.nowTime += dt;
+            while(this.nowTime >= 0.016)
+            {
+                this.fixedUpdate(0.016);
+                this.nowTime -= 0.016;
+            }
+
     },
 
     fixedUpdate(dt)

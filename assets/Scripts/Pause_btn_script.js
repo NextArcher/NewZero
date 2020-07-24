@@ -1,5 +1,6 @@
 //按钮事件
 
+var script = null;              //声明this代替
 cc.Class({
     extends: cc.Component,
 
@@ -20,25 +21,16 @@ cc.Class({
             default : null,
             type : cc.Node,
         },
-        EndMenu :           //结束菜单
-        {
-            default : null,
-            type : cc.Node,
-        },
-        wxSubContextView :      //显示子域节点
-        {
-            default : null,
-            type : cc.WXSubContextView,
-        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () 
     {
-        this.PauseMenu.zIndex = this.ResMenu.zIndex = this.EndMenu.zIndex = 2;        //菜单显示等级
+        this.PauseMenu.zIndex = this.ResMenu.zIndex = 2;        //菜单显示等级
         this.node.width = MapData.brim / 3;
         this.node.height = this.node.width;
+        script = this;                                          //获取this
 
         // if(typeof wx != 'undefined')
         // {
@@ -62,7 +54,7 @@ cc.Class({
         {
             //#region  返回菜单
             case "Pause_btn" :                  //左上角返回按钮
-                if(this.ResMenu.active || this.EndMenu.active)         //当复活菜单开启时不响应
+                if(this.ResMenu.active)         //当复活菜单开启时不响应
                 {
                     return;
                 }
@@ -83,8 +75,6 @@ cc.Class({
                 }
             break;
             case "Yes_btn" :                    //返回首页按钮
-                this.wxSubContextView.node.opacity = 0;         //隐藏显示子域节点
-                this.wxSubContextView.enabled = false;          //禁用子域组件
                 this.audioSuorce.play();        //播放音效
                 cc.director.loadScene('Zero');  //加载场景0
             break;
@@ -109,8 +99,6 @@ cc.Class({
                 Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
                 Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
                 Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
-                this.wxSubContextView.node.opacity = 0;                                         //隐藏子域节点
-                this.wxSubContextView.enabled = false;                                          //禁用子域组件
                 cc.director.loadScene('One');       //加载场景
                 
             break;
@@ -126,6 +114,7 @@ cc.Class({
                 {
                     wx.shareAppMessage({                                            //打开分享窗口
                         query : 'shareMsg = ' + '附带信息?',
+                        title : "这是你没有玩过的全新bug",
                     });
                     wx.onShow(function(){                                           //分享回调方法
                         //#region 复活
@@ -155,25 +144,23 @@ cc.Class({
                         Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
                         MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
                         MapData.IsTouch = true;                                                 //开启滑动响应
-                        //this.ResMenu.active = false;
+                        script.ResMenu.active = false;                                          //关闭复活窗口
+                        Scripts.Player_script.IsDeath = false;
                         cc.director.resume();                                                   //继续游戏
                     //#endregion 复活end
-                    });
+                });
                 }
-
+                else { return; }
             }
+            break;
+
             case "Close_btn" :      // X
                 if(this.ResMenu.active)                         //复活菜单关闭
                     this.ResMenu.active = false;
-                if(!this.EndMenu.active)                        //结算菜单显示
-                {
-                    this.EndMenu.active = true;
-                    this.EndMenu.getComponent('End_Menu_script').ThiShow(cc.sys.localStorage.getItem("maxScore"));                 //调用结算窗口加载方法
-                }
+                cc.director.loadScene("Two");
             break;
 
             case "Share_btn" :        //分享成绩
-                //this.wxSubContextView.enabled = false;       //禁用子域图片刷新
                 if(typeof wx === 'undefined')
                 {
                     return;

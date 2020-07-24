@@ -32,16 +32,6 @@ cc.Class({
             default : null,
             type : cc.script
         },
-        //狭路右边限制对象(用于人物消除矩形后的X轴限制)
-        Just :
-        {
-            default : 0,
-        },
-        //狭路左边限制对象
-        Lose :
-        {
-            default : 0
-        },
         //加快减少数值
         ReduceSpeed : 0.3,
         //父节点
@@ -92,7 +82,6 @@ cc.Class({
 
     start () 
     {
-        this.Gorge();                    //获取限定X轴方法
         this.thisX = this.node.x;        //记录X轴的值
         this.IsEnable = true;            //是否为显示状态
         this.InData = 0;                 //数值
@@ -112,12 +101,12 @@ cc.Class({
 
      fixedUpdate(dt)
      {
-        if(MapData.DownSpeed == 0)
-        {
-           //复原Y轴
-           this.node.y = 0;
-        }
-        this.DynamicColor();       //调用改变颜色方法
+            if(MapData.DownSpeed == 0)
+            {
+               //复原Y轴
+               this.node.y = 0;
+            }
+            this.DynamicColor();       //调用改变颜色方法
      },
 
     //隐藏方法
@@ -260,16 +249,6 @@ cc.Class({
                 //红绿满
                 this.node.color = new cc.Color(254,254,0);
             }
-    },
-
-    //获取限定X轴移动方法
-    Gorge()
-    {
-        //得出矩形物体右边值
-        this.Just = this.node.x + this.node.width / 2;
-        //得出矩形物体左边值
-        this.Lose = this.node.x - this.node.width / 2;
-
     },
 
     //抖动方法

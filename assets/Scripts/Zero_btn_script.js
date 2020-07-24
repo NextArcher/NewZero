@@ -97,6 +97,7 @@ cc.Class({
                 }
                 wx.shareAppMessage({
                     query : 'shareMsg = ' + '附带信息?',
+                    title : "这是你没有玩过的全新bug",
                 });
             break;
 
