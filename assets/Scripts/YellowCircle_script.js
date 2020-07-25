@@ -94,7 +94,7 @@ cc.Class({
             while(this.nowTime >= 0.016)
             {
                 this.fixedUpdate(0.016);
-                this.nowTime -= 0.016;
+                this.nowTime = 0;
             }
      },
 
@@ -136,6 +136,7 @@ cc.Class({
         {
             this.ReXY();
         }
+        else { return; }
      },
 
      //初次接触
@@ -162,6 +163,7 @@ cc.Class({
                {
                     this.ReXY();
                }
+               else { return; }
            break;
            case "Point_2":
                this.ReXY();
@@ -182,6 +184,7 @@ cc.Class({
                {
                     this.ReXY();
                }
+               else { return; }
            break;
            case "Point_2":
                this.ReXY();

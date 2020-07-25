@@ -1,7 +1,5 @@
 //尾随物体脚本
 
-var dist = 0;                   //距离
-var speed = 0;                  //速度
 var Isgreater = false;          //判断左右
 cc.Class({
     extends: cc.Component,
@@ -20,8 +18,6 @@ cc.Class({
         timer : 0,
         //上一个物体的Y轴值
         fol : 0,
-        //自身速度
-        speed : 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -34,6 +30,7 @@ cc.Class({
         //将自身添加到数组
         PointX.Last[PointX.Last.length] = this.node;
         this.speedTime = 0;             //有Map_script传递，用于指定动作时间
+        this.OspeedTime = 0;            //speedTime的不变版
         this.ThisNodeX = 0;
         this.OnAtouchMove_0 = 0;        //上个物体移动前的位置
         this.OnAtouchMove_1 = 0;        //上个物体移动后的位置
@@ -70,14 +67,24 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime -= 0.016;
+             this.nowTime = 0;
          }
      },
 
      fixedUpdate(dt)
      {
         //跟随方法(上一物体的原位置，上一物体移动后的位置)
-        this.OnAtouchMove(this.OnAtouchMove_0,this.OnAtouchMove_1);
+        //this.OnAtouchMove(this.OnAtouchMove_0,this.OnAtouchMove_1);
+        if(this.timer > this.speedTime)
+        {
+            var touchMove = cc.moveTo(this.speedTime,this.OnA.x,this.fol)
+            this.node.runAction(touchMove);
+            this.timer = 0;
+        }
+        else 
+        {
+            this.timer += dt;
+        }
      },
 
      //计算同轴上的距离
@@ -93,6 +100,7 @@ cc.Class({
          this.ThisNodeX = this.node.x;                      //当前位置 = 移动后的位置
          if(OnAMove != LastMove)                                               //上一帧的位置 不等于 当前位置
          {
+             
              this.node.x = OnAMove;
          }
          else                                                                   //上一帧的位置 等于 当前位置
@@ -114,19 +122,4 @@ cc.Class({
          }
      },
 
-     onCollisionEnter(other,self)
-     {
-         if(other.node.group == "Point_1")
-         {
-             
-         }
-     },
-
-     onCollisionStay(other,self)
-     {
-         if(other.node.group == "Point_1")
-         {
-
-         }
-     },
 });

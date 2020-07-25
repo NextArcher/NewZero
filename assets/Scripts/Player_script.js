@@ -138,7 +138,7 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime -= 0.016;
+             this.nowTime = 0;
          }
      },
 
@@ -146,11 +146,12 @@ cc.Class({
      {
         //调用移动方法
         //this.Move(dt);
-        if(PointX.Last[1] != null)              //向尾巴1传递当前位置和移动后的位置
-        {
-            PointX.Last[1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
-            PointX.Last[1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
-        }
+        // if(PointX.Last[1] != null)              //向尾巴1传递当前位置和移动后的位置
+        // {
+        //     PointX.Last[1].getComponent('following_script').OnAtouchMove_0 = this.ThisNodeX;
+        //     PointX.Last[1].getComponent('following_script').OnAtouchMove_1 = this.node.x;
+        // }
+        // else { return; }
      },
 
 //#region 人物移动方法
@@ -298,6 +299,7 @@ cc.Class({
                     }
                     Point_2Data.IsOne = false;
                  }
+                 else { return; }
              break;
 
              default:
@@ -404,8 +406,10 @@ cc.Class({
                             this.timer += other.node.getComponent("Point_2_script").ReduceSpeed;
                         }
                     }
+                    else { return; }
 
                 }
+                else { return; }
             break;
             //#endregion 矩形end
             default:
@@ -429,8 +433,11 @@ cc.Class({
                         {
                             this.Collider.size = cc.size(this.node.width,this.node.width / 4);
                         }
+                        else { return; }
                     }
+                    else { return; }
                  }
+                 else { return; }
              break;
 
              default:

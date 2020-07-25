@@ -52,7 +52,7 @@ cc.Class({
             while(this.nowTime >= 0.016)
             {
                 this.fixedUpdate(0.016);
-                this.nowTime -= 0.016;
+                this.nowTime = 0;
             }
 
     },
@@ -73,7 +73,9 @@ cc.Class({
                     //离开画布
                     this.IsIns = false;
                 }
+                else { return; }
             }
+            else { return; }
         }
         if(this.timer != 0)
         {

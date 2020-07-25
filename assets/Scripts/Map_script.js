@@ -33,7 +33,7 @@ window.MapData =
     //竖形物体组
     Point_1S : Array(),
     //尾随速度
-    FollSpeed : 3.2,
+    FollSpeed : 0,
     //累计长度
     AddUpData : 0,
     //磁力状态?
@@ -157,6 +157,7 @@ cc.Class({
          cc.director.getCollisionManager().enabled = true;
          MapData.IsTouch = true;
          MapData.Score = 0;
+         MapData.FollSpeed = 0.003;
          cc.director.resume();               //时间开始流动
 
          //传入引用
@@ -237,7 +238,7 @@ cc.Class({
         }
 
         //生成20个物体
-         for(var i = 0;i < 24;i++)
+         for(var i = 0;i < 26;i++)
          {
              if(i <= 8)                             //固定生成8个食物
              {
@@ -248,12 +249,12 @@ cc.Class({
          }
 
          //#endregion 生成物体end
+         cc.director.preloadScene("Two");       //预加载场景2
 
      },
 
     start () 
     {
-        cc.director.preloadScene("Two");
         //调用计算尾随个数方法得出循环生成几个尾随物体
         for(var i = 0;i < this.YellFollNumber();i++)
         {
@@ -355,8 +356,9 @@ cc.Class({
             this.node.addChild(newYell);
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
-
-            newYell.getComponent('following_script').speedTime = MapData.FollSpeed += 0.1;
+            MapData.FollSpeed += 0.001;
+            newYell.getComponent('following_script').speedTime = MapData.FollSpeed;
+            newYell.getComponent('following_script').OspeedTime = MapData.FollSpeed;
     },
 //#endregion 生成尾随物体方法end
 
@@ -375,6 +377,7 @@ cc.Class({
     {
         if(MapData.IsTouch)                                     //是否响应
             Scripts.Player_script.onTouchStart(event);          //调用玩家的点击事件
+        else { return; }
     },
 
     //滑动事件
@@ -382,6 +385,7 @@ cc.Class({
     {
         if(MapData.IsTouch)                                     //是否响应
             Scripts.Player_script.onTouchMove(event);           //调用玩家的滑动事件
+        else { return; }
     },
 
     //抬起事件

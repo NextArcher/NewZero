@@ -95,7 +95,7 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime -= 0.016;
+             this.nowTime = 0;
          }
      },
 
@@ -106,7 +106,8 @@ cc.Class({
                //复原Y轴
                this.node.y = 0;
             }
-            this.DynamicColor();       //调用改变颜色方法
+            //this.DynamicColor();       //调用改变颜色方法
+            else { return; }
      },
 
     //隐藏方法
@@ -133,6 +134,8 @@ cc.Class({
 
         //调用随机数值方法
          this.RandomData();
+
+         this.DynamicColor();       //调用改变颜色方法
 
         //重置加快减少数值
         this.ReduceSpeed = 0.3;
@@ -163,12 +166,14 @@ cc.Class({
             //重置位置信息
             this.node.setPosition(this.thisX,0);
         }
+        else { return; }
     },
 
     //减少数值方法
     ReduceData()
     {
         this.InData --;
+        this.DynamicColor();       //调用改变颜色方法
         //双倍得分?
         if(MapData.IsDouble)
         {

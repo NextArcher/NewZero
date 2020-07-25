@@ -95,6 +95,7 @@ cc.Class({
                         this.PlayerScript.IsLeft = true;
                     }
                 }
+                else { return; }
                 break;
             //#endregion 竖形物体end
             
@@ -159,7 +160,9 @@ cc.Class({
                             this.PlayerScript.IsLeft = true;
                         }
                     }
+                    else { return; }
                 }
+                else { return; }
             break;
             //#endregion 矩形end
             default:
@@ -233,13 +236,11 @@ cc.Class({
                         break;
                     }
                 }
+                else { return; }
             }
+            else { return; }
         }
-        //在开启了某一道具状态后接触食物
-        else
-        {
-            return ;
-        }
+        else { return; }
     },
 
 

@@ -28,7 +28,7 @@ cc.Class({
         while(this.nowTime >= 0.016)
         {
             this.fixedUpdate(0.016);
-            this.nowTime -= 0.016;
+            this.nowTime = 0;
         }
     },
 
@@ -44,6 +44,7 @@ cc.Class({
                 //调用重置XY方法
                 this.ReXY();
             }
+            else { return; }
     },
 
     //重置位置方法

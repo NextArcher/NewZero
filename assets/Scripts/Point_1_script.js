@@ -57,7 +57,7 @@ cc.Class({
          while(this.nowTime >= 0.016)
          {
              this.fixedUpdate(0.016);
-             this.nowTime -= 0.016;
+             this.nowTime = 0;
          }
      },
 
@@ -73,12 +73,14 @@ cc.Class({
                //根据底点与相同X轴的顶点距离，判断是否调用设置XY的方法
                this.Interval();
             }
+            else { return; }
         }
 
         if(this.node.y < -MapData.size.height - this.node.height / 2)
         {
             this.ReXY();
         }
+        else { return; }
      },
 
      //#region 初次接触方法
@@ -99,8 +101,11 @@ cc.Class({
                             MapData.NowDownSpeed = MapData.DownSpeed;
                             MapData.DownSpeed = 0;
                         } 
+                        else { return; }
                     }
+                    else { return; }
                 }
+                else { return; }
             break;
             case "Point_1":
                 this.ReXY();
@@ -111,6 +116,7 @@ cc.Class({
                 {
                     this.ReXY();
                 }
+                else { return; }
             break;
 
              default:
@@ -153,6 +159,7 @@ cc.Class({
                 {
                     this.ReXY();
                 }
+                else { return; }
             break;
 
             default:
@@ -173,8 +180,11 @@ cc.Class({
                 {
                     MapData.DownSpeed = MapData.NowDownSpeed;
                 }
+                else { return; }
              }
+             else { return; }
          }
+         else { return; }
      },
      //#endregion 离开接触事件end
 
