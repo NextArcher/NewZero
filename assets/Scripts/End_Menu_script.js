@@ -1,6 +1,7 @@
 //结算菜单脚本
 
 var ref = 0;
+var refTime = 1;
 
 cc.Class({
     extends: cc.Component,
@@ -64,29 +65,50 @@ cc.Class({
     onLoad () 
     {
         this.nowTime = 0;
-    },
 
-    start () 
-    {
         this.node.size = MapData.size;
         this.MenuScore_lbl.fontSize = MapData.brim / 3;
         this.MenuScore_lbl.string = MapData.Score;                                         //显示分数
         this.audioSuorce.volume = MapData.VolumeData;        //音量
+        if(MapData.maxScore == 0)
+        {
+            MapData.maxScore = 1;
+        }
 
-        //获取好友玩家分数，将其排序出前三名
-        //获取玩家头像，将其赋值
         if(typeof wx != 'undefined')
         {
-            // this.wxSubContextView.node.opacity = 255;   //显示子域
-            // this.wxSubContextView.enabled = true;       //开启子域组件
-            // this.wxSubContextView.update();             //更新内容
-
             wx.getOpenDataContext().postMessage({       //向子域传递数据
                 Score : Number(MapData.maxScore),       //键 : 值
                 MapSize : MapData.size,                 //传递分辨率
+                text : "隐藏",
             });
         }
         else { return; }
+    },
+
+    start ()        //切换场景执行
+    {
+        if(!MapData.IsDeathTwo)                         //死亡后加载场景2显示再玩一次按钮
+        {
+            this.Again_btn.active = false;
+        }
+        else
+        {
+            this.Again_btn.active = true;
+        }
+        // this.node.size = MapData.size;
+        // this.MenuScore_lbl.fontSize = MapData.brim / 3;
+        // this.MenuScore_lbl.string = MapData.Score;                                         //显示分数
+        // this.audioSuorce.volume = MapData.VolumeData;        //音量
+
+        // if(typeof wx != 'undefined')
+        // {
+        //     wx.getOpenDataContext().postMessage({       //向子域传递数据
+        //         Score : Number(MapData.maxScore),       //键 : 值
+        //         MapSize : MapData.size,                 //传递分辨率
+        //     });
+        // }
+        // else { return; }
     },
 
     update (dt) 
@@ -101,11 +123,16 @@ cc.Class({
 
     fixedUpdate(dt)
     {
-        if(ref >= 16)                                   //每隔16帧刷新一次子域
+        if(ref >= refTime)                                   //每刷新一次就延长下次刷新的时间
         {
             this.wxSubContextView.enabled = true;
             this.wxSubContextView.update();
             ref = 0;
+            if(refTime > 16)                                //下次刷新的间隔不得大于16
+            {
+                refTime += 1;
+            }
+            else { return; }
         }
         else
         {
@@ -120,10 +147,6 @@ cc.Class({
         //获取玩家头像，将其赋值
         if(typeof wx != 'undefined')
         {
-            // this.wxSubContextView.node.opacity = 255;   //显示子域
-            // this.wxSubContextView.enabled = true;       //开启子域组件
-            // this.wxSubContextView.update();             //更新内容
-
             wx.getOpenDataContext().postMessage({       //向子域传递数据
                 Score : Number(maxScore),                       //键 : 值
                 MapSize : MapData.size,                 //传递分辨率
@@ -154,6 +177,14 @@ cc.Class({
 
             case "Home_btn":        //返回首页
                 this.audioSuorce.play();
+                if(typeof wx != "undefined")
+                {
+                    wx.getOpenDataContext().postMessage({       //向子域传递数据
+                        Score : Number(MapData.maxScore),       //键 : 值
+                        MapSize : MapData.size,                 //传递分辨率
+                        text : "隐藏",                          //传递隐藏全部排行
+                    });
+                }
                 cc.director.loadScene("Zero");
             break;
 
@@ -169,7 +200,7 @@ cc.Class({
                         wx.getOpenDataContext().postMessage({       //向子域传递数据
                             Score : Number(MapData.maxScore),       //键 : 值
                             MapSize : MapData.size,                 //传递分辨率
-                            ShowAllRanking : true,                  //传递显示全部排行
+                            text : "显示",                          //传递显示全部排行
                         });
                     }
                     else { return; }

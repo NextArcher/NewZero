@@ -1,53 +1,54 @@
 //Canvas画布脚本
 
 
-//声明全局变量
-window.MapData =
-{
-    //分辨率
-    size : null,
-    //矩形边长
-    brim : null,
-    //矩形物体生成点存储
-    arr1 : Array(),
-    //竖形物体生成点存储
-    arr2 : Array(),
-    //矩形物体生成点
-    tem : null,
-    //竖形物体生成点
-    yem : null,
-    //下一波矩形的生成点
-    PointY : null,
-    //当前下降速度
-    NowDownSpeed : 0,
-    //下降速度 原108
-    DownSpeed : 0,
-    //人物数值 原3
-    PlayerData : 3,
-    //重置Y?
-    IsReY : false,
-    //矩形物体组
-    Point_2S : Array(),
-    //黄圆物体组
-    YellowCircleS : Array(),
-    //竖形物体组
-    Point_1S : Array(),
-    //尾随速度
-    FollSpeed : 0,
-    //累计长度
-    AddUpData : 0,
-    //磁力状态?
-    IsMagnetism : false,
-    //穿透状态?
-    IsPenetrate : false,
-    //双倍得分状态?
-    IsDouble : false,
-    //得分
-    Score : 0,
-    IsTouch : true,             //响应滑动?
-    VolumeData : 0.5,           //音量
-    maxScore : 0,
-},
+// //声明全局变量
+// window.MapData =
+// {
+//     //分辨率
+//     size : null,
+//     //矩形边长
+//     brim : null,
+//     //矩形物体生成点存储
+//     arr1 : Array(),
+//     //竖形物体生成点存储
+//     arr2 : Array(),
+//     //矩形物体生成点
+//     tem : null,
+//     //竖形物体生成点
+//     yem : null,
+//     //下一波矩形的生成点
+//     PointY : null,
+//     //当前下降速度
+//     NowDownSpeed : 0,
+//     //下降速度 原108
+//     DownSpeed : 0,
+//     //人物数值 原3
+//     PlayerData : 3,
+//     //重置Y?
+//     IsReY : false,
+//     //矩形物体组
+//     Point_2S : Array(),
+//     //黄圆物体组
+//     YellowCircleS : Array(),
+//     //竖形物体组
+//     Point_1S : Array(),
+//     //尾随速度
+//     FollSpeed : 0,
+//     //累计长度
+//     AddUpData : 0,
+//     //磁力状态?
+//     IsMagnetism : false,
+//     //穿透状态?
+//     IsPenetrate : false,
+//     //双倍得分状态?
+//     IsDouble : false,
+//     //得分
+//     Score : 0,
+//     IsTouch : true,             //响应滑动?
+//     VolumeData : 0.5,           //音量
+//     maxScore : 0,               //发送子域的得分
+//     IsDeathTwo : false,         //是否死亡切换场景2
+// },
 
 //全脚本收录
 window.Scripts = 
@@ -157,8 +158,7 @@ cc.Class({
          cc.director.getCollisionManager().enabled = true;
          MapData.IsTouch = true;
          MapData.Score = 0;
-         MapData.FollSpeed = 0.003;
-         cc.director.resume();               //时间开始流动
+         MapData.FollSpeed = 0.0004;
 
          //传入引用
          Scripts.Map_script = this;
@@ -249,7 +249,6 @@ cc.Class({
          }
 
          //#endregion 生成物体end
-         cc.director.preloadScene("Two");       //预加载场景2
 
      },
 
@@ -354,9 +353,10 @@ cc.Class({
             newYell.name = "YellFollow" + i;
             //设置父节点
             this.node.addChild(newYell);
+            //this.Player.addChild(newYell);
             //设置生成点
             newYell.position = cc.v2(this.Player.x,PointX.Last[PointX.Last.length-1].y);
-            MapData.FollSpeed += 0.001;
+            MapData.FollSpeed += 0.0001;
             newYell.getComponent('following_script').speedTime = MapData.FollSpeed;
             newYell.getComponent('following_script').OspeedTime = MapData.FollSpeed;
     },

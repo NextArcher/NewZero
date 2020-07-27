@@ -36,12 +36,6 @@ cc.Class({
             default : null,
             type : cc.BoxCollider
         },
-        //矩形碰撞器_1
-        Collider_1 :
-        {
-            default : null,
-            type: cc.BoxCollider,
-        },
         ResMenu :           //复活菜单
         {
             default : null,
@@ -79,7 +73,7 @@ cc.Class({
         //根据矩形物体得出人物宽高
         this.node.width = MapData.brim / 2.3;
         this.node.height = MapData.brim / 2.3;
-
+        
         //设置文字大小
         this.Label_1.fontSize = this.node.width;
         this.Label_1.lineHeight = this.node.height;
@@ -105,12 +99,6 @@ cc.Class({
         this.Collider.size = cc.size(this.node.width,this.node.width / 4);
         this.Collider.offset.y = this.node.height / 2 + this.node.width / 8;
         this.Collider.offset.x = 0;
-
-        //设置矩形碰撞_1
-        this.Collider_1.tag = 1;
-        this.Collider_1.offset.y = this.node.height / 3;
-        this.Collider_1.offset.x = 0;
-        this.Collider_1.size = cc.size(this.node.width,this.node.height / 3);
         //#endregion 碰撞器设置end
 
      },
@@ -244,7 +232,7 @@ cc.Class({
             if(this.IsRight)
             {
                 //如果物体的X轴值 大于 地图宽度的一半(右边) 减去 本物体宽度的一半
-                if(this.node.x <= (MapData.size.width / 2 - this.node.width / 2))
+                if( (this.node.x += touchSpeed * touchTime) <= (MapData.size.width / 2 - this.node.width / 2))
                 {
                     this.accRight = true;
                     this.accLeft = false;
@@ -263,7 +251,7 @@ cc.Class({
             if(this.IsLeft)
             {
                 //如果物体的X轴值 小于 地图宽度的一半(左边) 加上 本物体的宽度一半
-                if(this.node.x >= (-MapData.size.width / 2 + this.node.width / 2)) 
+                if( (this.node.x -= -touchSpeed * touchTime) >= (-MapData.size.width / 2 + this.node.width / 2)) 
                 {
                     this.accLeft = true;
                     this.accRight = false;
@@ -493,12 +481,14 @@ cc.Class({
                 this.ResMenu.active = true;                             //显示复活窗口
                 this.IsOneDeath = false;                                //非一次死亡
                 MapData.maxScore = MapData.Score;                       //将本次得分写入全局变量
+                MapData.IsDeathTwo = true;                              //死亡切换场景2
             }
             else
             {
                 this.audioScuore.volume = MapData.VolumeData;                                      //设置音量
                 this.audioScuore.play();                                                           //播放结束音效
                 MapData.maxScore = MapData.Score;                                                  //将本次得分写入全局变量
+                MapData.IsDeathTwo = true;                                                         //死亡切换场景2
                 cc.director.loadScene("Two");                                                      //加载场景2
             }
 

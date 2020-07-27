@@ -63,12 +63,22 @@ cc.Class({
 
      update (dt) 
      {
-         this.nowTime += dt;
-         while(this.nowTime >= 0.016)
-         {
-             this.fixedUpdate(0.016);
-             this.nowTime = 0;
-         }
+        //  this.nowTime += dt;
+        //  while(this.nowTime >= 0.016)
+        //  {
+        //      this.fixedUpdate(0.016);
+        //      this.nowTime = 0;
+        //  }
+        if(this.timer > this.speedTime)
+        {
+            var touchMove = cc.moveTo(this.speedTime,this.OnA.x,this.fol);
+            this.node.runAction(touchMove);
+            this.timer = 0;
+        }
+        else 
+        {
+            this.timer += dt;
+        }
      },
 
      fixedUpdate(dt)
@@ -77,7 +87,7 @@ cc.Class({
         //this.OnAtouchMove(this.OnAtouchMove_0,this.OnAtouchMove_1);
         if(this.timer > this.speedTime)
         {
-            var touchMove = cc.moveTo(this.speedTime,this.OnA.x,this.fol)
+            var touchMove = cc.moveTo(this.speedTime,this.OnA.x,this.fol);
             this.node.runAction(touchMove);
             this.timer = 0;
         }

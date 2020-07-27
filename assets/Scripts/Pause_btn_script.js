@@ -1,6 +1,9 @@
 //按钮事件
 
 var script = null;              //声明this代替
+var time_0 = 0;
+var time_1 = 0;
+
 cc.Class({
     extends: cc.Component,
 
@@ -31,6 +34,13 @@ cc.Class({
         this.node.width = MapData.brim / 3;
         this.node.height = this.node.width;
         script = this;                                          //获取this
+
+        cc.game.on(cc.game.EVENT_HIDE,function(){               //页面隐藏事件
+            time_0 = new Date().getTime();                          //声明时间对象
+        });
+        cc.game.on(cc.game.EVENT_SHOW,function(){               //页面显示事件
+            time_1 = new Date().getTime();                          //声明时间对象
+        });
 
         // if(typeof wx != 'undefined')
         // {
@@ -94,17 +104,19 @@ cc.Class({
             break;
             case "ReDo_btn" :                       //重玩按钮
                 this.audioSuorce.play();            //播放音效
-                MapData.IsTouch = true;             //开启滑动响应
-                MapData.AddUpData = 0;              //更新累计数值
-                Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
-                Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
-                Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
-                cc.director.loadScene('One');       //加载场景
+                // MapData.IsTouch = true;             //开启滑动响应
+                // MapData.AddUpData = 0;              //更新累计数值
+                // Scripts.Map_script.AddUplbl.string = MapData.AddUpData + "/20";                //进度条更新
+                // Scripts.Map_script.ProgressBar.progress = MapData.AddUpData / 20;
+                // Scripts.Player_script.IsOneDeath = true;                                        //重置一次死亡状态
+                cc.director.loadScene('Zero');       //加载场景
                 
             break;
             //#endregion 返回菜单end
 
             case "Res_btn" :        //看视频复活
+            time_0 = new Date().getTime();                          //声明时间对象
+            console.log("记录时间点0：",time_0);
             if(typeof wx != 'undefined')
             {
                 // var rawardedVideo = wx.creatorRawardedVideoAd({             //视频广告未能观看
@@ -112,42 +124,69 @@ cc.Class({
                 // });
                 if(typeof wx != 'undefined')                                   //用分享代替
                 {
-                    wx.shareAppMessage({                                            //打开分享窗口
-                        query : 'shareMsg = ' + '附带信息?',
+                    wx.shareAppMessage({                                            //打开分享窗口 时间会停止
+                        query : "key = 1",
                         title : "这是你没有玩过的全新bug",
                     });
-                    wx.onShow(function(){                                           //分享回调方法
-                        //#region 复活
-                        MapData.PlayerData = 3;
-                        Scripts.Player_script.Label_1.string = MapData.PlayerData;
-                        //显示的尾巴个数
-                        for(var i = 0;i < MapData.PlayerData;i++)
-                            {
-                                //向下遍历数组(从索引1开始) 遇到隐藏的就显示
-                                for(var j = 1;j < PointX.Last.length;j++)
+                    wx.onShow(function(){                                       //分享回调
+                        time_1 = new Date().getTime();                          //声明时间对象
+                        console.log("记录时间点1：",time_0);
+                        console.log("时间点相减：",time_0 - time_1);
+                        if((time_1 / 1000) - (time_0 / 1000) < 2)                   //时间戳 / 1000 得出秒数 相减 
+                        {
+                            console.log("分享失败");
+                            wx.showModal({                                                      //提示窗口
+                                title: "请分享给好友或群",
+                                success: res => {
+                                    if(res.confirm)                                             //点击确认按钮
+                                    {
+                                        wx.shareAppMessage({                                            //打开分享窗口 时间会停止
+                                            query : "key = 1",
+                                            title : "这是你没有玩过的全新bug",
+                                        });
+                                    }
+                                    else if(res.cancel)
+                                    {
+                                        
+                                    }
+                                },
+                            });
+                        }
+                        else
+                        {
+                            //#region 复活
+                            MapData.PlayerData = 3;
+                            Scripts.Player_script.Label_1.string = MapData.PlayerData;
+                            //显示的尾巴个数
+                            for(var i = 0;i < MapData.PlayerData;i++)
                                 {
-                                    //尾随物体组.获取脚本.node组件.opacity属性
-                                    //索引0(人物)并没有following_script脚本
-                                    if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                                    //向下遍历数组(从索引1开始) 遇到隐藏的就显示
+                                    for(var j = 1;j < PointX.Last.length;j++)
                                     {
-                                        //显示
-                                        PointX.Last[j].getComponent("following_script").node.opacity = 255;
-                                        break ;
+                                        //尾随物体组.获取脚本.node组件.opacity属性
+                                        //索引0(人物)并没有following_script脚本
+                                        if(PointX.Last[j].getComponent("following_script").node.opacity == 0)
+                                        {
+                                            //显示
+                                            PointX.Last[j].getComponent("following_script").node.opacity = 255;
+                                            break ;
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                         
                                     }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                     
                                 }
-                            }
-                        Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
-                        MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
-                        MapData.IsTouch = true;                                                 //开启滑动响应
-                        script.ResMenu.active = false;                                          //关闭复活窗口
-                        Scripts.Player_script.IsDeath = false;
-                        cc.director.resume();                                                   //继续游戏
-                    //#endregion 复活end
+                            Scripts.Map_script.Point_2S.getComponent('Point_2S_script').ReXY();     //方块重置
+                            MapData.IsTouch = true;                                                 //开启滑动响应
+                            script.ResMenu.active = false;                                          //关闭复活窗口
+                            Scripts.Player_script.IsDeath = false;
+                            MapData.DownSpeed = MapData.NowDownSpeed;                               //下降
+                            cc.director.resume();                                                   //继续游戏
+                        //#endregion 复活end
+                        }
+            
                 });
                 }
                 else { return; }

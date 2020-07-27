@@ -69,6 +69,7 @@
     ]
   ],
   "excluded-modules": [
+    "Animation",
     "Dynamic Atlas",
     "DragonBones",
     "EditBox",
@@ -125,6 +126,5 @@
   },
   "migrate-history": [
     "cloud-function"
-  ],
-  "start-scene": "current"
+  ]
 }

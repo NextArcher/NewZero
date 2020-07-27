@@ -33,14 +33,11 @@
         "__id__": 8
       },
       {
-        "__id__": 10
-      },
-      {
         "__id__": 9
       }
     ],
     "_prefab": {
-      "__id__": 11
+      "__id__": 10
     },
     "_opacity": 255,
     "_color": {
@@ -273,8 +270,6 @@
     },
     "timer": 0,
     "player": null,
-    "Just": 0,
-    "Lose": 0,
     "ReduceSpeed": 0.3,
     "UpNode": null,
     "box_0": {
@@ -325,27 +320,6 @@
     "_loop": false,
     "playOnLoad": false,
     "preload": false,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.BoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": false,
-    "tag": 1,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 200,
-      "height": 200
-    },
     "_id": ""
   },
   {
